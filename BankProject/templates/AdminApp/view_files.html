@@ -1,0 +1,110 @@
+{% extends 'AdminApp/layout.html' %}
+
+ {% block content %}
+<div class="container-fluid">
+    <div class="row p-2">
+        <div class="col-md-12 border-bottom mb-3 ">
+            <h2 class="text-primary" ><b>{{loan_object.customer_name}}</b>- File Details</h2>
+        </div>
+        <div class="col-md-6">
+            <div class="mt-3 pb-2 border-bottom">
+                <h4 >Customer Details</h4>
+            </div>
+             <div class="mt-3 mb-2 pb-2 border-bottom">
+                <label >User Id :</label>
+                <b class="d-block">{{loan_object.user_id}}</b>
+            </div>
+            <div class="mt-3 mb-2 pb-2 border-bottom">
+                <label >User Name :</label>
+                <b class="d-block">{{loan_object.user_name}}</b>
+            </div>
+            <div class="mt-3 mb-2 pb-2 border-bottom">
+                <label >Customer Name :</label>
+                <b class="d-block">{{loan_object.customer_name}}</b>
+            </div>
+            <div class="mt-3 mb-2 pb-2 border-bottom">
+                <label >Customer Mobile :</label>
+                <b class="d-block">{{loan_object.customer_mobile}}</b>
+            </div>
+            <div class="mt-3 mb-2 pb-2 border-bottom">
+                <label >Customer Email :</label>
+                <b class="d-block">{{loan_object.customer_email}}</b>
+            </div>
+            <div class="mt-3 mb-2 pb-2 border-bottom">
+                <label >Customer Address :</label>
+                <b class="d-block">{{loan_object.customer_address}}</b>
+            </div>
+             <div class="mt-3 mb-2 pb-2 border-bottom">
+                <label >Customer Adhar Card No :</label>
+                <b class="d-block">{{loan_object.adhar_number}}</b>
+            </div>
+             <div class="mt-3 mb-2 pb-2 border-bottom">
+                <label >Customer Pan Card No :</label>
+                <b class="d-block">{{loan_object.pan_number}}</b>
+            </div>
+            <div class="mt-3 mb-2 pb-2 border-bottom">
+                <label >Customer Photo :</label>
+                <a href="{{loan_object.customer_photo.url}}"target="_blank"><b class="d-block">{{loan_object.customer_photo}}</b></a>
+            </div>
+            <div class="mt-3 mb-2 pb-2 border-bottom">
+                <label >Customer PAN card :</label>
+                <a href="{{loan_object.customer_pan_card.url}}"target="_blank"><b class="d-block">{{loan_object.customer_pan_card}}</b></a>
+            </div>
+            <div class="mt-3 mb-2 pb-2 border-bottom">
+                <label >Customer Adhar Card :</label>
+                <a href="{{loan_object.customer_adhar.url}}" target="_blank"><b class="d-block">{{loan_object.customer_adhar}}</b></a>
+            </div>
+
+
+            <div class="mt-3 mb-2 pb-2 border-bottom">
+                <label >Customer Signature :</label>
+               <a href="{{loan_object.customer_signature.url}}" target="_blank"><b class="d-block">{{loan_object.customer_signature}}</b></a>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="mt-3 pb-2 border-bottom">
+                <h4  >Loan Type</h4>
+            </div>
+            <div class="mt-3 mb-2 pb-2 border-bottom">
+                <label >Loan Type :</label>
+                <b class="d-block">{{loan_object.loan_type}}</b>
+            </div>
+             <div class="mt-3 mb-2 pb-2 border-bottom">
+                <label >Loan Interest :</label>
+                <b class="d-block">{{loan_object.interest}}% </b>
+            </div>
+             <div class="mt-3 mb-2 pb-2 border-bottom">
+                <label >Request Amount :</label>
+                <b class="d-block">&#8377;{{loan_object.request_amount}}</b>
+            </div>
+            <div class="mt-3 mb-2 pb-2 border-bottom">
+                <label >Month Installment :</label>
+                <b class="d-block">{{loan_object.month_installation}} Months</b>
+            </div>
+
+            <div class="mt-3 mb-2 pb-2 border-bottom">
+                <label >Request Loan File Date :</label>
+                <b class="d-block">{{loan_object.action}} </b>
+            </div>
+             <div class="mt-3 mb-2 pb-2 border-bottom">
+                <label >STATUS :</label>
+                <b class="d-block">{{loan_object.status}} </b>
+            </div>
+
+            </div>
+
+
+            <div class="col-md-12 text-center mt-3">
+            {% if loan_object.status == 'pending'  %}
+            <a href="/FinanceAdmin/approve/{{loan_object.id}}" ><button class="btn btn-primary btn-lg ">Approve File</button></a>
+                {% endif %}
+             {% if loan_object.status == 'pending' or loan_object.status == 'approved'   %}
+            <a href="/FinanceAdmin/reject/{{loan_object.id}}" onclick="return confirm('Are You Want To Reject....')" ><button class="btn btn-danger btn-lg ml-1 ">Reject File</button></a>
+             {% endif %}
+            </div>
+</div>
+</div>
+<br><br><br><br><br><br><br><br><br><br><br><br>
+
+
+{% endblock %}

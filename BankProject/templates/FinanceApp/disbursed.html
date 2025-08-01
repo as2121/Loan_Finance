@@ -1,0 +1,176 @@
+{% extends 'FinanceApp/layout.html' %}
+{% block title %}
+<p>finance-disbursed</p>
+{% endblock %}
+
+{% block content %}
+<br><br><br>
+<br><br><br>
+{% if dis_object.status == 'pending' or dis_object.status == 'reject' %}
+
+<h1 class="text-center font-weight-bold text-primary mb-5">DISBURSED FILE</h1>
+<div class="container" style="background-image:rgba(255, 255, 255,0.8)">
+ <div class="row">
+        <div class="col-md-12 table-responsive" >
+        <table border="1" class="table tabel=bordered" style="background-color:rgba(255, 255, 255,0.8);border-radius:10px">
+            <tr class="table-active">
+                <th>ACTION</th>
+                <th>USER ID</th>
+                <th>USERNAME</th>
+                <th>ACOUNT HOLDER NAME</th>
+                <th>BANK NAME</th>
+                <th>ACOUNT NO</th>
+                <th>IFSC CODE </th>
+                <th>TOTAL AMOUNT</th>
+                <th>MONTHLY INSTALLMENT</th>
+                <th>STATUS</th>
+            </tr>
+          <tr>
+              <td>
+
+                  <a href="/update_dis/{{dis_object.id}}"><button class="btn btn-sm btn-primary m-1"><i class="fa-solid fa-pen-to-square"></i></button></a>
+                  <button onclick="fun1()" class="btn btn-sm btn-danger m-1"><i class="fa-solid fa-trash"></i></button>
+              </td>
+              <td>{{dis_object.user_id}}</td>
+              <td>{{dis_object.user_name}}</td>
+              <td>{{dis_object.acount_holder_name}}</td>
+              <td>{{dis_object.bank_name}}</td>
+              <td>{{dis_object.acount_no}}</td>
+              <td>{{dis_object.ifsc_code}}</td>
+              <td>&#8377;{{dis_object.total_amount}}</td>
+              <td>&#8377;{{dis_object.month_installment}}</td>
+              <td>{{dis_object.status}}</td>
+
+          </tr>
+
+        </table>
+
+    </div>
+ </div>
+</div>
+<br>
+<br><br><br>
+
+{% endif %}
+{% if not dis_object and loan_object.status == 'approved' %}
+<div class="container">
+ <div class="row">
+     <div class="col-md-12 shadow p-2" style="background-color:rgba(255, 255, 255,0.8);">
+<form action="/disbursed/" method="post">
+    {% csrf_token %}
+     <div class="container-fluid">
+        <div class="row p-3">
+             <div class="col-md-12 text-primary p-3 ">
+                <h2 class="text-primary" >Bank Details To Disburse Loan File - {{loan_object.customer_name}}</h2>
+             </div>
+
+                <input  type="number" value="{{loan_object.id}}" name="loan"  class="form-control" hidden  >
+                <input  type="number" value="{{loan_object.user_id}}" name="user_id"  class="form-control" hidden  >
+                <input  type="text" value="{{user}}" name="user_name"  class="form-control" hidden  >
+
+             <div class="col-md-4 mt-3 ">
+                <label >Request Amount :</label>
+                <input  type="number" value="{{loan_object.request_amount}}" name="request_amount" class="form-control" readonly  >
+             </div>
+             <div class="col-md-4 mt-3 ">
+                <label>Interest :</label>
+                <input  type="text" value="{{loan_object.interest}}" id="interest_id" name="interest" class="form-control" readonly>
+             </div>
+             <div class="col-md-4 mt-3 ">
+                <label>Total Amount Pay:</label>
+                <input id="total"  type="text" value=""  name="total_amount" class="form-control" readonly>
+             </div>
+
+             <div class="col-md-4 mt-3 ">
+                <label >Month Of Installaion</label>
+                <input  type="number" value="{{loan_object.month_installation}}" id="month_id" name="month_installation" class="form-control" readonly >
+             </div>
+             <div class="col-md-4 mt-3 ">
+                <label >Monthly Installment :</label>
+                <input id="month"  type="text" value="" name="month_installment" class="form-control" readonly>
+             </div>
+             <div class="col-md-4 mt-3 ">
+                <label >Acount Holder Name :</label>
+                <input placeholder="Acount Holder Name" type="text"      name="acount_holder_name" class="form-control" >
+             </div>
+             <div class="col-md-4 mt-3 ">
+                <label >Bank Name :</label>
+                <input   placeholder="Bank Name " type="text" name="bank_name" class="form-control" required>
+             </div>
+             <div class="col-md-4 mt-3 ">
+                <label >Acount No :</label>
+                <input placeholder="Acount No" type="text" name="acount_no" class="form-control" required>
+             </div>
+             <div class="col-md-4 mt-3 ">
+                <label >IFSC Code :</label>
+                <input  placeholder="IFSC Code" type="text" name="ifsc_code" class="form-control" required>
+                <input hidden  value="pending" type="text" name="status" class="form-control" required>
+             </div>
+             <div class="col-md-12 text-center mt-4">
+                <button type="submit" class="btn btn-primary">Disbursed File </button>
+             </div>
+        </div>
+     </div>
+</form>
+     </div>
+ </div>
+ </div>
+{% endif %}
+{% if loan_object.status == 'pending'  or not loan_object  %}
+<br><br><br>
+<br><br><br>
+<br><br><br>
+<div class="container p-3" style="background-color:rgba(255, 255, 255,0.8);border-radius:10px">
+<h1 class="text-center text-dark font-weight-bold">DISBURSED FILE NOT FOUND</h1>
+</div>
+<br><br><br>
+<br><br><br>
+<br><br><br>
+{% endif %}
+{% if dis_object.status == 'active' %}
+
+<br><br><br>
+<br><br><br>
+<div class="container p-3 shadow" style="background-color:rgba(255, 255, 255,0.8);border-radius:10px">
+    <h4 class="text-danger text-center font-weight-bold">Your Loan File Disbursed Successfully, and the money has been sent to your bank account. Please check!</h4>
+</div>
+<br><br><br>
+<br><br><br>
+<br><br><br>
+{% endif %}
+<script>
+        function showMessage(msg){
+     alert(msg)
+     }
+
+  {% for message in messages %}
+  {% if message %}
+  showMessage('{{message}}')
+  {% endif %}
+  {% endfor %}
+
+    function fun2(){
+    var per={{loan_object.request_amount}}*{{loan_object.interest}}/100
+    var total={{loan_object.request_amount}}+per
+    var month=Math.round(total/{{loan_object.month_installation}})
+    document.getElementById('month').value=month
+    document.getElementById('total').value=total
+    const currentDate = new Date();
+    document.getElementById('date').value=currentDate
+    }
+    fun2()
+
+
+     function fun1(){
+     alert('If You Want to Delete This Disbursed File Please contact The Finance Office...!')
+     }
+
+
+
+
+
+
+</script>
+<br><br><br>
+<br><br><br>
+{%  endblock %}

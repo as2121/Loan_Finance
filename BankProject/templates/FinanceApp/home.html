@@ -1,0 +1,109 @@
+{% extends 'FinanceApp/layout.html' %}
+{% load static %}
+
+ {% block title%}
+    <title>Finances-Home</title>
+{% endblock title %}
+
+{% block content %}
+<br><br><br>
+<div class="site-blocks-cover overlay" style="background-image:url({% static 'FinanceApp/images/hero_2.jpg'%})" id="home-section" >
+
+      <div class="container">
+        <div class="row align-items-center justify-content-center">
+
+          <div class="col-md-10 mt-lg-5 text-center">
+            <div class="single-text ">
+              <div class="slide">
+                <h1 class="text-uppercase" >Loans and Mortgages</h1>
+                <p class="mb-5 desc">Personal loans, auto loans, home loans, and other types of credit offered to individuals.</p>
+                </div>
+              </div>
+
+
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <a href="#next" class="mouse smoothscroll">
+        <span class="mouse-icon">
+          <span class="mouse-wheel"></span>
+        </span>
+      </a>
+
+<div class="site-section bg-white" id="next">
+      <div class="container">
+        <div class="row mb-5">
+          <div class="col-md-4 text-center"  data-aos-delay="">
+            <img src="{% static 'FinanceApp/images/flaticon-svg/svg/001-wallet.svg' %}" alt="Free Website Template by Free-Template.co" class="img-fluid w-25 mb-4">
+            <h3 class="card-title">Personal Loan Solutions</h3>
+            <p>These loans are used to finance the purchase of a home or property. There are various types of loan.</p>
+          </div>
+          <div class="col-md-4 text-center"  data-aos-delay="100">
+            <img src="{% static 'FinanceApp/images/flaticon-svg/svg/004-cart.svg' %}" alt="Free Website Template by Free-Template.co" class="img-fluid w-25 mb-4">
+            <h3 class="card-title">Mortgage Loan Solutions</h3>
+            <p>These loans are used to purchase a vehicle and are typically secured by the car itself.</p>
+          </div>
+          <div class="col-md-4 text-center"  data-aos-delay="200">
+            <img src="{% static 'FinanceApp/images/flaticon-svg/svg/006-credit-card.svg' %}" alt="Free Website Template by Free-Template.co" class="img-fluid w-25 mb-4">
+            <h3 class="card-title">Payday Loan Solutions</h3>
+            <p>Short-term, high-interest loans that are intended to cover urgent expenses.</p>
+          </div>
+
+        </div>
+
+        <div class="row">
+          <div class="col-lg-6 bg-white " >
+            <figure class="circle-bg">
+            <img src="{% static 'FinanceApp/images/about_2.jpg' %}" alt="Free Website Template by Free-Template.co" class="img-fluid">
+            </figure>
+          </div>
+          <div class="col-lg-5 ml-auto"  data-aos-delay="100">
+            <div class="">
+              <h3 class="h3 mb-4 text-black">Banking Solutions Is Our Priority</h3>
+              <p>A small river named Duden flows by their place and supplies it with the necessary regelialia.</p>
+
+            </div>
+
+            <div class="">
+              <ul class="list-unstyled ul-check success">
+                <li>Officia quaerat eaque neque</li>
+                <li>Lorem ipsum dolor sit amet</li>
+                <li>Consectetur adipisicing elit</li>
+              </ul>
+
+            </div>
+
+
+
+
+
+
+
+
+
+          </div>
+
+
+        </div>
+      </div>
+    </div>
+
+<script>
+  function showMessage(msg){
+     alert(msg)
+  }
+  {% for message in messages %}
+  {% if message %}
+  showMessage('{{message}}')
+  {% endif %}
+  {% endfor %}
+
+</script>
+
+{% endblock content %}
+
+

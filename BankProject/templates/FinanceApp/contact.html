@@ -1,0 +1,109 @@
+{% extends 'FinanceApp/layout.html'%}
+{% load static %}
+
+{% block title %}
+<title>Finance-Contact</title>
+{% endblock title %}
+
+{% block content %}
+<br><br><br>
+ <section  class="site-section bg-light" id="contact-section" >
+      <div class="container">
+        <div class="row mb-5">
+          <div class="col-12 text-center">
+            <h2 class="section-title mb-3">Contact Us</h2>
+          </div>
+        </div>
+        <div class="row mb-5">
+
+
+
+          <div class="col-md-4 text-center">
+            <p class="mb-4">
+              <span class="icon-room d-block h2 text-primary"></span>
+              <span>203  AS FINANCE,AHILYANAGAR, MAHARASHTRA</span>
+            </p>
+          </div>
+          <div class="col-md-4 text-center">
+            <p class="mb-4">
+              <span class="icon-phone d-block h2 text-primary"></span>
+              <a href="#">+91 1234567890</a>
+            </p>
+          </div>
+          <div class="col-md-4 text-center">
+            <p class="mb-0">
+              <span class="icon-mail_outline d-block h2 text-primary"></span>
+              <a href="#">finance@gmail.com</a>
+            </p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12 mb-5">
+
+
+
+            <form method="post" class="p-5 bg-white">
+              {% csrf_token %}
+              <h2 class="h4 text-black mb-5"> Feedback Form</h2>
+
+              <div class="row form-group">
+                <div class="col-md-12 mb-3 mb-md-0">
+                  <label class="text-black" > Name</label>
+                  <input name="user_id" type="text" value="{{user.id}}"   class="form-control" hidden>
+                  <input name="name" type="text" value="{{user}}" readonly  class="form-control">
+                </div>
+
+              </div>
+
+              <div class="row form-group">
+              <div class="col-md-6">
+                  <label class="text-black" for="mobile">Mobile</label>
+                  <input name="mobile" type="number" id="mobile" class="form-control">
+                </div>
+                <div class="col-md-6">
+                  <label class="text-black" for="email">Email</label>
+                  <input name="email" type="email" id="email" class="form-control">
+                </div>
+              </div>
+
+              <div class="row form-group">
+
+                <div class="col-md-12">
+                  <label class="text-black" for="subject">Subject</label>
+                  <input name="subject" type="text" id="subject" class="form-control">
+                </div>
+              </div>
+
+              <div class="row form-group">
+                <div class="col-md-12">
+                  <label class="text-black" for="message">Message</label>
+                  <textarea name="message" id="message" cols="30" rows="7" class="form-control" placeholder="Write your notes or questions here..."></textarea>
+                </div>
+              </div>
+
+              <div class="row form-group">
+                <div class="col-md-12">
+                 <center> <input type="submit" value="Send Message" class="btn btn-primary btn-md text-white"></center>
+                </div>
+              </div>
+
+
+            </form>
+          </div>
+
+        </div>
+      </div>
+    </section>
+  <script>
+    function show_message(msg){
+    alert(msg)
+    }
+
+    {% for message in messages %}
+     {% if message %}
+    show_message('{{message}}')
+    {% endif %}
+    {% endfor %}
+</script>
+
+{% endblock content %}

@@ -1,0 +1,36 @@
+{% extends 'FinanceApp/layout.html' %}
+{% block title %}
+<p>finance-register</p>
+{% endblock %}
+
+{% block content %}
+{% load static %}
+{% load crispy_forms_tags %}
+<div style="margin-top:100px;margin-bottom:100px;"  class="container">
+    <div class="row justify-content-center" >
+       <div class="col-md-6 p-5 shadow" style="background-color:rgba(255, 255, 255,0.8);border-radius:10px"  >
+
+    <h3 class="text-center mb-5">USER REGISTRATION</h3>
+           <form method="post">
+               {% csrf_token %}
+               {{form|crispy}}
+               <center><button class="btn btn-primary" type="submit">Save Registration</button></center>
+           </form>
+
+
+
+</div>
+    </div>
+</div>
+<script>
+  function showMessage(msg){
+     alert(msg)
+  }
+  {% for message in messages %}
+  {% if message %}
+  showMessage('{{message}}')
+  {% endif %}
+  {% endfor %}
+
+</script>
+{% endblock %}

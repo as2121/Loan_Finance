@@ -1,0 +1,66 @@
+{% extends 'AdminApp/layout.html' %}
+
+ {% block content %}
+
+<h1 class="text-center font-weight-bold text-primary mb-2">DISBURSED FILES</h1>
+<div class="container-fluid">
+ <div class="row">
+        <div class="col-md-12 table-responsive">
+        <table border="1" class="table tabel=bordered ">
+            <tr class="table-active">
+                <th>ACTION</th>
+                <th>USER ID</th>
+                <th>USER NAME</th>
+                <th>ACOUNT HOLDER NAME</th>
+                <th>BANK NAME</th>
+                <th>ACOUNT NO</th>
+                <th>IFSC CODE</th>
+                <th>TOTAL AMOUNT</th>
+                <th>STATUS</th>
+
+
+            </tr>
+            {% for dis in dis_object %}
+          <tr>
+              <td>
+                  <a href="/FinanceAdmin/view_disbursed/{{dis.id}}" > <button  class="btn btn-info btn-sm m-1"><i class="fa-sharp fa-solid fa-eye"></i></button></a>
+                  <a href="/FinanceAdmin/update_disbursed/{{dis.id}}" > <button  class="btn btn-primary btn-sm m-1"><i class="fa-solid fa-pen-to-square"></i></button></a>
+                  <a href="/FinanceAdmin/delete_disbursed/{{dis.id}}" onclick="return confirm('Are You Sure..!')"> <button  class="btn btn-danger btn-sm m-1"><i class="fa-solid fa-trash"></i></button></a>
+              </td>
+              <td>{{dis.user_id}}</td>
+              <td>{{dis.user_name}}</td>
+              <td>{{dis.bank_name}}</td>
+              <td>{{dis.acount_holder_name}}</td>
+              <td>{{dis.acount_no}}</td>
+              <td>{{dis.ifsc_code}}</td>
+              <td>{{dis.total_amount}}</td>
+              <td>{{dis.status}}</td>
+
+
+          </tr>
+            {% endfor %}
+
+            {% if not dis_object %}
+            <tr class="text-center p-5" >
+                <th colspan="10" rowspan="3" >Data Not Found</th>
+            </tr>
+            {% endif %}
+
+        </table>
+
+    </div>
+ </div>
+</div>
+<script>
+  function showMessage(msg){
+     alert(msg)
+  }
+  {% for message in messages %}
+  {% if message %}
+  showMessage('{{message}}')
+  {% endif %}
+  {% endfor %}
+
+</script>
+
+{% endblock %}

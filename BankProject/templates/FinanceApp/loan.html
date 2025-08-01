@@ -1,0 +1,328 @@
+{% extends 'FinanceApp/layout.html' %}
+{% block title %}
+<p>finance-loan</p>
+{% endblock %}
+
+{% block content %}
+<br><br><br><br>
+
+{% if loan_object.status == 'pending' or loan_object.status == 'rejected' %}
+<br><br><br>
+
+<h1 class="text-center font-weight-bold text-primary">LOAN FILE</h1>
+<div class="container">
+ <div class="row">
+        <div class="col-md-12 table-responsive"  >
+        <table class="table tabel=bordered " style="background-color:rgba(255, 255, 255,0.8);">
+            <tr class="table-active">
+                <th>ACTION</th>
+                <th>NAME</th>
+                <th>MOBILE</th>
+                <th>EMAIL</th>
+                <th>ADDRESS</th>
+                <th>Date & Time</th>
+                <th>STATUS</th>
+            </tr>
+          <tr>
+              <td>
+                  <a href="/update/{{loan_object.id}}"><button class="btn btn-primary m-1"><i class="fa-solid fa-pen-to-square"></i></button></a>
+                  <button onclick="alert('Please Contact To Admin For Delete Loan File')" class="btn btn-danger m-1"><i class="fa-solid fa-trash"></i></button>
+              </td>
+              <td>{{loan_object.customer_name}}</td>
+              <td>{{loan_object.customer_mobile}}</td>
+              <td>{{loan_object.customer_email}}</td>
+              <td>{{loan_object.customer_address}}</td>
+              <td>{{loan_object.action}}</td>
+              <td>{{loan_object.status}}</td>
+          </tr>
+
+        </table>
+
+    </div>
+ </div>
+</div>
+<br>
+<br><br><br>
+<br><br><br>
+<br><br><br>
+
+{% endif %}
+
+{% if not loan_object %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <form  method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+<div class="container p-3">
+    <div class="row">
+        <div class="col-md-12 mb-3">
+            <h2 class=" font-weight-bold p-2  text-primary text-center">Add Loan Files</h2>
+        </div>
+        <div class="col-12 mb-4 " >
+            <div class="shadow border p-3" style="background-color:rgba(255, 255, 255,0.8);border-radius:10px">
+                <h2 class="text-center">Customser Details</h2>
+                <div class="row mb-4">
+                    <div class="col-md-4 mt-4 ">
+                        <label >Customer Name <span class="text-danger">*</span></label>
+                        <input value="{{user.id}}" type="text" name="user_id"  class="form-control" hidden>
+                        <input value="{{user}}" type="text" name="user_name"  class="form-control" hidden>
+                        <input type="text" name="customer_name" placeholder="Customer Name" class="form-control" required>
+                    </div>
+                   <!-- Customer Mobile Section -->
+<div class="col-md-4 mt-4">
+    <label>Customer Mobile <span class="text-danger">*</span></label>
+    <input type="number" id="mobile_input" name="customer_mobile" placeholder="Customer Mobile" class="form-control" required>
+    <button type="button" class="btn btn-info mt-1" onclick="sendMobileOTP()">Send Mobile OTP</button>
+    <button type="button" id="resendMobileOtpBtn" class="btn btn-secondary mt-1" onclick="sendMobileOTP()" disabled>Resend OTP</button>
+</div>
+
+<!-- Customer Email Section -->
+<div class="col-md-4 mt-4">
+    <label>Customer Email <span class="text-danger">*</span></label>
+    <input type="email" id="email_input" name="customer_email" placeholder="Customer Email" class="form-control" required>
+    <button type="button" class="btn btn-info mt-1" onclick="sendEmailOTP()">Send Email OTP</button>
+    <button type="button" id="resendEmailOtpBtn" class="btn btn-secondary mt-1" onclick="sendEmailOTP()" disabled>Resend OTP</button>
+</div>
+
+<!-- Mobile OTP Modal -->
+<div style="margin-top:100px" class="modal fade" id="mobileOTPModal" tabindex="-1" aria-labelledby="mobileOTPModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Verify Mobile OTP</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Enter the OTP sent to your mobile number.</p>
+        <input type="text" id="mobile_otp" class="form-control" placeholder="Enter Mobile OTP">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success" onclick="verifyMobileOTP()">Verify</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Email OTP Modal -->
+<div style="margin-top:100px"  class="modal fade" id="emailOTPModal" tabindex="-1" aria-labelledby="emailOTPModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Verify Email OTP</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Enter the OTP sent to your email address.</p>
+        <input type="text" id="email_otp" class="form-control" placeholder="Enter Email OTP">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success" onclick="verifyEmailOTP()">Verify</button>
+      </div>
+    </div>
+  </div>
+</div>
+ <div class="col-md-4 mt-4 ">
+                        <label >Customer Pan Card No<span class="text-danger">*</span> </label>
+                         <input placeholder="Pan Card No" type="text"  name="pan_number" class="form-control" required>
+                    </div>
+                      <div class="col-md-4 mt-4 ">
+                        <label >Customer Adhar Card No<span class="text-danger">*</span> </label>
+                         <input placeholder="Adhar Card No" type="number"  name="adhar_number" class="form-control" required >
+                    </div>
+                    <div class="col-md-4 mt-4 ">
+                        <label >Customer Photo <span class="text-danger">*</span></label>
+                        <input type="file" accept="image/*"  name="customer_photo" class="form-control" required>
+                    </div>
+                    <div class="col-md-4 mt-4 ">
+                        <label >Customer PAN card<span class="text-danger">*</span> </label>
+                       <input class="form-control" type="file" name="customer_pan_card" id="customer_pan_card" accept="image/*" required>
+                    </div>
+                    <div class="col-md-4 mt-4 ">
+                        <label >Customer Adhar Card Front<span class="text-danger">*</span></label>
+                        <input class="form-control" type="file" name="customer_adhar" id="customer_adhar" accept="image/*"  required>
+                    </div>
+
+                    <div class="col-md-4 mt-4 ">
+                        <label >Customer Signature<span class="text-danger">*</span> </label>
+                        <input type="file" accept="image/*" name="customer_signature" class="form-control" >
+                    </div>
+
+                    <div class="col-md-12 mt-4 ">
+                        <label >Customer Address <span class="text-danger">*</span></label>
+                        <textarea  rows="3" name="customer_address" placeholder="Customer Address" class="form-control" required></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="shadow border p-3 mt-5 " style="background-color:rgba(255, 255, 255,0.8);border-radius:10px">
+                <h2 class="text-center">Loan Details</h2>
+                <div class="row">
+                 <div class="col-md-3 mt-4 ">
+    <label>Loan Type <span class="text-danger">*</span></label>
+    <select class="form-control" name="loan_type" id="loan_type_select">
+        <option value="" disabled selected>Not Selected</option>
+        {% for type in type_obj %}
+            <option value="{{ type.id }}" data-interest="{{ type.interest_rate }}">{{ type.name }}</option>
+        {% endfor %}
+    </select>
+</div>
+
+<div class="col-md-3 mt-4 ">
+    <label>Interest <span class="text-danger">*</span></label>
+    <input placeholder="Interest" type="text" name="interest" class="form-control" readonly>
+</div>
+
+                    <div class="col-md-3 mt-4 ">
+                        <label >Request Amount <span class="text-danger">*</span></label>
+                        <input placeholder="Request Amount " type="number"  name="request_amount" class="form-control" >
+                    </div>
+                    <div class="col-md-3 mt-4 ">
+                        <label>Requested Month Of Installation<span class="text-danger">*</span></label>
+                        <input placeholder="Requested Month Of Installation" type="number"  name="month_installation" class="form-control" >
+                    </div>
+
+                    <div class="col-md-12 text-center mt-4 mb-5">
+                            <button class="btn btn-primary ">Save Loan Files</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+     </div>
+   </div>
+</form>
+
+        </div>
+    </div>
+</div>
+{% endif %}
+{% if loan_object.status == 'approved' or loan_object.status == 'disbursed'  %}
+<br><br><br>
+<br><br><br>
+<br><br><br>
+
+<div class="container p-4" style="background-color:rgba(255, 255, 255,0.8);border-radius:10px">
+    <h4 class="text-danger font-weight-bold text-center">Your Loan File Approved Successfully..!</h4>
+</div>
+<br><br><br>
+<br><br><br>
+<br><br><br>
+{% endif %}
+<script>
+      document.addEventListener("DOMContentLoaded", function() {
+        const select = document.getElementById("loan_type_select");
+        const interestInput = document.querySelector('input[name="interest"]');
+
+        select.addEventListener("change", function() {
+            const selectedOption = this.options[this.selectedIndex];
+            const interest = selectedOption.getAttribute("data-interest");
+            interestInput.value = interest ? interest : "";
+        });
+    });
+
+ function showMessage(msg){
+     alert(msg)
+  }
+  {% for message in messages %}
+  {% if message %}
+  showMessage('{{message}}')
+  {% endif %}
+  {% endfor %}
+
+let isMobileVerified = false;
+let isEmailVerified = false;
+
+function sendMobileOTP() {
+    const mobile = document.getElementById('mobile_input').value;
+    if (!mobile) {
+        alert("Please enter mobile number first.");
+        return;
+    }
+    document.getElementById('resendMobileOtpBtn').disabled = true;
+    document.querySelector("button[onclick='sendMobileOTP()']").disabled = true;
+
+    // DEMO: just show alert with demo OTP and open modal
+    alert("Sending Mobile OTP (demo) - Use OTP: 123456");
+    var mobileOtpModal = new bootstrap.Modal(document.getElementById('mobileOTPModal'));
+    mobileOtpModal.show();
+
+    setTimeout(() => {
+        document.getElementById('resendMobileOtpBtn').disabled = false;
+        document.querySelector("button[onclick='sendMobileOTP()']").disabled = false;
+    }, 30000);
+}
+
+function verifyMobileOTP() {
+    const otp = document.getElementById('mobile_otp').value;
+    if (!otp) {
+        alert("Please enter the OTP.");
+        return;
+    }
+    if (otp === "123456") {
+        alert("Mobile OTP Verified!");
+        isMobileVerified = true;
+        document.getElementById('mobile_otp').disabled = true;
+        document.querySelector("button[onclick='verifyMobileOTP()']").disabled = true;
+        document.getElementById('mobile_otp').style.borderColor = 'green';
+        // Hide modal
+        var mobileOtpModal = bootstrap.Modal.getInstance(document.getElementById('mobileOTPModal'));
+        mobileOtpModal.hide();
+    } else {
+        alert("Incorrect Mobile OTP!");
+    }
+}
+
+function sendEmailOTP() {
+    const email = document.getElementById('email_input').value;
+    if (!email) {
+        alert("Please enter email first.");
+        return;
+    }
+    document.getElementById('resendEmailOtpBtn').disabled = true;
+    document.querySelector("button[onclick='sendEmailOTP()']").disabled = true;
+
+    // DEMO: show alert with demo OTP and open modal
+    alert("Sending Email OTP (demo) - Use OTP: 123456");
+    var emailOtpModal = new bootstrap.Modal(document.getElementById('emailOTPModal'));
+    emailOtpModal.show();
+
+    setTimeout(() => {
+        document.getElementById('resendEmailOtpBtn').disabled = false;
+        document.querySelector("button[onclick='sendEmailOTP()']").disabled = false;
+    }, 30000);
+}
+
+function verifyEmailOTP() {
+    const otp = document.getElementById('email_otp').value;
+    if (!otp) {
+        alert("Please enter the OTP.");
+        return;
+    }
+    if (otp === "123456") {
+        alert("Email OTP Verified!");
+        isEmailVerified = true;
+        document.getElementById('email_otp').disabled = true;
+        document.querySelector("button[onclick='verifyEmailOTP()']").disabled = true;
+        document.getElementById('email_otp').style.borderColor = 'green';
+        // Hide modal
+        var emailOtpModal = bootstrap.Modal.getInstance(document.getElementById('emailOTPModal'));
+        emailOtpModal.hide();
+    } else {
+        alert("Incorrect Email OTP!");
+    }
+}
+
+document.querySelector('form').addEventListener('submit', function(e) {
+    if (!isMobileVerified || !isEmailVerified) {
+        e.preventDefault();
+        alert("Please verify both Mobile and Email OTP before submitting the form.");
+    }
+});
+
+
+
+
+
+</script>
+{% endblock %}

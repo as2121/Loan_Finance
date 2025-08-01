@@ -1,0 +1,26 @@
+{% extends 'AdminApp/layout.html' %}
+
+ {% block content %}
+ <div class="box">
+        <h2 class="text-center font-weight-bold">LOAN FINANCE</h2>
+     <div class="m-3 shadow p-3">
+        <p><strong>Acount Holder Name :</strong>{{name}}</p>
+        <p><strong>Amount:</strong> ₹ {{ amt }}</p>
+        <p><strong>Bank Name:</strong> {{ bank_name }}</p>
+        <p><strong>Acount No:</strong> {{ account_number }}</p>
+        <p><strong>IFSC Code :</strong> {{ ifsc_code }}</p>
+         <center>
+        <a href="/FinanceAdmin/view_disbursed/{{user_id}}"><button class="btn btn-danger ">Pay Later</button></a>
+        <button class="btn btn-success text-center" onclick="fakePay()">🟢 Pay Now</button>
+        </center>
+    </div>
+     </div>
+<script>
+    function fakePay() {
+        alert("✅ Payment successful");
+        window.location.href = "/FinanceAdmin/success/{{ user_id }}";
+    }
+</script>
+
+
+{% endblock %}

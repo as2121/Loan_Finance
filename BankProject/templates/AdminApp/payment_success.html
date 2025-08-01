@@ -1,0 +1,29 @@
+{% extends 'AdminApp/layout.html' %}
+
+ {% block content %}
+
+ <div class="text-center w-50 p-3 rounded-3 bg-warning mx-auto" style="margin-top:200px">
+       <h2>🎉 Payment Done </h2>
+       <h2>/FinanceAdmin/emi/{{ id }} </h2>
+
+
+    <p class="text-danger font-weight-bold  ">Thank you for using our Paytm Gateway!</p>
+      <h6>Redirecting in <span id="countdown">5</span> seconds...</h6>
+ </div>
+<script>
+        let count = 5;
+        const countdownEl = document.getElementById('countdown');
+
+        const interval = setInterval(() => {
+            count--;
+            countdownEl.textContent = count;
+
+            if (count === 0) {
+                clearInterval(interval);
+                // Redirect after countdown
+                window.location.href = "/FinanceAdmin/emi/{{ id }}";
+            }
+        }, 1000);  // 1 second interval
+    </script>
+
+{% endblock %}

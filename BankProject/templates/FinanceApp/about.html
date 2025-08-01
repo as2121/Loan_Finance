@@ -1,0 +1,148 @@
+{% extends 'FinanceApp/layout.html' %}
+{% load static %}
+
+{% block title %}
+<title>Finance-About</title>
+{% endblock title %}
+
+{% block content %}
+<br><br><br>
+<div class="site-section cta-big-image bg-white" id="about-section">
+      <div class="container">
+        <div class="row mb-5 justify-content-center">
+          <div class="col-md-8 text-center">
+            <h2 class="section-title mb-3" data-aos-delay="">About Us</h2>
+            <p class="lead"  data-aos-delay="100">Having too much debt can lead to financial stress and make it difficult to manage existing loans.</p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-lg-6 mb-5"  data-aos-delay="">
+            <figure class="circle-bg">
+            <img src="{% static 'FinanceApp/images/img_2.jpg' %}" class="img-fluid">
+            </figure>
+          </div>
+          <div class="col-lg-5 ml-auto"  >
+
+            <h3 class="text-black mb-4">We Solve Your Financial Problem</h3>
+
+            <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.</p>
+
+            <p>A small river named Duden flows by their place and supplies it with the necessary regelialia. It is a paradisematic country, in which roasted parts of sentences fly into your mouth.</p>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+<section class="site-section mt-0 bg-white">
+      <div class="container">
+
+        <div class="row mb-5 justify-content-center">
+          <div class="col-md-7 text-center">
+            <h2 class="section-title mb-3"  data-aos-delay="">How It Works</h2>
+            <p class="lead"     >If facing foreclosure or repossession, seeking advice from a bankruptcy or foreclosure attorney may help you understand your rights and options, including potential legal.</p>
+          </div>
+        </div>
+
+        <div class="row align-items-lg-center" >
+          <div class="col-lg-6 mb-5" >
+
+            <div class=" slide-one-item-alt">
+              <img src="{% static 'FinanceApp/images/img_1.jpg' %}" alt="Image" class="img-fluid">
+            </div>
+            <div class="custom-direction">
+              <a href="" class="custom-prev"><span><span class="icon-keyboard_backspace"></span></span></a><a href="" class="custom-next"><span><span class="icon-keyboard_backspace"></span></span></a>
+            </div>
+
+          </div>
+          <div class="col-lg-5 ml-auto"  data-aos-delay="100">
+
+            <div class=" slide-one-item-alt-text">
+              <div>
+                <h2 class="section-title mb-3">01. Online Applications</h2>
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Cumque nisi, deserunt necessitatibus odio magnam nihil illum
+                  neque voluptas?</p>
+
+                <p><a href="" class="btn btn-primary mr-2 mb-2">Learn More</a></p>
+              </div>
+
+
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+<section class="site-section border-bottom bg-white" id="team-section">
+      <div class="container">
+        <div class="row mb-5 justify-content-center">
+          <div class="col-md-8 text-center">
+            <h2 class="section-title mb-3"  data-aos-delay="">Meet Team</h2>
+            <p class="lead"  data-aos-delay="100">A small river named Duden flows by their place and supplies it with the necessary regelialia.</p>
+          </div>
+        </div>
+        <div class="row">
+
+
+
+          <div class="col-md-6 col-lg-4 mb-4" data-aos-delay="">
+            <div class="team-member">
+              <figure>
+                <ul class="social">
+                  <li><a href=""><span class="icon-facebook"></span></a></li>
+                  <li><a href=""><span class="icon-twitter"></span></a></li>
+                  <li><a href=""><span class="icon-linkedin"></span></a></li>
+                  <li><a href=""><span class="icon-instagram"></span></a></li>
+                </ul>
+                <img src="{% static 'FinanceApp/images/person_1.jpg' %}" alt="Image" class="img-fluid">
+              </figure>
+              <div class="p-3">
+                <h3>Kaiara Spencer</h3>
+                <span class="position">Accountant</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6 col-lg-4 mb-4" data-aos-delay="100">
+            <div class="team-member">
+              <figure>
+                <ul class="social">
+                  <li><a href="#"><span class="icon-facebook"></span></a></li>
+                  <li><a href="#"><span class="icon-twitter"></span></a></li>
+                  <li><a href="#"><span class="icon-linkedin"></span></a></li>
+                  <li><a href="#"><span class="icon-instagram"></span></a></li>
+                </ul>
+                <img src="{% static 'FinanceApp/images/person_2.jpg' %}" alt="Image" class="img-fluid">
+              </figure>
+              <div class="p-3">
+                <h3>Dave Simpson</h3>
+                <span class="position">Finance Teller</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6 col-lg-4 mb-4"  data-aos-delay="200">
+            <div class="team-member">
+              <figure>
+                <ul class="social">
+                  <li><a href="#"><span class="icon-facebook"></span></a></li>
+                  <li><a href="#"><span class="icon-twitter"></span></a></li>
+                  <li><a href="#"><span class="icon-linkedin"></span></a></li>
+                  <li><a href="#"><span class="icon-instagram"></span></a></li>
+                </ul>
+                <img src="{% static 'FinanceApp/images/person_3.jpg' %}" alt="Image" class="img-fluid">
+              </figure>
+              <div class="p-3">
+                <h3>Ben Thompson</h3>
+                <span class="position">Finance Teller</span>
+              </div>
+            </div>
+          </div>
+
+
+
+        </div>
+      </div>
+    </section>
+
+{% endblock content %}

@@ -1,0 +1,58 @@
+{% extends 'AdminApp/layout.html' %}
+
+ {% block content %}
+
+<h1 class="text-center font-weight-bold text-primary">CONTACT US</h1>
+<div class="container-fluid">
+ <div class="row">
+        <div class="col-md-12 table-responsive">
+        <table border="1" class="table tabel=bordered ">
+            <tr class="table-active">
+                <th>ACTION</th>
+                <th>USER ID</th>
+                <th>USER NAME</th>
+                <th>MOBILE</th>
+                <th>EMAIL</th>
+                <th>SUBJECT</th>
+                <th>MESSAGE</th>
+
+            </tr>
+            {% for contact in contact_object %}
+          <tr>
+              <td>
+                  <a href="/FinanceAdmin/delete_contact/{{contact.id}}" onclick="return confirm('Are You Sure..!')"> <button  class="btn btn-danger m-1"><i class="fa-solid fa-trash"></i></button></a>
+              </td>
+              <td>{{contact.user_id}}</td>
+              <td>{{contact.name}}</td>
+              <td>{{contact.mobile}}</td>
+              <td>{{contact.email}}</td>
+              <td>{{contact.subject}}</td>
+              <td>{{contact.message}}</td>
+
+
+          </tr>
+            {% endfor %}
+             {% if not contact_object %}
+            <tr class="text-center p-5" >
+                <th colspan="10" rowspan="3" >Data Not Found</th>
+            </tr>
+            {% endif %}
+
+        </table>
+
+    </div>
+ </div>
+</div>
+<script>
+  function showMessage(msg){
+     alert(msg)
+  }
+  {% for message in messages %}
+  {% if message %}
+  showMessage('{{message}}')
+  {% endif %}
+  {% endfor %}
+
+</script>
+
+{% endblock %}

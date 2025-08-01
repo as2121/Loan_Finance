@@ -1,0 +1,49 @@
+{% extends 'AdminApp/layout.html' %}
+
+ {% block content %}
+
+<h1 class="text-center font-weight-bold text-primary">LOGIN USERS</h1>
+<div class="container-fluid">
+ <div class="row">
+        <div class="col-md-12 table-responsive">
+        <table class="table tabel=bordered ">
+            <tr class="table-active">
+                <th>ACTION</th>
+                <th>ID</th>
+                <th>USER NAME</th>
+                <th>PASSWORD</th>
+                <th>JOIN DATE </th>
+
+            </tr>
+            {% for user in user_object %}
+          <tr>
+              <td>
+                  <a href="/FinanceAdmin/update/{{user.id}}"><button class="btn btn-primary m-1"><i class="fa-solid fa-pen-to-square"></i></button></a>
+                  <a href="/FinanceAdmin/delete/{{user.id}}" onclick="return confirm('Are You Sure..!')"> <button  class="btn btn-danger m-1"><i class="fa-solid fa-trash"></i></button></a>
+              </td>
+              <td>{{user.id}}</td>
+              <td>{{user.username}}</td>
+              <td>{{user.password}}</td>
+              <td>{{user.date_joined}}</td>
+
+          </tr>
+            {% endfor %}
+
+        </table>
+
+    </div>
+ </div>
+</div>
+<script>
+  function showMessage(msg){
+     alert(msg)
+  }
+  {% for message in messages %}
+  {% if message %}
+  showMessage('{{message}}')
+  {% endif %}
+  {% endfor %}
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends 'FinanceApp/layout.html' %}
+{% block title %}
+<p>finance-emi </p>
+{% endblock %}
+
+{% block content %}
+<div style="height:100vh" >
+ <div class="container">
+  <div class="row justify-content-center">
+   <div style="margin-top:200px" class="col-md-4 bg-light p-4 ">
+     <h2 class="text-primary font-weight-bold ">Pay EMI</h2>
+<p ><b>Loan ID:</b> {{ emi.loan.id }}</p>
+<p ><b>Due Date: </b>{{ emi.due_date }}</p>
+<p  ><b>Amount:</b> ₹{{ emi.emi_amount }}</p>
+
+<form method="post">
+    {% csrf_token %}
+ <button class="btn btn-success" type="submit">Confirm Payment</button>
+</form>
+   </div>
+  </div>
+ </div>
+</div>
+
+
+<script>
+ function showMessage(msg){
+     alert(msg)
+  }
+  {% for message in messages %}
+  {% if message %}
+  showMessage('{{message}}')
+  {% endif %}
+  {% endfor %}
+
+</script>
+{% endblock %}

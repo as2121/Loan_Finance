@@ -1,0 +1,61 @@
+{% extends 'AdminApp/layout.html' %}
+{% block title %}
+<p>Admin- User History </p>
+{% endblock %}
+
+{% block content %}
+<div >
+ <div class="container">
+  <div class="row justify-content-center ">
+   <div class="col-md-12">
+    <h2 class="text-primary mt-5 font-weight-bold">Customer Payment History : </h2>
+<table class="table table-light  table-bordered ">
+    <tr class="table-active">
+        <th>SR NO</th>
+        <th>Due Date</th>
+        <th>Amount</th>
+        <th>Status</th>
+        <th>Action</th>
+    </tr>
+    {% for em in emi %}
+    <tr>
+
+        <td>{{ forloop.counter }}</td>
+        <td>{{ em.due_date }}</td>
+        <td>₹{{ em.emi_amount }}</td>
+        <td>{% if em.is_paid %}Paid on {{ em.payment_date }}{% else %}Pending{% endif %}</td>
+        <td>
+            {% if not em.is_paid %}
+           ❌ Pending
+
+            {% else %}
+            ✅
+            {% endif %}
+                 {% if not emi %}
+            <tr class="text-center p-5" >
+                <th colspan="10" rowspan="3" >Data Not Found</th>
+            </tr>
+            {% endif %}
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+   </div>
+  </div>
+ </div>
+</div>
+
+
+<script>
+ function showMessage(msg){
+     alert(msg)
+  }
+  {% for message in messages %}
+  {% if message %}
+  showMessage('{{message}}')
+  {% endif %}
+  {% endfor %}
+
+</script>
+{% endblock %}

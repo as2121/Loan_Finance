@@ -1,0 +1,64 @@
+{% extends 'AdminApp/layout.html' %}
+{% load static %}
+
+
+
+{% block content %}
+{% load crispy_forms_tags %}
+
+<br>
+<h1 class="text-center font-weight-bold text-primary">Loan Type</h1>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <form method="post" >
+                {% csrf_token %}
+                {{form|crispy}}
+                <center><button class="btn btn-primary" type="submit">Save Loan Type</button></center>
+            </form>
+        </div>
+         <div class="col-md-9 mt-5 table-responsive">
+        <table border="1" class="table tabel=bordered ">
+            <tr class="table-active">
+                <th>ACTION</th>
+
+                <th>NAME</th>
+                <th>INTEREST</th>
+
+            </tr>
+            {% for type in loan_obj %}
+          <tr>
+              <td>
+
+                  <a href="/FinanceAdmin/type/update/{{type.id}}" > <button  class="btn btn-primary m-1"><i class="fa-solid fa-pen-to-square"></i></button></a>
+                  <a href="/FinanceAdmin/type/delete/{{type.id}}" onclick="return confirm('Are You Sure..!')"> <button  class="btn btn-danger m-1"><i class="fa-solid fa-trash"></i></button></a>
+              </td>
+
+              <td>{{type.name}}</td>
+              <td>{{type.interest_rate}}</td>
+
+          </tr>
+            {% endfor %}
+             {% if not loan_obj %}
+            <tr class="text-center p-5" >
+                <th colspan="10" rowspan="3" >Data Not Found</th>
+            </tr>
+            {% endif %}
+
+        </table>
+
+    </div>
+    </div>
+</div>
+<script>
+  function showMessage(msg){
+     alert(msg)
+  }
+  {% for message in messages %}
+  {% if message %}
+  showMessage('{{message}}')
+  {% endif %}
+  {% endfor %}
+
+</script>
+{% endblock %}

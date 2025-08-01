@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FINANCE ADMIN</title>
+  <link rel="stylesheet" href="{% static '/AdminApp/style.css' %}">
+    <script src="https://kit.fontawesome.com/331cd755fd.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
+
+     <style>
+        .box {
+            border: 1px solid #ccc;
+            padding: 25px;
+            width: 500px;
+            margin: auto;
+            margin-top: 100px;
+            text-align: left;
+            font-family: Arial;
+        }
+         strong{
+         color:black;
+
+         }
+    </style>
+
+</head>
+<style>
+    a:hover{
+    font-weight:bold;
+
+    }
+
+</style>
+<body >
+  <div class="wrapper">
+    <!-- Sidebar  -->
+    <nav id="sidebar">
+        <div class="sidebar-header">
+            <h3>FINANCE ADMIN</h3>
+        </div>
+
+        <ul class=" components">
+
+            <li class="active mb-3 ">
+                <a href="/FinanceAdmin/user" >USERS</a>
+            </li>
+              <li class="active mb-3 ">
+                <a href="/FinanceAdmin/type" >LOAN TYPE</a>
+            </li>
+             <li class="active mb-3 ">
+                <a href="/FinanceAdmin/loan">LOAN REQUEST</a>
+            </li>
+             <li class="active mb-3 ">
+                <a href="/FinanceAdmin/approve_loan">APPROVED LOAN FILES</a>
+            </li>
+             <li class="active mb-3 ">
+                <a href="/FinanceAdmin/disbursed">DISBURSED LOAN FILES</a>
+            </li>
+              <li class="active mb-3 ">
+                <a href="/FinanceAdmin/rejected">REJECTED LOAN FILES</a>
+            </li>
+              <li class="active mb-3 ">
+                <a href="/FinanceAdmin/active_loan">ACTIVE LOAN FILES</a>
+            </li>
+              <li class="active mb-3 ">
+                <a href="/FinanceAdmin/emi_history">EMI HISTORY</a>
+            </li>
+             <li class="active mb-3 ">
+                <a href="/FinanceAdmin/contact" >CONTACT US</a>
+            </li>
+             <li class="active mb-3 ">
+                <a href="/FinanceAdmin/logout" > LOGOUT</a>
+            </li>
+        </ul>
+
+
+    </nav>
+
+    <!-- Page Content  -->
+    <div id="content">
+
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-11 display">
+                         <button type="button" id="sidebarCollapse" class="btn btn-info text-right">
+                        <i class="fas fa-align-left"></i>
+                         </button>
+                    </div>
+
+
+                </div>
+
+            </div>
+
+        </nav>
+        {% block content %}
+        <p>Please Overrider</p>
+        {% endblock %}
+
+</div>
+</div>
+  <script src="https://code.jquery.com/jquery-3.7.1.slim.min.js" integrity="sha256-kmHvs0B+OpCW5GVHUNjv9rOmY0IvSIRcf7zGUDTDQM8=" crossorigin="anonymous"></script>
+<script>
+    $(document).ready(function () {
+            $('#sidebarCollapse').on('click', function () {
+                $('#sidebar').toggleClass('active');
+            });
+        });
+</script>
+</body>
+</html>
