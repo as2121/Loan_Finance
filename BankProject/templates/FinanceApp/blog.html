@@ -1,0 +1,592 @@
+{% extends 'FinanceApp/layout.html' %}
+{% load static %}
+
+{% block title %}
+<title>Loan Finance - Blog</title>
+{% endblock title %}
+
+{% block content %}
+
+<style>
+    /* Fix overflow issues */
+    body, html {
+        overflow-x: hidden;
+        max-width: 100%;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .site-section {
+        width: 100%;
+        margin: 0;
+        padding: 0;
+    }
+
+    .container {
+        max-width: 100%;
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    /* Ensure no horizontal overflow */
+    .row {
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    /* Professional Color Grading */
+    .blog-gradient-1 {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    .blog-gradient-2 {
+        background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+    }
+
+    .blog-gradient-3 {
+        background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
+    }
+
+    .blog-gradient-4 {
+        background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
+    }
+
+    /* Card Styles with Fixed Height */
+    .blog-card {
+        border: none;
+        border-radius: 15px;
+        transition: all 0.4s ease;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        height: 380px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .blog-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+    }
+
+    .blog-card-img {
+        height: 160px;
+        object-fit: cover;
+        width: 100%;
+        flex-shrink: 0;
+        background-color: #f8f9fa;
+    }
+
+    .blog-card-body {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        padding: 1.5rem;
+    }
+
+    .blog-card-content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* Interest Rate Badge */
+    .interest-badge {
+        background: rgba(255, 255, 255, 0.2);
+        padding: 6px 15px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        margin-bottom: 10px;
+        display: inline-block;
+    }
+
+    /* Modal Styles */
+    .blog-modal .modal-content {
+        border: none;
+        border-radius: 20px;
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+        margin-top: 80px;
+    }
+
+    .blog-modal .modal-header {
+        border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+        backdrop-filter: blur(10px);
+    }
+
+    .blog-modal .modal-body {
+        padding: 2rem;
+        background: white;
+    }
+
+    /* Close Button */
+    .modal-close-btn {
+        background: rgba(255, 255, 255, 0.2);
+        border: none;
+        border-radius: 50%;
+        width: 35px;
+        height: 35px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        color: white;
+        transition: all 0.3s ease;
+    }
+
+    .modal-close-btn:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: rotate(90deg);
+    }
+
+    /* Professional Typography */
+    .professional-title {
+        font-weight: 700;
+        letter-spacing: -0.5px;
+    }
+
+    .professional-subtitle {
+        font-weight: 300;
+        line-height: 1.6;
+    }
+
+    /* Button Styles */
+    .btn-premium {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        border-radius: 8px;
+        padding: 10px 25px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        color: white;
+        font-size: 0.9rem;
+        margin-top: auto;
+    }
+
+    .btn-premium:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        color: white;
+    }
+
+    .btn-light-custom {
+        background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+        border: none;
+        border-radius: 8px;
+        padding: 10px 25px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        color: #333;
+        font-size: 0.9rem;
+        margin-top: auto;
+    }
+
+    .btn-light-custom:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        color: #333;
+    }
+
+    /* Document List */
+    .document-list {
+        list-style: none;
+        padding: 0;
+    }
+
+    .document-list li {
+        padding: 8px 0;
+        border-bottom: 1px solid #eee;
+    }
+
+    .document-list li:last-child {
+        border-bottom: none;
+    }
+
+    /* Ensure equal height for all cards */
+    .blog-row {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .blog-col {
+        display: flex;
+        margin-bottom: 2rem;
+    }
+</style>
+
+<br><br><br>
+
+<!-- Blog Hero Section -->
+<div class="site-section py-5" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+  <div class="container">
+    <div class="row justify-content-center text-center mx-0">
+      <div class="col-md-10">
+        <h1 class="professional-title text-white mb-4" data-aos="fade-down">Simple Loan Solutions</h1>
+        <p class="lead professional-subtitle text-white mb-4" data-aos="fade-up">
+          Get easy loans with minimal documentation. Only Aadhar, PAN, Photo and Signature required.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Blog Section -->
+<section class="site-section py-5" style="background: linear-gradient(to bottom, #f8f9fa, #e9ecef);" id="blog-section">
+  <div class="container">
+    <div class="row mb-5 justify-content-center text-center mx-0">
+      <div class="col-md-8">
+        <h2 class="section-title professional-title mb-3" data-aos="fade-down">Our Loan Types</h2>
+        <p class="lead professional-subtitle" data-aos="fade-up">Simple documentation - Quick approval</p>
+      </div>
+    </div>
+
+    <div class="row blog-row mx-0">
+      <!-- Personal Loan Card -->
+      <div class="col-md-6 col-lg-4 blog-col" data-aos="fade-up">
+        <div class="blog-card w-100">
+          <img src="{% static 'FinanceApp/images/personal.jpg'%}"
+               alt="Personal Loan" class="blog-card-img">
+          <div class="blog-card-body text-white blog-gradient-1">
+            <div class="blog-card-content">
+              <span class="interest-badge">Interest: 8% - 15%</span>
+              <h5 class="card-title professional-title">Personal Loan</h5>
+              <p class="card-text">For medical expenses, travel, weddings or any personal needs.</p>
+              <button class="btn btn-light-custom" data-bs-toggle="modal" data-bs-target="#personalLoanModal">Learn More</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Home Loan Card -->
+      <div class="col-md-6 col-lg-4 blog-col" data-aos="fade-up" data-aos-delay="100">
+        <div class="blog-card w-100">
+          <img src="{% static 'FinanceApp/images/home.jpg'%}"
+               alt="Home Loan" class="blog-card-img">
+          <div class="blog-card-body text-dark blog-gradient-2">
+            <div class="blog-card-content">
+              <span class="interest-badge">Interest: 15% - 20%</span>
+              <h5 class="card-title professional-title">Home Loan</h5>
+              <p class="card-text">Buy or renovate your home with affordable loan options.</p>
+              <button class="btn btn-premium" data-bs-toggle="modal" data-bs-target="#homeLoanModal">Learn More</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Gold Loan Card -->
+      <div class="col-md-6 col-lg-4 blog-col" data-aos="fade-up" data-aos-delay="200">
+        <div class="blog-card w-100">
+          <img src="{% static 'FinanceApp/images/gold.jpg'%}"
+               alt="Gold Loan" class="blog-card-img">
+          <div class="blog-card-body text-white blog-gradient-3">
+            <div class="blog-card-content">
+              <span class="interest-badge">Interest: 11% - 14%</span>
+              <h5 class="card-title professional-title">Gold Loan</h5>
+              <p class="card-text">Get instant cash against your gold ornaments.</p>
+              <button class="btn btn-light-custom" data-bs-toggle="modal" data-bs-target="#goldLoanModal">Learn More</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Car Loan Card -->
+      <div class="col-md-6 col-lg-4 blog-col" data-aos="fade-up">
+        <div class="blog-card w-100">
+          <img src="{% static 'FinanceApp/images/car.jpg'%}"
+               alt="Car Loan" class="blog-card-img">
+          <div class="blog-card-body text-dark blog-gradient-4">
+            <div class="blog-card-content">
+              <span class="interest-badge">Interest: 7% - 12 %</span>
+              <h5 class="card-title professional-title">Car Loan</h5>
+              <p class="card-text">Drive your dream car with easy financing options.</p>
+              <button class="btn btn-premium" data-bs-toggle="modal" data-bs-target="#carLoanModal">Learn More</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Education Loan Card -->
+      <div class="col-md-6 col-lg-4 blog-col" data-aos="fade-up" data-aos-delay="100">
+        <div class="blog-card w-100">
+          <img src="{% static 'FinanceApp/images/education.jpg'%}"
+               alt="Education Loan" class="blog-card-img">
+          <div class="blog-card-body text-white blog-gradient-1">
+            <div class="blog-card-content">
+              <span class="interest-badge">Interest: 5% - 8%</span>
+              <h5 class="card-title professional-title">Education Loan</h5>
+              <p class="card-text">Invest in your education for a better future.</p>
+              <button class="btn btn-light-custom" data-bs-toggle="modal" data-bs-target="#educationLoanModal">Learn More</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Business Loan Card -->
+      <div class="col-md-6 col-lg-4 blog-col" data-aos="fade-up" data-aos-delay="200">
+        <div class="blog-card w-100">
+          <img src="{% static 'FinanceApp/images/buisness.jpg'%}"
+               alt="Business Loan" class="blog-card-img">
+          <div class="blog-card-body text-dark blog-gradient-2">
+            <div class="blog-card-content">
+              <span class="interest-badge">Interest: 20% - 25%</span>
+              <h5 class="card-title professional-title">Business Loan</h5>
+              <p class="card-text">Grow your business with working capital loans.</p>
+              <button class="btn btn-premium" data-bs-toggle="modal" data-bs-target="#businessLoanModal">Learn More</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Loan Modals -->
+<!-- Personal Loan Modal -->
+<div class="modal fade blog-modal" id="personalLoanModal" tabindex="-1" aria-labelledby="personalLoanModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header text-white blog-gradient-1">
+        <h5 class="modal-title professional-title" id="personalLoanModalLabel">Personal Loan</h5>
+        <button type="button" class="modal-close-btn" data-bs-dismiss="modal" aria-label="Close">
+          ×
+        </button>
+      </div>
+      <div class="modal-body">
+        <h6 class="text-primary">Interest Rate: 10% - 15% per annum</h6>
+        <p>Quick personal loans for your immediate needs without any collateral.</p>
+
+        <h6 class="text-primary mt-4">Documents Required:</h6>
+        <ul class="document-list">
+          <li>✓ Aadhar Card</li>
+          <li>✓ PAN Card</li>
+          <li>✓ Passport Size Photo</li>
+          <li>✓ Signature</li>
+        </ul>
+
+        <h6 class="text-primary mt-4">Features:</h6>
+        <ul>
+          <li>No collateral required</li>
+          <li>24-48 hour approval</li>
+          <li>Flexible repayment options</li>
+          <li>Minimal documentation</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Home Loan Modal -->
+<div class="modal fade blog-modal" id="homeLoanModal" tabindex="-1" aria-labelledby="homeLoanModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header text-white blog-gradient-2">
+        <h5 class="modal-title professional-title" id="homeLoanModalLabel">Home Loan</h5>
+        <button type="button" class="modal-close-btn" data-bs-dismiss="modal" aria-label="Close">
+          ×
+        </button>
+      </div>
+      <div class="modal-body">
+        <h6 class="text-primary">Interest Rate: 8% - 12% per annum</h6>
+        <p>Affordable home loans for buying or renovating your property.</p>
+
+        <h6 class="text-primary mt-4">Documents Required:</h6>
+        <ul class="document-list">
+          <li>✓ Aadhar Card</li>
+          <li>✓ PAN Card</li>
+          <li>✓ Passport Size Photo</li>
+          <li>✓ Signature</li>
+          <li>✓ Property Documents</li>
+        </ul>
+
+        <h6 class="text-primary mt-4">Features:</h6>
+        <ul>
+          <li>Long repayment tenure (up to 20 years)</li>
+          <li>Tax benefits available</li>
+          <li>Low interest rates</li>
+          <li>Property insurance options</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Gold Loan Modal -->
+<div class="modal fade blog-modal" id="goldLoanModal" tabindex="-1" aria-labelledby="goldLoanModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header text-white blog-gradient-3">
+        <h5 class="modal-title professional-title" id="goldLoanModalLabel">Gold Loan</h5>
+        <button type="button" class="modal-close-btn" data-bs-dismiss="modal" aria-label="Close">
+          ×
+        </button>
+      </div>
+      <div class="modal-body">
+        <h6 class="text-primary">Interest Rate: 9% - 14% per annum</h6>
+        <p>Instant cash against your gold ornaments with complete safety.</p>
+
+        <h6 class="text-primary mt-4">Documents Required:</h6>
+        <ul class="document-list">
+          <li>✓ Aadhar Card</li>
+          <li>✓ PAN Card</li>
+          <li>✓ Passport Size Photo</li>
+          <li>✓ Signature</li>
+        </ul>
+
+        <h6 class="text-primary mt-4">Features:</h6>
+        <ul>
+          <li>Instant disbursal (2-4 hours)</li>
+          <li>Safe gold storage with insurance</li>
+          <li>No income proof required</li>
+          <li>Flexible repayment options</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Car Loan Modal -->
+<div class="modal fade blog-modal" id="carLoanModal" tabindex="-1" aria-labelledby="carLoanModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header text-white blog-gradient-4">
+        <h5 class="modal-title professional-title" id="carLoanModalLabel">Car Loan</h5>
+        <button type="button" class="modal-close-btn" data-bs-dismiss="modal" aria-label="Close">
+          ×
+        </button>
+      </div>
+      <div class="modal-body">
+        <h6 class="text-primary">Interest Rate: 7% - 11% per annum</h6>
+        <p>Easy car financing for both new and used vehicles.</p>
+
+        <h6 class="text-primary mt-4">Documents Required:</h6>
+        <ul class="document-list">
+          <li>✓ Aadhar Card</li>
+          <li>✓ PAN Card</li>
+          <li>✓ Passport Size Photo</li>
+          <li>✓ Signature</li>
+          <li>✓ Driving License</li>
+        </ul>
+
+        <h6 class="text-primary mt-4">Features:</h6>
+        <ul>
+          <li>Fast approval process</li>
+          <li>Competitive interest rates</li>
+          <li>Insurance assistance</li>
+          <li>Online application available</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Education Loan Modal -->
+<div class="modal fade blog-modal" id="educationLoanModal" tabindex="-1" aria-labelledby="educationLoanModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header text-white blog-gradient-1">
+        <h5 class="modal-title professional-title" id="educationLoanModalLabel">Education Loan</h5>
+        <button type="button" class="modal-close-btn" data-bs-dismiss="modal" aria-label="Close">
+          ×
+        </button>
+      </div>
+      <div class="modal-body">
+        <h6 class="text-primary">Interest Rate: 8% - 13% per annum</h6>
+        <p>Support your educational goals with our student loan programs.</p>
+
+        <h6 class="text-primary mt-4">Documents Required:</h6>
+        <ul class="document-list">
+          <li>✓ Aadhar Card</li>
+          <li>✓ PAN Card</li>
+          <li>✓ Passport Size Photo</li>
+          <li>✓ Signature</li>
+          <li>✓ Admission Proof</li>
+        </ul>
+
+        <h6 class="text-primary mt-4">Features:</h6>
+        <ul>
+          <li>Moratorium period available</li>
+          <li>Covers tuition and living expenses</li>
+          <li>Long repayment tenure</li>
+          <li>Collateral free for smaller amounts</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Business Loan Modal -->
+<div class="modal fade blog-modal" id="businessLoanModal" tabindex="-1" aria-labelledby="businessLoanModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header text-white blog-gradient-2">
+        <h5 class="modal-title professional-title" id="businessLoanModalLabel">Business Loan</h5>
+        <button type="button" class="modal-close-btn" data-bs-dismiss="modal" aria-label="Close">
+          ×
+        </button>
+      </div>
+      <div class="modal-body">
+        <h6 class="text-primary">Interest Rate: 11% - 16% per annum</h6>
+        <p>Grow your business with our working capital and expansion loans.</p>
+
+        <h6 class="text-primary mt-4">Documents Required:</h6>
+        <ul class="document-list">
+          <li>✓ Aadhar Card</li>
+          <li>✓ PAN Card</li>
+          <li>✓ Passport Size Photo</li>
+          <li>✓ Signature</li>
+          <li>✓ Business Proof</li>
+        </ul>
+
+        <h6 class="text-primary mt-4">Features:</h6>
+        <ul>
+          <li>Quick disbursal within 3 days</li>
+          <li>Flexible repayment options</li>
+          <li>Minimal documentation</li>
+          <li>Business advisory support</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- AOS Animations -->
+<link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+<script>
+  AOS.init({
+    duration: 1000,
+    once: true
+  });
+
+  document.addEventListener('DOMContentLoaded', function() {
+    document.body.style.overflowX = 'hidden';
+    document.documentElement.style.overflowX = 'hidden';
+  });
+  // Safe smooth scrolling for section links
+    document.addEventListener('DOMContentLoaded', function() {
+        // Only apply smooth scrolling to links that point to actual sections
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            const href = anchor.getAttribute('href');
+
+            // Skip if it's just "#" or if it's a dropdown link
+            if (href === '#' || href === '#!' || anchor.closest('.dropdown')) {
+                return;
+            }
+
+            // Only apply to actual section links
+            if (href && href.length > 1) {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetElement = document.querySelector(href);
+                    if (targetElement) {
+                        targetElement.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            }
+        });
+    });
+</script>
+
+{% endblock content %}

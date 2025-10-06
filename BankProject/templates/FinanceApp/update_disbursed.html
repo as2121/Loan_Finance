@@ -1,0 +1,26 @@
+{% extends 'FinanceApp/layout.html'%}
+{% load static %}
+
+{% block title %}
+<title>Finance-update</title>
+{% endblock title %}
+
+{% block content %}
+{% load crispy_forms_tags %}
+<br><br><br><br>
+<br>
+<h1 class="text-center font-weight-bold text-primary">Update Disursed File</h1>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6 p-5 rounded-3" style="background-color:rgba(255, 255, 255,0.8)">
+            <form method="post" >
+                {% csrf_token %}
+                {{form|crispy}}
+                <center><button class="btn btn-primary" type="submit">Save Disbursed</button></center>
+            </form>
+        </div>
+    </div>
+</div>
+<br><br><br><br>
+
+{% endblock %}

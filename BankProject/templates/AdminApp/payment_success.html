@@ -1,0 +1,497 @@
+{% extends 'AdminApp/layout.html' %}
+
+{% block content %}
+<style>
+    /* Professional Color Grading */
+    :root {
+        --primary: #667eea;
+        --primary-dark: #764ba2;
+        --secondary: #4facfe;
+        --secondary-dark: #00f2fe;
+        --success: #43e97b;
+        --success-dark: #38f9d7;
+        --warning: #feca57;
+        --warning-dark: #ff9ff3;
+        --dark: #2c3e50;
+        --light: #f8f9fa;
+        --muted: #6c757d;
+    }
+
+    /* Base Styles */
+    body {
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+        font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+    }
+
+    /* Success Card */
+    .success-container {
+        width: 100%;
+        max-width: 500px;
+        margin: 0 auto;
+    }
+
+    .success-card {
+        position: relative;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        border-radius: 24px;
+        padding: 50px 40px;
+        text-align: center;
+        box-shadow: 0 25px 80px rgba(0, 0, 0, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        overflow: hidden;
+        animation: cardEntrance 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    /* Background Animation */
+    .success-card::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle at center,
+            rgba(67, 233, 123, 0.1) 0%,
+            rgba(56, 249, 215, 0.05) 30%,
+            transparent 70%);
+        animation: pulse 6s ease-in-out infinite;
+        z-index: 0;
+    }
+
+    .success-content {
+        position: relative;
+        z-index: 2;
+    }
+
+    /* Success Icon */
+    .success-icon {
+        width: 100px;
+        height: 100px;
+        background: linear-gradient(135deg, var(--success), var(--success-dark));
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 30px;
+        color: white;
+        font-size: 40px;
+        box-shadow: 0 15px 40px rgba(67, 233, 123, 0.3);
+        animation: iconPop 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) 0.3s both;
+    }
+
+    /* Typography */
+    .success-title {
+        font-size: 2.5rem;
+        font-weight: 800;
+        background: linear-gradient(135deg, var(--success), var(--success-dark));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin: 0 0 15px 0;
+        animation: textSlideUp 0.6s ease 0.4s both;
+    }
+
+    .success-subtitle {
+        font-size: 1.2rem;
+        color: var(--dark);
+        font-weight: 600;
+        margin: 0 0 20px 0;
+        animation: textSlideUp 0.6s ease 0.5s both;
+    }
+
+    .success-message {
+        font-size: 1rem;
+        color: var(--muted);
+        line-height: 1.6;
+        margin: 0 0 30px 0;
+        animation: textSlideUp 0.6s ease 0.6s both;
+    }
+
+    /* Countdown */
+    .countdown-container {
+        background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+        border-radius: 15px;
+        padding: 20px;
+        margin: 30px 0;
+        animation: textSlideUp 0.6s ease 0.7s both;
+    }
+
+    .countdown-text {
+        font-size: 1rem;
+        color: var(--dark);
+        font-weight: 500;
+        margin: 0 0 10px 0;
+    }
+
+    .countdown-number {
+        font-size: 2rem;
+        font-weight: 800;
+        color: var(--primary);
+        animation: countdownPulse 1s ease-in-out infinite;
+    }
+
+    /* Transaction Details */
+    .transaction-details {
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.3));
+        border-radius: 15px;
+        padding: 20px;
+        margin: 25px 0;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        animation: textSlideUp 0.6s ease 0.8s both;
+    }
+
+    .detail-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 0;
+        border-bottom: 1px solid rgba(102, 126, 234, 0.1);
+    }
+
+    .detail-item:last-child {
+        border-bottom: none;
+    }
+
+    .detail-label {
+        color: var(--muted);
+        font-weight: 500;
+        font-size: 0.9rem;
+    }
+
+    .detail-value {
+        color: var(--dark);
+        font-weight: 600;
+        font-size: 0.95rem;
+    }
+
+    /* Loading Bar */
+    .loading-bar {
+        width: 100%;
+        height: 6px;
+        background: rgba(102, 126, 234, 0.2);
+        border-radius: 3px;
+        overflow: hidden;
+        margin: 20px 0;
+        animation: textSlideUp 0.6s ease 0.9s both;
+    }
+
+    .loading-progress {
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, var(--success), var(--success-dark));
+        border-radius: 3px;
+        animation: loadingFill 3s linear forwards;
+        transform-origin: left;
+    }
+
+    /* Manual Redirect */
+    .manual-redirect {
+        margin-top: 25px;
+        animation: textSlideUp 0.6s ease 1s both;
+    }
+
+    .redirect-btn {
+        background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+        color: white;
+        border: none;
+        border-radius: 12px;
+        padding: 12px 30px;
+        font-weight: 600;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .redirect-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4);
+    }
+
+    /* Animations */
+    @keyframes cardEntrance {
+        from {
+            opacity: 0;
+            transform: translateY(50px) scale(0.9);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+    }
+
+    @keyframes iconPop {
+        0% {
+            opacity: 0;
+            transform: scale(0) rotate(-180deg);
+        }
+        70% {
+            transform: scale(1.1) rotate(10deg);
+        }
+        100% {
+            opacity: 1;
+            transform: scale(1) rotate(0);
+        }
+    }
+
+    @keyframes textSlideUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes pulse {
+        0%, 100% {
+            opacity: 0.6;
+            transform: scale(1);
+        }
+        50% {
+            opacity: 0.8;
+            transform: scale(1.05);
+        }
+    }
+
+    @keyframes countdownPulse {
+        0%, 100% {
+            transform: scale(1);
+            color: var(--primary);
+        }
+        50% {
+            transform: scale(1.1);
+            color: var(--success);
+        }
+    }
+
+    @keyframes loadingFill {
+        0% {
+            transform: scaleX(0);
+        }
+        100% {
+            transform: scaleX(1);
+        }
+    }
+
+    /* Confetti Effect */
+    .confetti {
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        background: var(--success);
+        opacity: 0;
+        animation: confettiFall 3s ease-in-out forwards;
+    }
+
+    @keyframes confettiFall {
+        0% {
+            opacity: 1;
+            transform: translateY(-100px) rotate(0deg);
+        }
+        100% {
+            opacity: 0;
+            transform: translateY(500px) rotate(720deg);
+        }
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        body {
+            padding: 15px;
+        }
+
+        .success-card {
+            padding: 40px 25px;
+            border-radius: 20px;
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            font-size: 32px;
+            margin-bottom: 25px;
+        }
+
+        .success-title {
+            font-size: 2rem;
+        }
+
+        .success-subtitle {
+            font-size: 1.1rem;
+        }
+
+        .countdown-number {
+            font-size: 1.8rem;
+        }
+
+        .transaction-details {
+            padding: 15px;
+        }
+
+        .detail-item {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 5px;
+        }
+
+        .detail-value {
+            font-size: 1rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .success-card {
+            padding: 30px 20px;
+        }
+
+        .success-title {
+            font-size: 1.8rem;
+        }
+
+        .success-icon {
+            width: 70px;
+            height: 70px;
+            font-size: 28px;
+        }
+
+        .countdown-container {
+            padding: 15px;
+        }
+    }
+</style>
+
+<div class="success-container">
+    <div class="success-card">
+        <!-- Success Icon -->
+        <div class="success-content">
+            <div class="success-icon">
+                ✓
+            </div>
+
+            <!-- Main Title -->
+            <h1 class="success-title">Payment Successful!</h1>
+
+            <!-- Subtitle -->
+            <p class="success-subtitle">Thank you for your payment</p>
+
+            <!-- Message -->
+            <p class="success-message">
+                Your transaction has been processed successfully. You will be redirected to your EMI dashboard shortly.
+            </p>
+
+            <!-- Transaction Details -->
+            <div class="transaction-details">
+                <div class="detail-item">
+                    <span class="detail-label">Transaction ID:</span>
+                    <span class="detail-value">TXN_{{ id }}_{{ random_number }}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Status:</span>
+                    <span class="detail-value" style="color: var(--success);">Completed</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Payment Method:</span>
+                    <span class="detail-value">Demo Payment Gateway</span>
+                </div>
+            </div>
+
+            <!-- Countdown -->
+            <div class="countdown-container">
+                <div class="countdown-text">Redirecting to EMI Dashboard in</div>
+                <div class="countdown-number" id="countdown">3</div>
+            </div>
+
+            <!-- Loading Bar -->
+            <div class="loading-bar">
+                <div class="loading-progress"></div>
+            </div>
+
+            <!-- Manual Redirect Button -->
+            <div class="manual-redirect">
+                <button class="redirect-btn" id="manualRedirect">
+                    <i class="fas fa-rocket"></i>
+                    Continue Now
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Font Awesome -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const countdownEl = document.getElementById('countdown');
+    const manualRedirectBtn = document.getElementById('manualRedirect');
+    let count = 3;
+
+    // Create confetti effect
+    function createConfetti() {
+        const colors = ['#43e97b', '#38f9d7', '#667eea', '#764ba2', '#4facfe', '#00f2fe'];
+        const card = document.querySelector('.success-card');
+
+        for (let i = 0; i < 30; i++) {
+            const confetti = document.createElement('div');
+            confetti.className = 'confetti';
+            confetti.style.left = Math.random() * 100 + '%';
+            confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+            confetti.style.animationDelay = Math.random() * 2 + 's';
+            confetti.style.width = Math.random() * 10 + 5 + 'px';
+            confetti.style.height = Math.random() * 10 + 5 + 'px';
+            card.appendChild(confetti);
+        }
+    }
+
+    // Start countdown
+    const countdownInterval = setInterval(() => {
+        count--;
+        countdownEl.textContent = count;
+
+        if (count === 0) {
+            clearInterval(countdownInterval);
+            redirectToEMI();
+        }
+    }, 1000);
+
+    // Manual redirect function
+    function redirectToEMI() {
+        window.location.href = "/FinanceAdmin/emi/{{ id }}";
+    }
+
+    // Manual redirect button
+    manualRedirectBtn.addEventListener('click', function() {
+        this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Redirecting...';
+        this.disabled = true;
+        redirectToEMI();
+    });
+
+    // Create confetti on load
+    setTimeout(createConfetti, 500);
+
+    // Add keyboard support
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+            redirectToEMI();
+        }
+    });
+});
+
+// Generate random number for transaction ID
+const random_number = Math.floor(100000 + Math.random() * 900000);
+</script>
+
+{% endblock %}

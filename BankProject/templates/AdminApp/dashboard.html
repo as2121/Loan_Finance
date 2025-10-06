@@ -1,0 +1,958 @@
+{% extends 'AdminApp/layout.html' %}
+{% load static %}
+
+{% block title %}
+<title>Admin Dashboard - Loan Management System</title>
+{% endblock %}
+
+{% block content %}
+<style>
+    /* Professional Dark Theme Color Grading */
+    :root {
+        --bg-primary: #0f1424;
+        --bg-secondary: #1a2035;
+        --bg-card: #1e273d;
+        --bg-glass: rgba(255, 255, 255, 0.05);
+        --accent-primary: #667eea;
+        --accent-secondary: #764ba2;
+        --accent-success: #43e97b;
+        --accent-warning: #feca57;
+        --accent-danger: #ff6b6b;
+        --accent-info: #4facfe;
+        --text-primary: #ffffff;
+        --text-secondary: #a0a7c2;
+        --text-muted: #6c7592;
+        --border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    /* Dashboard Container with Animated Background */
+    .dashboard-container {
+        background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 50%, #0d1220 100%);
+        min-height: 100vh;
+        padding: 20px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    /* Animated Background Elements */
+    .dashboard-container::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background:
+            radial-gradient(circle at 20% 80%, rgba(102, 126, 234, 0.1) 0%, transparent 50%),
+            radial-gradient(circle at 80% 20%, rgba(118, 75, 162, 0.08) 0%, transparent 50%),
+            radial-gradient(circle at 40% 40%, rgba(67, 233, 123, 0.05) 0%, transparent 50%);
+        animation: float 15s ease-in-out infinite;
+        z-index: 0;
+    }
+
+    @keyframes float {
+        0%, 100% { transform: translate(0px, 0px) rotate(0deg); }
+        33% { transform: translate(30px, -30px) rotate(120deg); }
+        66% { transform: translate(-20px, 20px) rotate(240deg); }
+    }
+
+    /* Header with Glass Morphism */
+    .dashboard-header {
+        background: var(--bg-glass);
+        backdrop-filter: blur(20px);
+        border: 1px solid var(--border-color);
+        border-radius: 25px;
+        padding: 30px;
+        margin-bottom: 30px;
+        position: relative;
+        z-index: 2;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        animation: slideDown 0.8s ease-out;
+    }
+
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-50px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .dashboard-title {
+        font-weight: 700;
+        font-size: 2.8rem;
+        background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent-primary) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin: 0;
+        text-align: center;
+    }
+
+    .dashboard-subtitle {
+        text-align: center;
+        color: var(--text-secondary);
+        font-weight: 300;
+        margin-top: 12px;
+        font-size: 1.2rem;
+    }
+
+    /* Stats Grid with Glass Cards */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 25px;
+        margin-bottom: 30px;
+        position: relative;
+        z-index: 2;
+    }
+
+    .stat-card {
+        background: var(--bg-glass);
+        backdrop-filter: blur(20px);
+        border: 1px solid var(--border-color);
+        border-radius: 20px;
+        padding: 30px;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        animation: cardAppear 0.6s ease-out;
+    }
+
+    @keyframes cardAppear {
+        from {
+            opacity: 0;
+            transform: scale(0.8) translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+        }
+    }
+
+    .stat-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+        transform: scaleX(0);
+        transition: transform 0.4s ease;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-10px) scale(1.02);
+        border-color: var(--accent-primary);
+        box-shadow:
+            0 20px 40px rgba(0, 0, 0, 0.4),
+            0 0 0 1px rgba(102, 126, 234, 0.1);
+    }
+
+    .stat-card:hover::before {
+        transform: scaleX(1);
+    }
+
+    .stat-card:nth-child(1) { animation-delay: 0.1s; }
+    .stat-card:nth-child(2) { animation-delay: 0.2s; }
+    .stat-card:nth-child(3) { animation-delay: 0.3s; }
+    .stat-card:nth-child(4) { animation-delay: 0.4s; }
+
+    .stat-icon {
+        width: 80px;
+        height: 80px;
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 32px;
+        margin-bottom: 20px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .stat-icon::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+        opacity: 0.8;
+        border-radius: 20px;
+    }
+
+    .stat-icon i {
+        position: relative;
+        z-index: 2;
+        color: white;
+    }
+
+    .stat-number {
+        font-size: 3.2rem;
+        font-weight: 800;
+        color: var(--text-primary);
+        line-height: 1;
+        margin-bottom: 10px;
+        background: linear-gradient(135deg, var(--text-primary), var(--accent-primary));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .stat-label {
+        color: var(--text-secondary);
+        font-weight: 600;
+        font-size: 1.1rem;
+        margin-bottom: 15px;
+    }
+
+    .stat-trend {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        padding: 8px 16px;
+        background: var(--bg-glass);
+        border-radius: 12px;
+        border: 1px solid var(--border-color);
+    }
+
+    .trend-up { color: var(--accent-success); }
+    .trend-down { color: var(--accent-danger); }
+
+    /* Analytics Grid */
+    .analytics-grid {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 25px;
+        margin-bottom: 30px;
+        position: relative;
+        z-index: 2;
+    }
+
+    @media (max-width: 1200px) {
+        .analytics-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .chart-card, .status-card {
+        background: var(--bg-glass);
+        backdrop-filter: blur(20px);
+        border: 1px solid var(--border-color);
+        border-radius: 20px;
+        padding: 30px;
+        animation: slideUp 0.8s ease-out;
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(50px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .chart-card { animation-delay: 0.5s; }
+    .status-card { animation-delay: 0.6s; }
+
+    .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 25px;
+    }
+
+    .card-title {
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .card-title i {
+        color: var(--accent-primary);
+    }
+
+    /* Status Cards */
+    .status-grid {
+        display: grid;
+        gap: 15px;
+    }
+
+    .status-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px;
+        background: var(--bg-glass);
+        border: 1px solid var(--border-color);
+        border-radius: 15px;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .status-item::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 4px;
+        background: var(--accent-warning);
+        transition: width 0.3s ease;
+    }
+
+    .status-item:hover::before {
+        width: 8px;
+    }
+
+    .status-item:hover {
+        transform: translateX(10px);
+        border-color: var(--accent-primary);
+    }
+
+    .status-approved::before { background: var(--accent-success); }
+    .status-rejected::before { background: var(--accent-danger); }
+
+    .status-info h4 {
+        margin: 0 0 5px 0;
+        font-weight: 600;
+        color: var(--text-primary);
+    }
+
+    .status-info p {
+        margin: 0;
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+    }
+
+    .status-value {
+        font-size: 2rem;
+        font-weight: 800;
+    }
+
+    .status-pending .status-value { color: var(--accent-warning); }
+    .status-approved .status-value { color: var(--accent-success); }
+    .status-rejected .status-value { color: var(--accent-danger); }
+
+    /* Recent Activities */
+    .activities-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 25px;
+        margin-bottom: 30px;
+        position: relative;
+        z-index: 2;
+    }
+
+    @media (max-width: 968px) {
+        .activities-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .activity-card {
+        background: var(--bg-glass);
+        backdrop-filter: blur(20px);
+        border: 1px solid var(--border-color);
+        border-radius: 20px;
+        padding: 30px;
+        animation: slideUp 0.8s ease-out;
+    }
+
+    .activity-card:nth-child(1) { animation-delay: 0.7s; }
+    .activity-card:nth-child(2) { animation-delay: 0.8s; }
+
+    .activity-list {
+        max-height: 400px;
+        overflow-y: auto;
+    }
+
+    .activity-item {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding: 15px;
+        border-bottom: 1px solid var(--border-color);
+        transition: all 0.3s ease;
+        border-radius: 12px;
+        margin-bottom: 8px;
+    }
+
+    .activity-item:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+    }
+
+    .activity-item:hover {
+        background: var(--bg-glass);
+        border-color: var(--accent-primary);
+        transform: translateX(5px);
+    }
+
+    .activity-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        color: white;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .activity-icon::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+        opacity: 0.8;
+        border-radius: 12px;
+    }
+
+    .activity-icon i {
+        position: relative;
+        z-index: 2;
+    }
+
+    .activity-content {
+        flex: 1;
+    }
+
+    .activity-title {
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 5px;
+    }
+
+    .activity-desc {
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+        margin-bottom: 5px;
+    }
+
+    .activity-time {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+    }
+
+    /* Quick Actions with Glow Effect */
+    .quick-actions {
+        background: var(--bg-glass);
+        backdrop-filter: blur(20px);
+        border: 1px solid var(--border-color);
+        border-radius: 20px;
+        padding: 30px;
+        margin-bottom: 30px;
+        position: relative;
+        z-index: 2;
+        animation: slideUp 0.8s ease-out;
+        animation-delay: 0.9s;
+    }
+
+    .actions-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin-top: 20px;
+    }
+
+    .action-btn {
+        background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+        color: white;
+        border: none;
+        border-radius: 15px;
+        padding: 25px 20px;
+        text-align: center;
+        text-decoration: none;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .action-btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+        transition: left 0.5s;
+    }
+
+    .action-btn:hover {
+        transform: translateY(-8px) scale(1.05);
+        box-shadow:
+            0 20px 40px rgba(102, 126, 234, 0.3),
+            0 0 80px rgba(102, 126, 234, 0.2);
+        text-decoration: none;
+        color: white;
+    }
+
+    .action-btn:hover::before {
+        left: 100%;
+    }
+
+    .action-icon {
+        font-size: 2.2rem;
+        margin-bottom: 5px;
+    }
+
+    .action-text {
+        font-weight: 600;
+        font-size: 1rem;
+    }
+
+    /* Chart Container */
+    .chart-container {
+        height: 300px;
+        position: relative;
+    }
+
+    /* Custom Scrollbar */
+    .activity-list::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .activity-list::-webkit-scrollbar-track {
+        background: var(--bg-glass);
+        border-radius: 10px;
+    }
+
+    .activity-list::-webkit-scrollbar-thumb {
+        background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+        border-radius: 10px;
+    }
+
+    /* Floating Particles Animation */
+    .particles {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 1;
+    }
+
+    .particle {
+        position: absolute;
+        background: rgba(102, 126, 234, 0.1);
+        border-radius: 50%;
+        animation: floatParticle 20s infinite linear;
+    }
+
+    @keyframes floatParticle {
+        0% {
+            transform: translateY(100vh) rotate(0deg);
+            opacity: 0;
+        }
+        10% {
+            opacity: 1;
+        }
+        90% {
+            opacity: 1;
+        }
+        100% {
+            transform: translateY(-100px) rotate(360deg);
+            opacity: 0;
+        }
+    }
+
+    /* Empty States */
+    .empty-state {
+        text-align: center;
+        padding: 40px 20px;
+        color: var(--text-secondary);
+    }
+
+    .empty-state i {
+        font-size: 3rem;
+        margin-bottom: 15px;
+        opacity: 0.5;
+    }
+</style>
+
+<div class="dashboard-container">
+    <!-- Animated Background Particles -->
+    <div class="particles" id="particles"></div>
+
+    <!-- Dashboard Header -->
+    <div class="dashboard-header">
+        <h1 class="dashboard-title">
+            <i class="fas fa-tachometer-alt mr-3"></i>
+            Admin Dashboard
+        </h1>
+        <p class="dashboard-subtitle">Comprehensive overview of your loan management system</p>
+    </div>
+
+    <div class="container-fluid">
+        <!-- Quick Stats Grid -->
+        <div class="stats-grid">
+            <!-- Total Users -->
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="stat-number">{{ total_users }}</div>
+                <div class="stat-label">Total Users</div>
+                <div class="stat-trend trend-up">
+                    <i class="fas fa-arrow-up"></i>
+                    <span>Active Users</span>
+                </div>
+            </div>
+
+            <!-- Total Loans -->
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-file-invoice-dollar"></i>
+                </div>
+                <div class="stat-number">{{ total_loans }}</div>
+                <div class="stat-label">Total Loans</div>
+                <div class="stat-trend trend-up">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Loan Applications</span>
+                </div>
+            </div>
+
+            <!-- Disbursed Loans -->
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-hand-holding-usd"></i>
+                </div>
+                <div class="stat-number">{{ total_disbursed }}</div>
+                <div class="stat-label">Disbursed Loans</div>
+                <div class="stat-trend trend-up">
+                    <i class="fas fa-rocket"></i>
+                    <span>Active Loans</span>
+                </div>
+            </div>
+
+            <!-- Contact Messages -->
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-headset"></i>
+                </div>
+                <div class="stat-number">{{ total_contacts }}</div>
+                <div class="stat-label">Contact Messages</div>
+                <div class="stat-trend trend-up">
+                    <i class="fas fa-comments"></i>
+                    <span>Customer Inquiries</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Analytics Grid -->
+        <div class="analytics-grid">
+            <!-- Chart Section -->
+            <div class="chart-card">
+                <div class="card-header">
+                    <h3 class="card-title text-dark">
+                        <i class="fas fa-chart-bar"></i>
+                        Loan Statistics
+                    </h3>
+                    <span style="color: var(--text-dark)">Last 6 Months</span>
+                </div>
+                <div class="chart-container">
+                    <canvas id="loanChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Loan Status -->
+            <div class="status-card">
+                <div class="card-header">
+                    <h3 class="card-title text-dark">
+                        <i class="fas fa-clipboard-check"></i>
+                        Loan Status
+                    </h3>
+                </div>
+                <div class="status-grid">
+                    <div class="status-item status-pending">
+                        <div class="status-info">
+                            <h4>Pending</h4>
+                            <p>Awaiting approval</p>
+                        </div>
+                        <div class="status-value">{{ pending_loans }}</div>
+                    </div>
+                    <div class="status-item status-approved">
+                        <div class="status-info">
+                            <h4>Approved</h4>
+                            <p>Active loans</p>
+                        </div>
+                        <div class="status-value">{{ approved_loans }}</div>
+                    </div>
+                    <div class="status-item status-rejected">
+                        <div class="status-info">
+                            <h4>Rejected</h4>
+                            <p>Declined applications</p>
+                        </div>
+                        <div class="status-value">{{ rejected_loans }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Activities -->
+        <div class="activities-grid">
+            <!-- Recent Loans -->
+            <div class="activity-card">
+                <div class="card-header">
+                    <h3 class="card-title text-dark ">
+                        <i class="fas fa-clock"></i>
+                        Recent Loan Applications
+                    </h3>
+                </div>
+                <div class="activity-list">
+                    {% for loan in recent_loans %}
+                    <div class="activity-item">
+                        <div class="activity-icon">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-title">{{ loan.customer_name }}</div>
+                            <div class="activity-desc">{{ loan.loan_type.name }} - ₹{{ loan.request_amount }}</div>
+                            <div class="activity-time">{{ loan.action|date:"M d, Y H:i" }}</div>
+                        </div>
+                        <span style="background: {% if loan.status == 'pending' %}var(--accent-warning){% elif loan.status == 'approved' %}var(--accent-success){% else %}var(--accent-danger){% endif %};
+                              color: white; padding: 4px 12px; border-radius: 12px; font-size: 0.8rem; font-weight: 600;">
+                            {{ loan.status|title }}
+                        </span>
+                    </div>
+                    {% empty %}
+                    <div class="empty-state ">
+                        <i class="fas fa-inbox"></i>
+                        <p>No recent loan applications</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Recent Contacts -->
+            <div class="activity-card">
+                <div class="card-header">
+                    <h3 class="card-title text-dark">
+                        <i class="fas fa-envelope"></i>
+                        Recent Contact Messages
+                    </h3>
+                </div>
+                <div class="activity-list">
+                    {% for contact in recent_contacts %}
+                    <div class="activity-item">
+                        <div class="activity-icon">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-title">{{ contact.name }}</div>
+                            <div class="activity-desc">{{ contact.subject }}</div>
+                            <div class="activity-time">{{ contact.email }}</div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="empty-state">
+                        <i class="fas fa-comments"></i>
+                        <p>No recent contact messages</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="quick-actions">
+            <div class="card-header">
+                <h3 class="card-title text-dark">
+                    <i class="fas fa-bolt"></i>
+                    Quick Actions
+                </h3>
+            </div>
+            <div class="actions-grid">
+                <a href="/FinanceAdmin/loan" class="action-btn">
+                    <i class="fas fa-file-invoice-dollar action-icon"></i>
+                    <span class="action-text">Manage Loans</span>
+                </a>
+                <a href="/FinanceAdmin/disbursed" class="action-btn">
+                    <i class="fas fa-hand-holding-usd action-icon"></i>
+                    <span class="action-text">Disbursed Files</span>
+                </a>
+                <a href="/FinanceAdmin/active_loan" class="action-btn">
+                    <i class="fas fa-check-circle action-icon"></i>
+                    <span class="action-text">Active Loans</span>
+                </a>
+                <a href="/FinanceAdmin/contact" class="action-btn">
+                    <i class="fas fa-headset action-icon"></i>
+                    <span class="action-text">Contact Messages</span>
+                </a>
+                <a href="/FinanceAdmin/emi_history" class="action-btn">
+                    <i class="fas fa-credit-card action-icon"></i>
+                    <span class="action-text">EMI Payments</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Create floating particles
+    function createParticles() {
+        const particlesContainer = document.getElementById('particles');
+        const particleCount = 15;
+
+        for (let i = 0; i < particleCount; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+
+            const size = Math.random() * 100 + 50;
+            const left = Math.random() * 100;
+            const animationDuration = Math.random() * 20 + 10;
+            const animationDelay = Math.random() * 5;
+
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            particle.style.left = `${left}%`;
+            particle.style.animationDuration = `${animationDuration}s`;
+            particle.style.animationDelay = `${animationDelay}s`;
+
+            particlesContainer.appendChild(particle);
+        }
+    }
+
+    // Initialize Chart
+    const ctx = document.getElementById('loanChart').getContext('2d');
+    const loanChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: {{ months|safe }},
+            datasets: [
+                {
+                    label: 'Loan Applications',
+                    data: {{ loan_counts|safe }},
+                    borderColor: '#667eea',
+                    backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.4,
+                    pointBackgroundColor: '#667eea',
+                    pointBorderColor: '#ffffff',
+                    pointBorderWidth: 2,
+                    pointRadius: 6,
+                    pointHoverRadius: 8
+                },
+                {
+                    label: 'Disbursed Loans',
+                    data: {{ disbursed_counts|safe }},
+                    borderColor: '#43e97b',
+                    backgroundColor: 'rgba(67, 233, 123, 0.1)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.4,
+                    pointBackgroundColor: '#43e97b',
+                    pointBorderColor: '#ffffff',
+                    pointBorderWidth: 2,
+                    pointRadius: 6,
+                    pointHoverRadius: 8
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'top',
+                    labels: {
+                        color: '#a0a7c2',
+                        font: {
+                            size: 12,
+                            family: 'Inter'
+                        }
+                    }
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(30, 39, 61, 0.9)',
+                    titleColor: '#ffffff',
+                    bodyColor: '#a0a7c2',
+                    borderColor: '#667eea',
+                    borderWidth: 1,
+                    titleFont: {
+                        family: 'Inter'
+                    },
+                    bodyFont: {
+                        family: 'Inter'
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.05)'
+                    },
+                    ticks: {
+                        color: '#a0a7c2',
+                        font: {
+                            family: 'Inter'
+                        }
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false
+                    },
+                    ticks: {
+                        color: '#a0a7c2',
+                        font: {
+                            family: 'Inter'
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    // Add hover effects to all interactive elements
+    const interactiveElements = document.querySelectorAll('.stat-card, .status-item, .activity-item, .action-btn');
+    interactiveElements.forEach(el => {
+        el.addEventListener('mouseenter', function() {
+            this.style.zIndex = '10';
+        });
+
+        el.addEventListener('mouseleave', function() {
+            this.style.zIndex = '2';
+        });
+    });
+
+    // Auto-refresh dashboard every 30 seconds
+    setInterval(() => {
+        // You can add AJAX call here to refresh data
+        console.log('Dashboard auto-refresh triggered');
+    }, 30000);
+
+    // Initialize particles
+    createParticles();
+});
+</script>
+
+<!-- Font Awesome -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+{% endblock %}

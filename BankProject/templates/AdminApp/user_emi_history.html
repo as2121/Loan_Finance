@@ -1,0 +1,526 @@
+{% extends 'AdminApp/layout.html' %}
+{% block title %}
+<title>Admin - User Payment History</title>
+{% endblock %}
+
+{% block content %}
+<style>
+    /* Professional Color Grading */
+    :root {
+        --primary: #667eea;
+        --primary-dark: #764ba2;
+        --secondary: #4facfe;
+        --secondary-dark: #00f2fe;
+        --success: #43e97b;
+        --success-dark: #38f9d7;
+        --warning: #feca57;
+        --warning-dark: #ff9ff3;
+        --danger: #ff6b6b;
+        --danger-dark: #ee5a24;
+        --dark: #2c3e50;
+        --light: #f8f9fa;
+        --muted: #6c757d;
+        --glass: rgba(255, 255, 255, 0.08);
+    }
+
+    /* Page Styles */
+    .history-container {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        min-height: 100vh;
+        padding: 20px;
+    }
+
+    /* Header */
+    .page-header {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+        color: white;
+        padding: 30px 0;
+        margin: -20px -20px 30px -20px;
+        border-radius: 0 0 20px 20px;
+        box-shadow: 0 5px 20px rgba(102, 126, 234, 0.3);
+    }
+
+    .page-title {
+        font-weight: 700;
+        font-size: 2.2rem;
+        margin: 0;
+    }
+
+    .page-subtitle {
+        opacity: 0.9;
+        font-weight: 300;
+        margin-top: 8px;
+        font-size: 1.1rem;
+    }
+
+    /* Stats Cards */
+    .stats-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+
+    .stat-card {
+        background: white;
+        border-radius: 15px;
+        padding: 25px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        text-align: center;
+        transition: all 0.3s ease;
+        border-top: 4px solid var(--primary);
+    }
+
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    .stat-number {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--primary);
+        line-height: 1;
+    }
+
+    .stat-label {
+        color: var(--muted);
+        font-weight: 500;
+        margin-top: 8px;
+        font-size: 0.9rem;
+    }
+
+    /* Table Container */
+    .table-container {
+        background: white;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        margin-bottom: 30px;
+    }
+
+    /* Professional Table */
+    .professional-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 0;
+    }
+
+    .table-header {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    }
+
+    .table-header th {
+        color: white;
+        padding: 20px 15px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        text-align: center;
+        border: none;
+        position: relative;
+    }
+
+    .table-header th::after {
+        content: '';
+        position: absolute;
+        right: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 1px;
+        height: 20px;
+        background: rgba(255, 255, 255, 0.3);
+    }
+
+    .table-header th:last-child::after {
+        display: none;
+    }
+
+    .table-body tr {
+        transition: all 0.3s ease;
+        border-bottom: 1px solid #f1f3f4;
+    }
+
+    .table-body tr:hover {
+        background: rgba(102, 126, 234, 0.05);
+        transform: translateY(-1px);
+    }
+
+    .table-body td {
+        padding: 18px 15px;
+        border: none;
+        font-weight: 500;
+        color: #5a6c7d;
+        text-align: center;
+        vertical-align: middle;
+        font-size: 0.9rem;
+    }
+
+    /* Status Badges */
+    .status-badge {
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        display: inline-block;
+    }
+
+    .status-paid {
+        background: linear-gradient(135deg, var(--success), var(--success-dark));
+        color: white;
+        box-shadow: 0 3px 10px rgba(67, 233, 123, 0.2);
+    }
+
+    .status-pending {
+        background: linear-gradient(135deg, var(--warning), var(--warning-dark));
+        color: #2c3e50;
+    }
+
+    /* Amount Styling */
+    .amount {
+        font-weight: 700;
+        color: var(--dark);
+        font-size: 1rem;
+    }
+
+    .amount::before {
+        content: '₹';
+        color: var(--primary);
+        margin-right: 2px;
+    }
+
+    /* Date Styling */
+    .date-cell {
+        font-family: 'Courier New', monospace;
+        background: #f8f9fa;
+        padding: 8px 12px;
+        border-radius: 8px;
+        font-weight: 600;
+        color: var(--dark);
+    }
+
+    /* Action Icons */
+    .action-icon {
+        font-size: 1.2rem;
+        display: inline-block;
+        padding: 8px;
+        border-radius: 10px;
+        transition: all 0.3s ease;
+    }
+
+    .icon-paid {
+        color: var(--success);
+        background: rgba(67, 233, 123, 0.1);
+    }
+
+    .icon-pending {
+        color: var(--danger);
+        background: rgba(255, 107, 107, 0.1);
+    }
+
+    /* No Data State */
+    .no-data {
+        text-align: center;
+        padding: 60px 20px;
+        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    }
+
+    .no-data-icon {
+        font-size: 4rem;
+        color: var(--primary);
+        margin-bottom: 20px;
+        opacity: 0.7;
+    }
+
+    .no-data-text {
+        color: var(--muted);
+        font-size: 1.2rem;
+        font-weight: 500;
+    }
+
+    /* Payment Details */
+    .payment-details {
+        background: rgba(67, 233, 123, 0.1);
+        border-radius: 10px;
+        padding: 8px 12px;
+        font-size: 0.85rem;
+        color: var(--success);
+        font-weight: 500;
+    }
+
+    /* Mobile Responsive Table */
+    @media (max-width: 768px) {
+        .history-container {
+            padding: 10px;
+        }
+
+        .page-header {
+            margin: -10px -10px 20px -10px;
+            padding: 20px 0;
+            border-radius: 0 0 15px 15px;
+        }
+
+        .page-title {
+            font-size: 1.8rem;
+            text-align: center;
+        }
+
+        .page-subtitle {
+            text-align: center;
+            font-size: 1rem;
+        }
+
+        .stats-container {
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+
+        .stat-card {
+            padding: 20px;
+        }
+
+        .table-container {
+            border-radius: 10px;
+            margin: 0 -10px;
+        }
+
+        /* Mobile Table Styles */
+        .professional-table {
+            display: block;
+            overflow-x: auto;
+        }
+
+        .table-header {
+            display: none;
+        }
+
+        .table-body tr {
+            display: block;
+            margin-bottom: 15px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            border: 1px solid #e9ecef;
+        }
+
+        .table-body td {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 10px;
+            text-align: left;
+            border-bottom: 1px solid #f1f3f4;
+            position: relative;
+        }
+
+        .table-body td:last-child {
+            border-bottom: none;
+        }
+
+        .table-body td::before {
+            content: attr(data-label);
+            font-weight: 600;
+            color: var(--primary);
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.5px;
+            min-width: 100px;
+        }
+
+        .status-badge, .action-icon {
+            margin-left: auto;
+        }
+
+        .date-cell, .payment-details {
+            font-size: 0.85rem;
+            padding: 6px 10px;
+        }
+    }
+
+    /* Custom Scrollbar */
+    .table-responsive::-webkit-scrollbar {
+        height: 8px;
+    }
+
+    .table-responsive::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 10px;
+    }
+
+    .table-responsive::-webkit-scrollbar-thumb {
+        background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+        border-radius: 10px;
+    }
+
+    /* Summary Section */
+    .summary-section {
+        background: white;
+        border-radius: 15px;
+        padding: 25px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        margin-bottom: 30px;
+    }
+
+    .summary-title {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: var(--primary);
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+</style>
+
+<div class="history-container">
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="container">
+            <h1 class="page-title">
+                <i class="fas fa-history mr-3"></i>
+                Customer Payment History
+            </h1>
+            <p class="page-subtitle">Track and manage all customer EMI payments</p>
+        </div>
+    </div>
+
+    <div class="container">
+
+
+        <!-- Summary Information -->
+        <div class="summary-section">
+            <h3 class="summary-title">
+                <i class="fas fa-chart-line"></i>
+                Payment Overview
+            </h3>
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>Recent Activity:</strong>
+                        {% if emi %}
+                            {% with last_payment=emi|first %}
+                                {% if last_payment.is_paid %}
+                                    Last payment received on {{ last_payment.payment_date }}
+                                {% else %}
+                                    Next payment due on {{ last_payment.due_date }}
+                                {% endif %}
+                            {% endwith %}
+                        {% else %}
+                            No payment history available
+                        {% endif %}
+                    </p>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Professional Table -->
+        <div class="table-container">
+            <div class="table-responsive">
+                <table class="professional-table">
+                    <thead class="table-header">
+                        <tr>
+                            <th>SR NO</th>
+                            <th>DUE DATE</th>
+                            <th>AMOUNT</th>
+                            <th>STATUS</th>
+                            <th>ACTION</th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-body">
+                        {% for em in emi %}
+                        <tr>
+                            <td data-label="SR NO">
+                                <strong>{{ forloop.counter }}</strong>
+                            </td>
+                            <td data-label="DUE DATE" class="date-cell">
+                                {{ em.due_date }}
+                            </td>
+                            <td data-label="AMOUNT" class="amount">
+                                {{ em.emi_amount }}
+                            </td>
+                            <td data-label="STATUS">
+                                {% if em.is_paid %}
+                                    <span class="status-badge status-paid">
+                                        Paid
+                                    </span>
+                                    <div class="payment-details">
+                                        on {{ em.payment_date }}
+                                    </div>
+                                {% else %}
+                                    <span class="status-badge status-pending">
+                                        Pending
+                                    </span>
+                                {% endif %}
+                            </td>
+                            <td data-label="ACTION">
+                                {% if not em.is_paid %}
+                                    <span class="action-icon icon-pending" title="Payment Pending">
+                                        ❌
+                                    </span>
+                                {% else %}
+                                    <span class="action-icon icon-paid" title="Payment Completed">
+                                        ✅
+                                    </span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+
+                        {% if not emi %}
+                        <tr>
+                            <td colspan="5">
+                                <div class="no-data">
+                                    <i class="fas fa-receipt no-data-icon"></i>
+                                    <h3 class="no-data-text">No Payment History Found</h3>
+                                    <p class="text-muted mt-2">There are no payment records available for this customer.</p>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Font Awesome -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+
+    // Add CSS for toast animations
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes slideOutRight {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(100%); opacity: 0; }
+        }
+    `;
+    document.head.appendChild(style);
+
+
+
+    // Add hover effects to table rows
+    const tableRows = document.querySelectorAll('.table-body tr');
+    tableRows.forEach(row => {
+        row.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-2px)';
+        });
+        row.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+        });
+    });
+});
+</script>
+
+{% endblock %}
