@@ -1,0 +1,32 @@
+{% extends 'AdminApp/layout.html'%}
+{% load static %}
+
+
+{% block content %}
+{% load crispy_forms_tags %}
+
+<br>
+<h1 class="text-center font-weight-bold text-primary">Update Loan File</h1>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <form method="post" >
+                {% csrf_token %}
+                {{form|crispy}}
+                <center><button class="btn btn-primary" type="submit">Save User</button></center>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+  function showMessage(msg){
+     alert(msg)
+  }
+  {% for message in messages %}
+  {% if message %}
+  showMessage('{{message}}')
+  {% endif %}
+  {% endfor %}
+
+</script>
+{% endblock %}

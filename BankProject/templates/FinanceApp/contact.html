@@ -1,0 +1,556 @@
+{% extends 'FinanceApp/layout.html' %}
+{% load static %}
+
+{% block title %}
+<title>Loan Finance - Contact Us</title>
+{% endblock title %}
+
+{% block content %}
+
+<style>
+    /* Professional Color Variables */
+    :root {
+        --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        --warning-gradient: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        --dark-gradient: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+        --light-gradient: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    }
+
+    /* Global Styles */
+    body, html {
+        overflow-x: hidden;
+        max-width: 100%;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: var(--light-gradient);
+    }
+
+    .container {
+        max-width: 100%;
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    /* Section Spacing */
+    .section-spacing {
+        padding: 80px 0;
+    }
+
+    /* Professional Typography */
+    .professional-title {
+        font-weight: 700;
+        letter-spacing: -0.5px;
+    }
+
+    .professional-subtitle {
+        font-weight: 300;
+        line-height: 1.6;
+    }
+
+    .gradient-text {
+        background: var(--primary-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    /* Hero Section */
+    .contact-hero {
+        background: var(--primary-gradient);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .contact-hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80') center/cover no-repeat;
+        opacity: 0.1;
+        z-index: 1;
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 2;
+    }
+
+    /* Contact Card Styles */
+    .contact-card {
+        border: none;
+        border-radius: 20px;
+        transition: all 0.4s ease;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        height: 220px;
+        display: flex;
+        flex-direction: column;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+    }
+
+    .contact-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+    }
+
+    .contact-card-body {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        padding: 2rem;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+    }
+
+    /* Contact Icon Styles */
+    .contact-icon {
+        width: 80px;
+        height: 80px;
+        background: var(--primary-gradient);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px;
+        box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+    }
+
+    .contact-icon i {
+        font-size: 2rem;
+        color: white;
+    }
+
+    /* Form Styles */
+    .contact-form {
+        border: none;
+        border-radius: 20px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+    }
+
+    .form-control {
+        border: 2px solid #e9ecef;
+        border-radius: 12px;
+        padding: 14px 18px;
+        transition: all 0.3s ease;
+        font-size: 1rem;
+        background: rgba(255, 255, 255, 0.9);
+    }
+
+    .form-control:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 0.3rem rgba(102, 126, 234, 0.15);
+        background: white;
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 8px;
+        font-size: 0.95rem;
+    }
+
+    /* Button Styles */
+    .btn-premium {
+        background: var(--primary-gradient);
+        border: none;
+        border-radius: 50px;
+        padding: 14px 35px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        color: white;
+        font-size: 1.1rem;
+        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+    }
+
+    .btn-premium:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 35px rgba(0, 0, 0, 0.25);
+        color: white;
+    }
+
+    /* Business Hours Section */
+    .business-hours {
+        background: var(--warning-gradient);
+        border-radius: 20px;
+        padding: 2.5rem;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Contact Grid */
+    .contact-grid {
+        display: flex;
+        flex-wrap: wrap;
+        margin: 0 -15px;
+    }
+
+    .contact-col {
+        display: flex;
+        margin-bottom: 30px;
+        padding: 0 15px;
+    }
+
+    /* Section Backgrounds */
+    .contact-section {
+        background: var(--light-gradient);
+    }
+
+    /* Link Styles */
+    .contact-link {
+        color: inherit;
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+
+    .contact-link:hover {
+        color: #667eea;
+        text-decoration: none;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .section-spacing {
+            padding: 60px 0;
+        }
+
+        .contact-card {
+            height: 200px;
+            margin: 10px 0;
+        }
+
+        .contact-card-body {
+            padding: 1.5rem;
+        }
+
+        .contact-icon {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 15px;
+        }
+
+        .contact-icon i {
+            font-size: 1.5rem;
+        }
+
+        .btn-premium {
+            padding: 12px 25px;
+            font-size: 1rem;
+        }
+
+        .business-hours {
+            padding: 2rem;
+        }
+    }
+
+    /* Card Color Variations */
+    .card-bg-primary { background: var(--primary-gradient); }
+    .card-bg-secondary { background: var(--secondary-gradient); }
+    .card-bg-success { background: var(--success-gradient); }
+    .card-bg-warning { background: var(--warning-gradient); }
+
+    /* Text Color Utilities */
+    .text-white { color: white !important; }
+    .text-dark { color: #2c3e50 !important; }
+</style>
+
+<!-- Contact Hero Section -->
+<section class="contact-hero text-white section-spacing">
+    <div class="container">
+        <div class="row justify-content-center text-center mx-0">
+            <div class="col-lg-10 hero-content">
+                <h1 class="professional-title display-4 mb-4" data-aos="fade-down">
+                    Get In <span class="gradient-text" style="background: linear-gradient(135deg, #fff, #e3f2fd); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Touch</span>
+                </h1>
+                <p class="lead professional-subtitle mb-4 fs-5" data-aos="fade-up">
+                    We're here to help you with all your loan needs. Reach out to us for quick assistance,
+                    personalized support, and expert guidance on your financial journey.
+                </p>
+                <div class="d-flex flex-column flex-sm-row justify-content-center gap-3" data-aos="zoom-in">
+                    <span class="badge bg-light text-dark p-3 fs-6">
+                        <i class="fas fa-clock me-2"></i>24/7 Support
+                    </span>
+                    <span class="badge bg-light text-dark p-3 fs-6">
+                        <i class="fas fa-shield-alt me-2"></i>Secure Communication
+                    </span>
+                    <span class="badge bg-light text-dark p-3 fs-6">
+                        <i class="fas fa-bolt me-2"></i>Quick Response
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Section -->
+<section class="section-spacing contact-section" id="contact-section">
+    <div class="container">
+        <!-- Contact Info Cards -->
+        <div class="row mb-5 justify-content-center text-center mx-0">
+            <div class="col-lg-8">
+                <h2 class="professional-title text-dark mb-4" data-aos="fade-down">
+                    Contact <span style="background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Information</span>
+                </h2>
+                <p class="lead professional-subtitle text-muted" data-aos="fade-up">
+                    Multiple ways to reach us for loan inquiries, support, and financial guidance
+                </p>
+            </div>
+        </div>
+
+        <div class="contact-grid">
+            <!-- Address Card -->
+            <div class="col-12 col-md-4 contact-col" data-aos="fade-up">
+                <div class="contact-card w-100">
+                    <div class="contact-card-body text-white card-bg-primary">
+                        <div class="contact-icon">
+                            <i class="fas fa-building"></i>
+                        </div>
+                        <h5 class="card-title professional-title mb-3">Office Address</h5>
+                        <p class="card-text professional-subtitle">
+                            203 AS FINANCE<br>
+                            PUNE, MAHARASHTRA
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Phone Card -->
+            <div class="col-12 col-md-4 contact-col" data-aos="fade-up" data-aos-delay="100">
+                <div class="contact-card w-100">
+                    <div class="contact-card-body text-dark card-bg-warning">
+                        <div class="contact-icon">
+                            <i class="fas fa-phone"></i>
+                        </div>
+                        <h5 class="card-title professional-title mb-3">Call Us</h5>
+                        <p class="card-text professional-subtitle">
+                            <a href="tel:+919604735635" class="contact-link text-dark">
+                                +91 9604735635
+                            </a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Email Card -->
+            <div class="col-12 col-md-4 contact-col" data-aos="fade-up" data-aos-delay="200">
+                <div class="contact-card w-100">
+                    <div class="contact-card-body text-white card-bg-success">
+                        <div class="contact-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <h5 class="card-title professional-title mb-3">Email Us</h5>
+                        <p class="card-text professional-subtitle">
+                            <a href="mailto:loanfinance0915@gmail.com" class="contact-link text-white">
+                                loanfinance0915@gmail.com
+                            </a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Feedback Form -->
+        <div class="row justify-content-center mx-0 mt-5">
+            <div class="col-lg-10" data-aos="fade-up" data-aos-delay="300">
+                <div class="contact-form p-5">
+                    <div class="text-center mb-5">
+                        <h2 class="professional-title text-dark mb-3">Send Us a Message</h2>
+                        <p class="text-muted professional-subtitle">
+                            Fill out the form below and we'll get back to you within 24 hours.
+                            Our team is ready to assist you with all your financial needs.
+                        </p>
+                    </div>
+
+                    <form method="post">
+                        {% csrf_token %}
+
+                        <!-- Hidden User ID -->
+                        <input type="text" name="user_id" value="{{user.id}}" hidden>
+
+                        <!-- Name Field -->
+                        <div class="row mb-4">
+                            <div class="col-md-12">
+                                <label class="form-label">Your Name</label>
+                                <input type="text"
+                                       name="name"
+                                       placeholder="Enter your full name"
+                                       class="form-control form-control-lg"
+                                       required>
+                            </div>
+                        </div>
+
+                        <!-- Contact Details -->
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <label class="form-label" for="mobile">
+                                    <i class="fas fa-mobile-alt me-2"></i>Mobile Number
+                                </label>
+                                <input type="number"
+                                       name="mobile"
+                                       id="mobile"
+                                       class="form-control form-control-lg"
+                                       placeholder="Enter your mobile number"
+                                       required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label" for="email">
+                                    <i class="fas fa-envelope me-2"></i>Email Address
+                                </label>
+                                <input readonly
+                                       value="{{user}}"
+                                       type="email"
+                                       name="email"
+                                       id="email"
+                                       class="form-control form-control-lg"
+                                       placeholder="Enter your email address"
+                                       required
+                                       style="background: #f8f9fa;">
+                            </div>
+                        </div>
+
+                        <!-- Subject Field -->
+                        <div class="row mb-4">
+                            <div class="col-md-12">
+                                <label class="form-label" for="subject">
+                                    <i class="fas fa-tag me-2"></i>Subject
+                                </label>
+                                <input type="text"
+                                       name="subject"
+                                       id="subject"
+                                       class="form-control form-control-lg"
+                                       placeholder="What is this regarding?"
+                                       required>
+                            </div>
+                        </div>
+
+                        <!-- Message Field -->
+                        <div class="row mb-5">
+                            <div class="col-md-12">
+                                <label class="form-label" for="message">
+                                    <i class="fas fa-comment me-2"></i>Your Message
+                                </label>
+                                <textarea name="message"
+                                          id="message"
+                                          cols="30"
+                                          rows="6"
+                                          class="form-control form-control-lg"
+                                          placeholder="Tell us how we can help you with your loan requirements, questions, or concerns..."
+                                          required></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="row">
+                            <div class="col-md-12 text-center">
+                                <button type="submit" class="btn-premium">
+                                    <i class="fas fa-paper-plane me-2"></i>Send Message
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Business Hours Section -->
+        <div class="row mt-5 mx-0">
+            <div class="col-12" data-aos="fade-up">
+                <div class="business-hours text-dark text-center">
+                    <h4 class="professional-title mb-4">
+                        <i class="fas fa-clock me-2"></i>Business Hours
+                    </h4>
+                    <div class="row justify-content-center">
+                        <div class="col-md-8">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <div class="d-flex justify-content-between align-items-center p-3 rounded" style="background: rgba(255, 255, 255, 0.2);">
+                                        <span class="professional-subtitle fw-bold">Monday - Friday</span>
+                                        <span class="professional-subtitle">9:00 AM - 6:00 PM</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="d-flex justify-content-between align-items-center p-3 rounded" style="background: rgba(255, 255, 255, 0.2);">
+                                        <span class="professional-subtitle fw-bold">Saturday</span>
+                                        <span class="professional-subtitle">10:00 AM - 4:00 PM</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-3">
+                                <div class="d-flex justify-content-center align-items-center p-3 rounded" style="background: rgba(255, 255, 255, 0.2);">
+                                    <span class="professional-subtitle fw-bold">Sunday</span>
+                                    <span class="professional-subtitle ms-3">Closed</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Support Note -->
+        <div class="row mt-4 mx-0">
+            <div class="col-12 text-center" data-aos="fade-up">
+                <div class="p-4 rounded" style="background: rgba(102, 126, 234, 0.1);">
+                    <h6 class="professional-title text-primary mb-2">
+                        <i class="fas fa-headset me-2"></i>Need Immediate Assistance?
+                    </h6>
+                    <p class="professional-subtitle text-muted mb-0">
+                        For urgent loan inquiries, call us directly at
+                        <a href="tel:+919604735635" class="text-primary fw-bold">+91 9604735635</a>
+                        during business hours
+                    </p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+
+<!-- AOS Animations -->
+<link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+
+<!-- Font Awesome -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+<script>
+    AOS.init({
+        duration: 1000,
+        once: true,
+        offset: 50
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        document.body.style.overflowX = 'hidden';
+        document.documentElement.style.overflowX = 'hidden';
+
+        // Form validation enhancement
+        const form = document.querySelector('form');
+        const inputs = form.querySelectorAll('input, textarea');
+
+        inputs.forEach(input => {
+            input.addEventListener('focus', function() {
+                this.style.background = 'white';
+            });
+
+            input.addEventListener('blur', function() {
+                if (this.id === 'email' && this.hasAttribute('readonly')) {
+                    this.style.background = '#f8f9fa';
+                } else if (!this.value) {
+                    this.style.background = 'rgba(255, 255, 255, 0.9)';
+                }
+            });
+        });
+    });
+
+
+</script>
+
+{% endblock content %}

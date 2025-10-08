@@ -1,0 +1,848 @@
+{% extends 'AdminApp/layout.html' %}
+
+{% block content %}
+<style>
+    /* Professional Color Grading */
+    :root {
+        --primary: #667eea;
+        --primary-dark: #764ba2;
+        --secondary: #4facfe;
+        --secondary-dark: #00f2fe;
+        --success: #43e97b;
+        --success-dark: #38f9d7;
+        --danger: #ff6b6b;
+        --danger-dark: #ee5a24;
+        --warning: #feca57;
+        --warning-dark: #ff9ff3;
+        --dark: #2c3e50;
+        --light: #f8f9fa;
+        --muted: #6c757d;
+        --glass: rgba(255, 255, 255, 0.08);
+        --glass-dark: rgba(0, 0, 0, 0.2);
+    }
+
+    /* Base Styles */
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: #2c3e50;
+        min-height: 100vh;
+        padding: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Main Container */
+    .payment-container {
+        width: 100%;
+        max-width: 1200px;
+        display: grid;
+        grid-template-columns: 1fr 400px;
+        gap: 30px;
+        align-items: start;
+    }
+
+    @media (max-width: 968px) {
+        .payment-container {
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+    }
+
+    /* Cards */
+    .payment-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        transition: all 0.3s ease;
+    }
+
+    .payment-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 25px 80px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Header */
+    .payment-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .payment-logo {
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 15px;
+        color: white;
+        font-weight: 800;
+        font-size: 24px;
+        box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+    }
+
+    .payment-title {
+        font-size: 28px;
+        font-weight: 700;
+        background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 8px;
+    }
+
+    .payment-subtitle {
+        color: var(--muted);
+        font-size: 16px;
+        font-weight: 400;
+    }
+
+    /* Amount Display */
+    .amount-display {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .amount-label {
+        color: var(--muted);
+        font-size: 16px;
+        margin-bottom: 10px;
+    }
+
+    .amount-value {
+        font-size: 48px;
+        font-weight: 800;
+        color: var(--dark);
+        line-height: 1;
+    }
+
+    .amount-currency {
+        color: var(--primary);
+    }
+
+    .order-info {
+        background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+        border-radius: 15px;
+        padding: 20px;
+        margin-bottom: 25px;
+    }
+
+    .info-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 0;
+        border-bottom: 1px solid rgba(102, 126, 234, 0.1);
+    }
+
+    .info-item:last-child {
+        border-bottom: none;
+    }
+
+    .info-label {
+        color: var(--muted);
+        font-weight: 500;
+    }
+
+    .info-value {
+        font-weight: 600;
+        color: var(--dark);
+    }
+
+    /* Payment Methods */
+    .payment-methods {
+        margin-bottom: 25px;
+    }
+
+    .methods-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+
+    .method-card {
+        background: white;
+        border: 2px solid #e9ecef;
+        border-radius: 15px;
+        padding: 20px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .method-card:hover {
+        border-color: var(--primary);
+        transform: translateY(-3px);
+        box-shadow: 0 10px 25px rgba(102, 126, 234, 0.15);
+    }
+
+    .method-card.active {
+        border-color: var(--primary);
+        background: linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(118, 75, 162, 0.05));
+    }
+
+    .method-icon {
+        font-size: 32px;
+        margin-bottom: 10px;
+        color: var(--primary);
+    }
+
+    .method-name {
+        font-weight: 600;
+        color: var(--dark);
+        margin-bottom: 5px;
+    }
+
+    .method-desc {
+        font-size: 12px;
+        color: var(--muted);
+    }
+
+    /* Action Buttons */
+    .action-buttons {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+
+    @media (max-width: 480px) {
+        .action-buttons {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .btn {
+        border: none;
+        border-radius: 12px;
+        padding: 15px 25px;
+        font-weight: 600;
+        font-size: 16px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+        color: white;
+        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-secondary {
+        background: rgba(255, 255, 255, 0.8);
+        border: 2px solid #e9ecef;
+        color: var(--dark);
+    }
+
+    .btn-secondary:hover {
+        background: white;
+        border-color: var(--primary);
+        transform: translateY(-2px);
+    }
+
+    .btn-success {
+        background: linear-gradient(135deg, var(--success), var(--success-dark));
+        color: white;
+        box-shadow: 0 8px 25px rgba(67, 233, 123, 0.3);
+    }
+
+    .btn-success:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 35px rgba(67, 233, 123, 0.4);
+    }
+
+    /* Bank Details Panel */
+    .bank-panel {
+        position: sticky;
+        top: 20px;
+    }
+
+    .bank-header {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+
+    .bank-icon {
+        width: 50px;
+        height: 50px;
+        background: linear-gradient(135deg, var(--secondary), var(--secondary-dark));
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 20px;
+    }
+
+    .bank-title {
+        font-size: 20px;
+        font-weight: 700;
+        color: var(--dark);
+    }
+
+    .bank-subtitle {
+        color: var(--muted);
+        font-size: 14px;
+    }
+
+    .bank-details {
+        background: linear-gradient(135deg, rgba(79, 172, 254, 0.1), rgba(0, 242, 254, 0.1));
+        border-radius: 15px;
+        padding: 20px;
+    }
+
+    .detail-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 0;
+        border-bottom: 1px solid rgba(79, 172, 254, 0.2);
+    }
+
+    .detail-item:last-child {
+        border-bottom: none;
+    }
+
+    .detail-label {
+        color: var(--muted);
+        font-size: 14px;
+        font-weight: 500;
+    }
+
+    .detail-value {
+        font-weight: 600;
+        color: var(--dark);
+        font-family: 'Courier New', monospace;
+    }
+
+    .copy-btn {
+        background: transparent;
+        border: 1px solid var(--primary);
+        color: var(--primary);
+        padding: 6px 12px;
+        border-radius: 8px;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .copy-btn:hover {
+        background: var(--primary);
+        color: white;
+    }
+
+    /* Progress Steps */
+    .progress-steps {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 30px 0;
+        position: relative;
+    }
+
+    .progress-steps::before {
+        content: '';
+        position: absolute;
+        top: 15px;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: #e9ecef;
+        z-index: 1;
+    }
+
+    .step {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        position: relative;
+        z-index: 2;
+    }
+
+    .step-icon {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: #e9ecef;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--muted);
+        margin-bottom: 8px;
+        transition: all 0.3s ease;
+    }
+
+    .step.active .step-icon {
+        background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+        color: white;
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+    }
+
+    .step.completed .step-icon {
+        background: linear-gradient(135deg, var(--success), var(--success-dark));
+        color: white;
+    }
+
+    .step-label {
+        font-size: 12px;
+        color: var(--muted);
+        font-weight: 500;
+    }
+
+    .step.active .step-label {
+        color: var(--primary);
+        font-weight: 600;
+    }
+
+    /* Modals */
+    .modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(10px);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        padding: 20px;
+    }
+
+    .modal.show {
+        display: flex;
+    }
+
+    .modal-content {
+        background: white;
+        border-radius: 20px;
+        padding: 30px;
+        max-width: 500px;
+        width: 100%;
+        box-shadow: 0 25px 80px rgba(0, 0, 0, 0.3);
+        animation: modalSlideIn 0.3s ease;
+    }
+
+    @keyframes modalSlideIn {
+        from {
+            opacity: 0;
+            transform: translateY(-50px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .modal-header {
+        display: flex;
+        justify-content: between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .modal-title {
+        font-size: 24px;
+        font-weight: 700;
+        color: var(--dark);
+    }
+
+    .close-btn {
+        background: none;
+        border: none;
+        font-size: 24px;
+        color: var(--muted);
+        cursor: pointer;
+        padding: 5px;
+    }
+
+    .close-btn:hover {
+        color: var(--danger);
+    }
+
+    /* Success Animation */
+    .success-animation {
+        text-align: center;
+        padding: 40px 20px;
+    }
+
+    .success-icon {
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(135deg, var(--success), var(--success-dark));
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px;
+        color: white;
+        font-size: 36px;
+        animation: successScale 0.5s ease;
+    }
+
+    @keyframes successScale {
+        0% {
+            transform: scale(0);
+        }
+        50% {
+            transform: scale(1.2);
+        }
+        100% {
+            transform: scale(1);
+        }
+    }
+
+    .success-title {
+        font-size: 28px;
+        font-weight: 700;
+        color: var(--success);
+        margin-bottom: 10px;
+    }
+
+    .success-message {
+        color: var(--muted);
+        margin-bottom: 30px;
+    }
+
+    /* Loading Spinner */
+    .spinner {
+        width: 20px;
+        height: 20px;
+        border: 3px solid rgba(255, 255, 255, 0.3);
+        border-top: 3px solid white;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    /* Utility Classes */
+    .text-center { text-align: center; }
+    .mb-20 { margin-bottom: 20px; }
+    .mt-20 { margin-top: 20px; }
+    .hidden { display: none; }
+</style>
+
+<div class="payment-container">
+    <!-- Left: Payment Details -->
+    <div class="payment-card">
+        <div class="payment-header">
+            <div class="payment-logo">LF</div>
+            <h1 class="payment-title">Loan Finance Payments</h1>
+            <p class="payment-subtitle">Secure payment processing · Demo environment</p>
+        </div>
+
+        <!-- Amount Display -->
+        <div class="amount-display">
+            <div class="amount-label">Total Amount to Pay</div>
+            <div class="amount-value">
+                <span class="amount-currency">₹</span>{{ amt }}.00
+            </div>
+        </div>
+
+        <!-- Order Information -->
+        <div class="order-info">
+            <div class="info-item">
+                <span class="info-label">Order ID</span>
+                <span class="info-value">ORD-{{ user_id }}</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Customer</span>
+                <span class="info-value">{{ name }}</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Bank</span>
+                <span class="info-value">{{ bank_name }}</span>
+            </div>
+        </div>
+
+        <!-- Progress Steps -->
+        <div class="progress-steps">
+            <div class="step active">
+                <div class="step-icon">1</div>
+                <div class="step-label">Payment</div>
+            </div>
+            <div class="step">
+                <div class="step-icon">2</div>
+                <div class="step-label">Processing</div>
+            </div>
+            <div class="step">
+                <div class="step-icon">3</div>
+                <div class="step-label">Complete</div>
+            </div>
+        </div>
+
+        <!-- Payment Methods -->
+        <div class="payment-methods">
+            <h3 class="mb-20">Choose Payment Method</h3>
+            <div class="methods-grid">
+                <div class="method-card active" data-method="card">
+                    <div class="method-icon">💳</div>
+                    <div class="method-name">Credit Card</div>
+                    <div class="method-desc">Visa, Mastercard</div>
+                </div>
+                <div class="method-card" data-method="upi">
+                    <div class="method-icon">📱</div>
+                    <div class="method-name">UPI</div>
+                    <div class="method-desc">Instant Payment</div>
+                </div>
+                <div class="method-card" data-method="netbanking">
+                    <div class="method-icon">🏦</div>
+                    <div class="method-name">Net Banking</div>
+                    <div class="method-desc">All Banks</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+            <button class="btn btn-primary" id="payNowBtn">
+                <i class="fas fa-lock"></i> Pay ₹{{ amt }}.00
+            </button>
+            <button class="btn btn-secondary" id="showBankBtn">
+                <i class="fas fa-university"></i> Bank Transfer
+            </button>
+        </div>
+
+        <!-- Demo Notes -->
+        <div class="order-info">
+            <div class="info-item">
+                <span class="info-label">💡 Demo Notes</span>
+            </div>
+            <div class="info-item" style="border-bottom: none; padding-top: 0;">
+                <small style="color: var(--muted); line-height: 1.5;">
+                    • This is a demo payment environment<br>
+                    • No real money will be transferred<br>
+                    • Use for testing purposes only
+                </small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right: Bank Details -->
+    <div class="payment-card bank-panel">
+        <div class="bank-header">
+            <div class="bank-icon">🏦</div>
+            <div>
+                <div class="bank-title">{{ bank_name }}</div>
+                <div class="bank-subtitle">Bank Transfer Details</div>
+            </div>
+        </div>
+
+        <div class="bank-details">
+            <div class="detail-item">
+                <span class="detail-label">Account Holder</span>
+                <span class="detail-value">{{ name }}</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Account Number</span>
+                <span class="detail-value">{{ account_number }}</span>
+                <button class="copy-btn" data-copy="{{ account_number }}">Copy</button>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">IFSC Code</span>
+                <span class="detail-value">{{ ifsc_code }}</span>
+                <button class="copy-btn" data-copy="{{ ifsc_code }}">Copy</button>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Amount</span>
+                <span class="detail-value">₹{{ amt }}.00</span>
+                <button class="copy-btn" data-copy="{{ amt }}.00">Copy</button>
+            </div>
+        </div>
+
+        <div class="mt-20">
+            <button class="btn btn-success" id="simulatePaymentBtn" style="width: 100%;">
+                <i class="fas fa-check-circle"></i> Simulate Payment
+            </button>
+        </div>
+
+        <div class="text-center mt-20">
+            <small style="color: var(--muted);">
+                After successful payment, you will be redirected automatically
+            </small>
+        </div>
+    </div>
+</div>
+
+<!-- Payment Processing Modal -->
+<div class="modal" id="processingModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="modal-title">Processing Payment</h3>
+        </div>
+        <div class="text-center" style="padding: 40px 20px;">
+            <div class="spinner" style="margin: 0 auto 20px;"></div>
+            <h4>Please wait...</h4>
+            <p style="color: var(--muted);">We're processing your payment securely</p>
+        </div>
+    </div>
+</div>
+
+<!-- Success Modal -->
+<div class="modal" id="successModal">
+    <div class="modal-content">
+        <div class="success-animation">
+            <div class="success-icon">✓</div>
+            <h2 class="success-title">Payment Successful!</h2>
+            <p class="success-message">Your payment of ₹{{ amt }}.00 has been processed successfully.</p>
+            <p style="color: var(--muted); font-size: 14px; margin-bottom: 20px;">
+                Transaction ID: <strong>TXN_{{ user_id }}_{{ random_number }}</strong>
+            </p>
+            <button class="btn btn-success" id="continueBtn" style="min-width: 200px;">
+                Continue <i class="fas fa-arrow-right"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Font Awesome -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Elements
+    const payNowBtn = document.getElementById('payNowBtn');
+    const showBankBtn = document.getElementById('showBankBtn');
+    const simulatePaymentBtn = document.getElementById('simulatePaymentBtn');
+    const continueBtn = document.getElementById('continueBtn');
+    const processingModal = document.getElementById('processingModal');
+    const successModal = document.getElementById('successModal');
+    const methodCards = document.querySelectorAll('.method-card');
+    const copyButtons = document.querySelectorAll('.copy-btn');
+    const steps = document.querySelectorAll('.step');
+
+    // Generate random transaction number
+    const randomNumber = Math.floor(100000 + Math.random() * 900000);
+
+    // Payment method selection
+    methodCards.forEach(card => {
+        card.addEventListener('click', function() {
+            methodCards.forEach(c => c.classList.remove('active'));
+            this.classList.add('active');
+        });
+    });
+
+    // Copy functionality
+    copyButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const text = this.getAttribute('data-copy');
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = this.textContent;
+                this.textContent = 'Copied!';
+                this.style.background = 'var(--success)';
+                this.style.color = 'white';
+                this.style.borderColor = 'var(--success)';
+
+                setTimeout(() => {
+                    this.textContent = originalText;
+                    this.style.background = 'transparent';
+                    this.style.color = 'var(--primary)';
+                    this.style.borderColor = 'var(--primary)';
+                }, 2000);
+            });
+        });
+    });
+
+    // Pay Now Button
+    payNowBtn.addEventListener('click', function() {
+        // Show processing modal
+        processingModal.classList.add('show');
+
+        // Simulate payment processing
+        setTimeout(() => {
+            processingModal.classList.remove('show');
+
+            // Update progress steps
+            steps[1].classList.add('completed');
+            steps[2].classList.add('active');
+
+            // Show success modal
+            setTimeout(() => {
+                successModal.classList.add('show');
+            }, 500);
+        }, 3000);
+    });
+
+    // Simulate Payment Button
+    simulatePaymentBtn.addEventListener('click', function() {
+        // Show processing modal
+        processingModal.classList.add('show');
+
+        // Simulate payment processing
+        setTimeout(() => {
+            processingModal.classList.remove('show');
+
+            // Update progress steps
+            steps[1].classList.add('completed');
+            steps[2].classList.add('active');
+
+            // Show success modal
+            setTimeout(() => {
+                successModal.classList.add('show');
+            }, 500);
+        }, 2000);
+    });
+
+    // Continue Button - Redirect to success page
+    continueBtn.addEventListener('click', function() {
+        // Show loading state
+        this.innerHTML = '<div class="spinner"></div> Redirecting...';
+        this.disabled = true;
+
+        // Redirect to success page
+        setTimeout(() => {
+            window.location.href = "/FinanceAdmin/success/{{ user_id }}";
+        }, 1000);
+    });
+
+    // Show bank details (scroll to bank panel on mobile)
+    showBankBtn.addEventListener('click', function() {
+        if (window.innerWidth <= 968) {
+            document.querySelector('.bank-panel').scrollIntoView({
+                behavior: 'smooth'
+            });
+        }
+    });
+
+    // Keyboard support
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            processingModal.classList.remove('show');
+            successModal.classList.remove('show');
+        }
+    });
+});
+</script>
+
+{% endblock %}

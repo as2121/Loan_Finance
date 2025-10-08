@@ -1,0 +1,393 @@
+{% extends 'FinanceApp/layout.html' %}
+{% load static %}
+
+{% block title %}
+<title>Loan Finance - User Login</title>
+{% endblock title %}
+
+{% block content %}
+
+<style>
+    /* Professional Color Grading */
+    .login-gradient-1 {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    .login-gradient-2 {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    }
+
+    .login-gradient-3 {
+        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    }
+
+    .login-gradient-4 {
+        background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+    }
+
+    /* Card Styles */
+    .login-card {
+        border: none;
+        border-radius: 20px;
+        transition: all 0.4s ease;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+        overflow: hidden;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+    }
+
+    .login-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 25px 60px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Form Styles */
+    .form-control {
+        border: 2px solid #e9ecef;
+        border-radius: 12px;
+        padding: 14px 18px;
+        transition: all 0.3s ease;
+        font-size: 1rem;
+        background: rgba(255, 255, 255, 0.9);
+    }
+
+    .form-control:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 0.3rem rgba(102, 126, 234, 0.15);
+        background: white;
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 8px;
+        font-size: 0.95rem;
+    }
+
+    /* Button Styles */
+    .btn-premium {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        border-radius: 50px;
+        padding: 14px 35px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        color: white;
+        font-size: 1.1rem;
+        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+    }
+
+    .btn-premium:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 35px rgba(0, 0, 0, 0.25);
+        color: white;
+    }
+
+    /* Professional Typography */
+    .professional-title {
+        font-weight: 700;
+        letter-spacing: -0.5px;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    @media (max-width: 768px) {
+    .container-fluid {
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    .animated-background {
+        padding: 10px !important;
+    }
+
+    .row.w-100.justify-content-center {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .col-md-6 {
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+}
+
+    .professional-subtitle {
+        font-weight: 300;
+        line-height: 1.6;
+        color: #6c757d;
+    }
+
+    /* Field Icon */
+    .field-icon {
+        position: absolute;
+        right: 18px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 1.2rem;
+        color: #6c757d;
+        cursor: pointer;
+        z-index: 10;
+        transition: color 0.3s ease;
+        background: rgba(255, 255, 255, 0.9);
+        padding: 5px;
+        border-radius: 50%;
+    }
+
+    .field-icon:hover {
+        color: #667eea;
+        background: rgba(102, 126, 234, 0.1);
+    }
+
+    /* Background Animation */
+    .animated-background {
+        background: linear-gradient(-45deg, #667eea, #764ba2, #f093fb, #f5576c);
+        background-size: 400% 400%;
+        animation: gradient 15s ease infinite;
+    }
+
+    @keyframes gradient {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    /* Link Styles */
+    .premium-link {
+        color: #667eea;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        position: relative;
+    }
+
+    .premium-link:hover {
+        color: #764ba2;
+        text-decoration: none;
+    }
+
+    .premium-link::after {
+        content: '';
+        position: absolute;
+        width: 0;
+        height: 2px;
+        bottom: -2px;
+        left: 0;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        transition: width 0.3s ease;
+    }
+
+    .premium-link:hover::after {
+        width: 100%;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .login-card {
+            margin: 20px;
+            padding: 25px !important;
+        }
+
+        .btn-premium {
+            padding: 12px 25px;
+            font-size: 1rem;
+        }
+    }
+
+    /* Security Badge */
+    .security-badge {
+        background: linear-gradient(135deg, #43e97b, #38f9d7);
+        color: white;
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+</style>
+
+<!-- Login Section -->
+<div class="container-fluid animated-background" >
+  <div class="row justify-content-center p-0">
+    <div class="col-md-6 m-0">
+      <div class="login-card p-5" data-aos="zoom-in" data-aos-duration="800">
+        <!-- Header Section -->
+        <div class="text-center mb-5">
+          <div class="mb-4">
+            <i class="fas fa-sign-in-alt fa-3x login-gradient-1" style="-webkit-background-clip: text; -webkit-text-fill-color: transparent;"></i>
+          </div>
+          <h2 class="professional-title mb-3">Welcome Back</h2>
+          <p class="professional-subtitle">Sign in to access your FinEase account</p>
+          <div class="security-badge mt-2">
+            <i class="fas fa-shield-alt"></i>
+            Secure Login
+          </div>
+        </div>
+
+        <form method="post" novalidate>
+          {% csrf_token %}
+
+          <!-- Username/Email Field -->
+          <div class="form-group mb-4">
+            <label for="id_username" class="form-label">
+              <i class="fas fa-envelope me-2 text-primary"></i>Email Address
+            </label>
+            <div class="position-relative">
+              <input type="text"
+                     name="username"
+                     class="form-control"
+                     id="id_username"
+                     placeholder="Enter your email address"
+                     required
+                     style="padding-left: 45px;">
+              <i class="fas fa-envelope position-absolute" style="left: 20px; top: 50%; transform: translateY(-50%); color: #6c757d;"></i>
+            </div>
+          </div>
+
+          <!-- Password Field -->
+          <div class="form-group mb-4 position-relative">
+            <label for="id_password" class="form-label">
+              <i class="fas fa-lock me-2 text-primary"></i>Password
+            </label>
+            <div class="position-relative">
+              <input type="password"
+                     name="password"
+                     class="form-control"
+                     id="id_password"
+                     placeholder="Enter your password"
+                     required
+                     style="padding-left: 45px;">
+              <i class="fas fa-lock position-absolute" style="left: 20px; top: 50%; transform: translateY(-50%); color: #6c757d;"></i>
+              <span toggle="#id_password" class="field-icon toggle-password">
+                <i class="fa fa-eye-slash"></i>
+              </span>
+            </div>
+          </div>
+
+          <!-- Forgot Password -->
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <div class="form-check">
+
+            </div>
+            <a href="/finance/forgot-password" class="premium-link small">
+              <i class="fas fa-key me-1"></i>Forgot Password?
+            </a>
+          </div>
+
+          <!-- Submit Button -->
+          <div class="d-grid mb-4">
+            <button type="submit" class="btn-premium">
+              <i class="fas fa-sign-in-alt me-2"></i>Sign In
+            </button>
+          </div>
+
+          <!-- Divider -->
+          <div class="position-relative text-center mb-4">
+            <hr>
+            <span class="position-absolute top-50 start-50 translate-middle bg-white px-3 text-muted small">
+              OR
+            </span>
+          </div>
+
+          <!-- Sign Up Link -->
+          <div class="text-center">
+            <p class="text-muted mb-2">Don't have an account?</p>
+            <a href="/finance/register" class="premium-link">
+              <i class="fas fa-user-plus me-1"></i>Create New Account
+            </a>
+          </div>
+        </form>
+
+        <!-- Additional Security Info -->
+        <div class="mt-5 pt-4 border-top">
+          <div class="row text-center">
+            <div class="col-4">
+              <div class="text-primary">
+                <i class="fas fa-shield-alt fa-2x mb-2"></i>
+                <p class="small mb-0">Secure</p>
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="text-success">
+                <i class="fas fa-bolt fa-2x mb-2"></i>
+                <p class="small mb-0">Fast</p>
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="text-info">
+                <i class="fas fa-lock fa-2x mb-2"></i>
+                <p class="small mb-0">Private</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Password Show/Hide Script -->
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const togglePassword = document.querySelectorAll('.toggle-password');
+    togglePassword.forEach(toggle => {
+      toggle.addEventListener('click', function() {
+        const input = document.querySelector(this.getAttribute('toggle'));
+        const icon = this.querySelector('i');
+        if (input.type === "password") {
+          input.type = "text";
+          icon.classList.replace('fa-eye-slash', 'fa-eye');
+        } else {
+          input.type = "password";
+          icon.classList.replace('fa-eye', 'fa-eye-slash');
+        }
+      });
+    });
+
+    // Add focus effects
+    const inputs = document.querySelectorAll('.form-control');
+    inputs.forEach(input => {
+      input.addEventListener('focus', function() {
+        this.parentElement.classList.add('focused');
+      });
+      input.addEventListener('blur', function() {
+        this.parentElement.classList.remove('focused');
+      });
+    });
+  });
+
+
+  // Add CSS for animations
+  const style = document.createElement('style');
+  style.textContent = `
+    @keyframes slideInRight {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+    @keyframes slideOutRight {
+      from { transform: translateX(0); opacity: 1; }
+      to { transform: translateX(100%); opacity: 0; }
+    }
+  `;
+  document.head.appendChild(style);
+
+</script>
+
+<!-- AOS Animation -->
+<link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+<script>
+  AOS.init({
+    duration: 1000,
+    once: true,
+    offset: 50
+  });
+</script>
+
+<!-- Font Awesome -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+{% endblock %}

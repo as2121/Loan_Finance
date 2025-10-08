@@ -1,0 +1,1038 @@
+{% extends 'FinanceApp/layout.html' %}
+{% block title %}
+<title>Loan Finance - User Registration</title>
+{% endblock %}
+
+{% block content %}
+{% load static %}
+
+<style>
+    /* Professional Color Grading */
+    .registration-gradient-1 {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    .registration-gradient-2 {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    }
+
+    .registration-gradient-3 {
+        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    }
+
+    .registration-gradient-4 {
+        background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+    }
+
+    /* Card Styles */
+    .registration-card {
+        border: none;
+        border-radius: 20px;
+        transition: all 0.4s ease;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+        overflow: hidden;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+    }
+
+    .registration-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 25px 60px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Form Styles */
+    .form-control {
+        border: 2px solid #e9ecef;
+        border-radius: 12px;
+        padding: 14px 18px;
+        transition: all 0.3s ease;
+        font-size: 1rem;
+        background: rgba(255, 255, 255, 0.9);
+    }
+
+    .form-control:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 0.3rem rgba(102, 126, 234, 0.15);
+        background: white;
+    }
+
+    /* Validation States */
+    .form-control.is-valid {
+        border-color: #43e97b;
+        box-shadow: 0 0 0 0.2rem rgba(67, 233, 123, 0.15);
+    }
+
+    .form-control.is-invalid {
+        border-color: #ff6b6b;
+        box-shadow: 0 0 0 0.2rem rgba(255, 107, 107, 0.15);
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 8px;
+        font-size: 0.95rem;
+    }
+
+    .form-text {
+        font-size: 0.85rem;
+        color: #6c757d;
+        margin-top: 6px;
+    }
+
+    /* Password Strength Indicator */
+    .password-strength {
+        height: 4px;
+        border-radius: 2px;
+        margin-top: 8px;
+        transition: all 0.3s ease;
+    }
+
+    .strength-weak {
+        background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+        width: 25%;
+    }
+
+    .strength-medium {
+        background: linear-gradient(135deg, #ffd93d 0%, #ff9a3d 100%);
+        width: 50%;
+    }
+
+    .strength-strong {
+        background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        width: 75%;
+    }
+
+    .strength-very-strong {
+        background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        width: 100%;
+    }
+
+    .strength-text {
+        font-size: 0.8rem;
+        font-weight: 600;
+        margin-top: 4px;
+    }
+
+    .strength-text.weak { color: #ff6b6b; }
+    .strength-text.medium { color: #ff9a3d; }
+    .strength-text.strong { color: #43e97b; }
+    .strength-text.very-strong { color: #38f9d7; }
+
+    /* Validation Messages */
+    .validation-message {
+        font-size: 0.8rem;
+        margin-top: 4px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .validation-valid {
+        color: #43e97b;
+    }
+
+    .validation-invalid {
+        color: #ff6b6b;
+    }
+
+    /* Button Styles */
+    .btn-premium {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        border-radius: 50px;
+        padding: 14px 35px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        color: white;
+        font-size: 1.1rem;
+        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+    }
+
+    .btn-premium:hover:not(:disabled) {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 35px rgba(0, 0, 0, 0.25);
+        color: white;
+    }
+
+    .btn-premium:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    .btn-outline-premium {
+        border: 2px solid #667eea;
+        border-radius: 50px;
+        padding: 10px 25px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        color: #667eea;
+        background: transparent;
+    }
+
+    .btn-outline-premium:hover {
+        background: #667eea;
+        color: white;
+        transform: translateY(-2px);
+    }
+
+    /* Professional Typography */
+    .professional-title {
+        font-weight: 700;
+        letter-spacing: -0.5px;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .professional-subtitle {
+        font-weight: 300;
+        line-height: 1.6;
+        color: #6c757d;
+    }
+
+    /* Field Icon */
+    .field-icon {
+        position: absolute;
+        right: 18px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 1.2rem;
+        color: #6c757d;
+        cursor: pointer;
+        z-index: 10;
+        transition: color 0.3s ease;
+        background: rgba(255, 255, 255, 0.9);
+        padding: 5px;
+        border-radius: 50%;
+    }
+
+    .field-icon:hover {
+        color: #667eea;
+        background: rgba(102, 126, 234, 0.1);
+    }
+
+    /* Modal Styles */
+    .premium-modal .modal-content {
+        border: none;
+        border-radius: 20px;
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+        overflow: hidden;
+    }
+
+    .premium-modal .modal-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-bottom: none;
+        padding: 25px 30px;
+    }
+
+    .premium-modal .modal-title {
+        font-weight: 700;
+        font-size: 1.4rem;
+    }
+
+    .premium-modal .modal-body {
+        padding: 30px;
+    }
+
+    .premium-modal .btn-close {
+        filter: invert(1);
+    }
+
+    /* OTP Input Styles */
+    .otp-input {
+        width: 50px;
+        height: 60px;
+        border: 2px solid #e9ecef;
+        border-radius: 12px;
+        text-align: center;
+        font-size: 1.4rem;
+        font-weight: 600;
+        color: #2c3e50;
+        transition: all 0.3s ease;
+        background: white;
+    }
+
+    .otp-input:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.15);
+        transform: scale(1.05);
+    }
+
+    .otp-container {
+        gap: 12px;
+    }
+
+    /* Background Animation */
+    .animated-background {
+        background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+        background-size: 400% 400%;
+        animation: gradient 15s ease infinite;
+    }
+
+    @keyframes gradient {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    /* Success States */
+    .success-message {
+        background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        color: white;
+        border-radius: 10px;
+        padding: 10px 15px;
+        margin: 10px 0;
+    }
+
+    .error-message {
+        background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+        color: white;
+        border-radius: 10px;
+        padding: 10px 15px;
+        margin: 10px 0;
+    }
+
+    /* ============================ */
+    /* MOBILE RESPONSIVE FIXES */
+    /* ============================ */
+
+    /* Mobile-first responsive design */
+    @media (max-width: 768px) {
+        .container-fluid.py-5 {
+            padding: 20px 15px !important;
+        }
+
+
+
+        .professional-title {
+            font-size: 1.5rem;
+            letter-spacing: -0.3px;
+        }
+
+        .professional-subtitle {
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .form-control {
+            padding: 12px 15px;
+            font-size: 16px; /* Prevents zoom on iOS */
+        }
+
+        .btn-premium {
+            padding: 12px 25px;
+            font-size: 1rem;
+            width: 100%;
+        }
+
+        /* OTP Modal mobile fixes */
+        .premium-modal .modal-dialog {
+            margin: 20px;
+            max-width: calc(100% - 40px);
+        }
+
+        .premium-modal .modal-header {
+            padding: 20px;
+        }
+
+        .premium-modal .modal-body {
+            padding: 20px;
+        }
+
+        .otp-input {
+            width: 45px;
+            height: 55px;
+            font-size: 1.2rem;
+        }
+
+        .otp-container {
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        /* Button group in modal */
+        .premium-modal .d-flex.justify-content-between {
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .premium-modal .btn {
+            width: 100%;
+            margin: 2px 0;
+        }
+
+        /* Field icons adjustment */
+        .field-icon {
+            right: 12px;
+            padding: 4px;
+            font-size: 1.1rem;
+        }
+
+        /* Password strength indicator */
+        .strength-text {
+            font-size: 0.75rem;
+        }
+
+        .validation-message {
+            font-size: 0.75rem;
+        }
+
+        /* Header icon size */
+        .fa-3x {
+            font-size: 2.5rem;
+        }
+    }
+
+
+
+        .professional-title {
+            font-size: 1.3rem;
+        }
+
+        .form-control {
+            padding: 10px 12px;
+            font-size: 16px;
+        }
+
+        .otp-input {
+            width: 40px;
+            height: 50px;
+            font-size: 1.1rem;
+        }
+
+        .otp-container {
+            gap: 6px;
+        }
+
+        .btn-premium {
+            padding: 10px 20px;
+            font-size: 0.95rem;
+        }
+
+        /* Reduce padding in form groups */
+        .form-group.mb-4 {
+            margin-bottom: 1rem !important;
+        }
+
+        .form-group.mb-5 {
+            margin-bottom: 1.5rem !important;
+        }
+
+        /* Adjust icon positions */
+        .position-absolute[style*="left: 20px"] {
+            left: 15px !important;
+        }
+
+        .field-icon {
+            right: 10px;
+        }
+    }
+
+    @media (max-width: 400px) {
+        .otp-input {
+            width: 35px;
+            height: 45px;
+            font-size: 1rem;
+        }
+
+        .otp-container {
+            gap: 4px;
+        }
+
+
+
+        .professional-title {
+            font-size: 1.2rem;
+        }
+
+        .professional-subtitle {
+            font-size: 0.85rem;
+        }
+    }
+
+    /* Fix for very small devices */
+    @media (max-width: 360px) {
+        .container-fluid {
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+
+
+
+        .otp-input {
+            width: 32px;
+            height: 42px;
+            font-size: 0.9rem;
+        }
+    }
+
+    /* Ensure form elements are touch-friendly */
+    .form-control,
+    .btn,
+    .field-icon,
+    .otp-input {
+        min-height: 44px; /* Minimum touch target size */
+    }
+
+    .field-icon {
+        min-width: 44px;
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Prevent horizontal scrolling on mobile */
+    body {
+        overflow-x: hidden;
+    }
+
+    .container-fluid {
+        max-width: 100%;
+        overflow-x: hidden;
+    }
+
+    /* Loading Animation */
+    .loading-dots {
+        display: inline-block;
+    }
+
+    .loading-dots::after {
+        content: '';
+        animation: dots 1.5s steps(5, end) infinite;
+    }
+
+    @keyframes dots {
+        0%, 20% { content: '.'; }
+        40% { content: '..'; }
+        60% { content: '...'; }
+        80%, 100% { content: ''; }
+    }
+  @media (max-width: 768px) {
+    .container-fluid {
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    .animated-background {
+        padding: 10px !important;
+    }
+
+    .row.w-100.justify-content-center {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .col-md-6 {
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+}
+</style>
+
+<div class="container-fluid animated-background">
+  <div class="row justify-content-center w-100 pt-3 pb-4 pl-0 pr-0">
+    <div class="col-md-6 col-12 m-0 ">
+      <div class="registration-card p-5 m-0" data-aos="zoom-in" data-aos-duration="800">
+        <!-- Header Section -->
+        <div class="text-center mb-5">
+          <div class="mb-4">
+            <i class="fas fa-user-plus fa-3x registration-gradient-1" style="-webkit-background-clip: text; -webkit-text-fill-color: transparent;"></i>
+          </div>
+          <h2 class="professional-title mb-3">Create Your Account</h2>
+          <p class="professional-subtitle">Join FinEase and start your financial journey today</p>
+        </div>
+
+        <form method="post" novalidate id="registrationForm">
+          {% csrf_token %}
+
+          <!-- Email Field -->
+          <div class="form-group mb-4">
+            <label for="email_input" class="form-label">
+              <i class="fas fa-envelope me-2 text-primary"></i>Email Address
+            </label>
+            <div class="position-relative">
+              <input type="email" id="email_input"
+                     name="username"
+                     class="form-control"
+                     placeholder="Enter your email address"
+                     required
+                     style="padding-left: 40px;">
+              <i class="fas fa-envelope position-absolute" style="left: 20px; top: 50%; transform: translateY(-50%); color: #6c757d;"></i>
+            </div>
+            <div id="email_validation" class="validation-message"></div>
+            {% for error in form.username.errors %}
+              <div class="invalid-feedback d-block">{{ error }}</div>
+            {% endfor %}
+          </div>
+
+          <!-- Password Field -->
+          <div class="form-group mb-4 position-relative">
+            <label for="id_password1" class="form-label">
+              <i class="fas fa-lock me-2 text-primary"></i>Password
+            </label>
+            <div class="position-relative">
+              <input type="password"
+                     name="password"
+                     class="form-control"
+                     id="id_password1"
+                     placeholder="Create a strong password"
+                     required
+                     style="padding-left: 45px;">
+              <i class="fas fa-lock position-absolute" style="left: 20px; top: 50%; transform: translateY(-50%); color: #6c757d;"></i>
+              <span toggle="#id_password1" class="field-icon toggle-password">
+                <i class="fa fa-eye-slash"></i>
+              </span>
+            </div>
+            <!-- Password Strength Indicator -->
+            <div class="password-strength" id="password_strength"></div>
+            <div class="strength-text" id="password_strength_text"></div>
+            <div id="password_validation" class="validation-message"></div>
+            {% for error in form.password1.errors %}
+              <div class="invalid-feedback d-block">{{ error }}</div>
+            {% endfor %}
+          </div>
+
+          <!-- Confirm Password Field -->
+          <div class="form-group mb-5 position-relative">
+            <label for="id_password2" class="form-label">
+              <i class="fas fa-lock me-2 text-primary"></i>Confirm Password
+            </label>
+            <div class="position-relative">
+              <input type="password"
+                     class="form-control"
+                     id="id_password2"
+                     placeholder="Confirm your password"
+                     required
+                     style="padding-left: 45px;">
+              <i class="fas fa-lock position-absolute" style="left: 20px; top: 50%; transform: translateY(-50%); color: #6c757d;"></i>
+              <span toggle="#id_password2" class="field-icon toggle-password">
+                <i class="fa fa-eye-slash"></i>
+              </span>
+            </div>
+            <div id="confirm_password_validation" class="validation-message"></div>
+            {% for error in form.password2.errors %}
+              <div class="invalid-feedback d-block">{{ error }}</div>
+            {% endfor %}
+          </div>
+
+          <input type="hidden" id="otp_verified" name="otp_verified" value="false">
+
+          <!-- Submit Button -->
+          <div class="d-grid mb-4">
+            <button type="button" class="btn-premium" id="sendOtpBtn" disabled>
+              <i class="fas fa-user-plus me-2"></i>Create Account
+            </button>
+          </div>
+        </form>
+
+        <!-- Login Link -->
+        <div class="text-center pt-3 border-top">
+          <p class="text-muted mb-0">
+            Already have an account?
+            <a href="/finance/login" class="text-primary fw-bold text-decoration-none">
+              Sign In <i class="fas fa-arrow-right ms-1"></i>
+            </a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- OTP Modal -->
+<div class="modal fade premium-modal" id="otpModal" tabindex="-1" aria-labelledby="otpModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-white w-100 text-center">
+          <i class="fas fa-shield-alt me-2"></i>Verify Your Email
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body text-center p-4">
+        <!-- Icon and Message -->
+        <div class="mb-4">
+          <div class="registration-gradient-3 rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
+               style="width: 80px; height: 80px;">
+            <i class="fas fa-envelope fa-2x text-white"></i>
+          </div>
+          <h6 class="fw-bold text-dark mb-2">Enter Verification Code</h6>
+          <p class="text-muted mb-3">We've sent a 6-digit OTP to your email address</p>
+        </div>
+
+        <!-- OTP Inputs -->
+        <div class="d-flex justify-content-center otp-container mb-4">
+          <input type="password" maxlength="1" class="otp-input form-control" />
+          <input type="password" maxlength="1" class="otp-input form-control" />
+          <input type="password" maxlength="1" class="otp-input form-control" />
+          <input type="password" maxlength="1" class="otp-input form-control" />
+          <input type="password" maxlength="1" class="otp-input form-control" />
+          <input type="password" maxlength="1" class="otp-input form-control" />
+        </div>
+
+        <!-- OTP Message -->
+        <div id="otp_message" class="text-center small mb-4"></div>
+
+        <!-- Action Buttons -->
+        <div class="d-flex justify-content-between align-items-center">
+          <button type="button" class="btn btn-outline-premium" id="resendOtpBtn">
+            <i class="fas fa-redo me-1"></i>Resend OTP
+          </button>
+          <button type="button" class="btn-premium px-4" id="verifyOtpBtn">
+            Verify <i class="fas fa-check ms-1"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const sendOtpBtn = document.getElementById("sendOtpBtn");
+    const verifyOtpBtn = document.getElementById("verifyOtpBtn");
+    const resendOtpBtn = document.getElementById("resendOtpBtn");
+    const registrationForm = document.getElementById("registrationForm");
+    const otpModalEl = document.getElementById("otpModal");
+
+    const emailInput = document.getElementById("email_input");
+    const passwordInput = document.getElementById("id_password1");
+    const confirmPasswordInput = document.getElementById("id_password2");
+
+    let otpInputs;
+    let isFormValid = false;
+
+    // Password toggle functionality
+    document.querySelectorAll('.toggle-password').forEach(toggle => {
+        toggle.addEventListener('click', function() {
+            const input = document.querySelector(this.getAttribute('toggle'));
+            const icon = this.querySelector('i');
+            if (input.type === "password") {
+                input.type = "text";
+                icon.classList.replace('fa-eye-slash', 'fa-eye');
+            } else {
+                input.type = "password";
+                icon.classList.replace('fa-eye', 'fa-eye-slash');
+            }
+        });
+    });
+
+    // Email validation
+    function validateEmail(email) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    }
+
+    // Password strength validation
+    function checkPasswordStrength(password) {
+        let strength = 0;
+        const validationMessages = [];
+
+        // Length check
+        if (password.length >= 8) {
+            strength += 1;
+            validationMessages.push({valid: true, text: '✓ At least 8 characters'});
+        } else {
+            validationMessages.push({valid: false, text: '✗ At least 8 characters'});
+        }
+
+        // Uppercase check
+        if (/[A-Z]/.test(password)) {
+            strength += 1;
+            validationMessages.push({valid: true, text: '✓ Uppercase letter'});
+        } else {
+            validationMessages.push({valid: false, text: '✗ Uppercase letter'});
+        }
+
+        // Lowercase check
+        if (/[a-z]/.test(password)) {
+            strength += 1;
+            validationMessages.push({valid: true, text: '✓ Lowercase letter'});
+        } else {
+            validationMessages.push({valid: false, text: '✗ Lowercase letter'});
+        }
+
+        // Number check
+        if (/[0-9]/.test(password)) {
+            strength += 1;
+            validationMessages.push({valid: true, text: '✓ Contains number'});
+        } else {
+            validationMessages.push({valid: false, text: '✗ Contains number'});
+        }
+
+        // Special character check
+        if (/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+            strength += 1;
+            validationMessages.push({valid: true, text: '✓ Special character'});
+        } else {
+            validationMessages.push({valid: false, text: '✗ Special character'});
+        }
+
+        return { strength, validationMessages };
+    }
+
+    // Update password strength indicator
+    function updatePasswordStrength(password) {
+        const strengthBar = document.getElementById('password_strength');
+        const strengthText = document.getElementById('password_strength_text');
+        const validationDiv = document.getElementById('password_validation');
+
+        if (password.length === 0) {
+            strengthBar.className = 'password-strength';
+            strengthBar.style.width = '0%';
+            strengthText.textContent = '';
+            validationDiv.innerHTML = '';
+            return;
+        }
+
+        const { strength, validationMessages } = checkPasswordStrength(password);
+
+        // Update strength bar
+        strengthBar.className = 'password-strength';
+        if (strength <= 2) {
+            strengthBar.classList.add('strength-weak');
+            strengthText.textContent = 'Weak';
+            strengthText.className = 'strength-text weak';
+        } else if (strength === 3) {
+            strengthBar.classList.add('strength-medium');
+            strengthText.textContent = 'Medium';
+            strengthText.className = 'strength-text medium';
+        } else if (strength === 4) {
+            strengthBar.classList.add('strength-strong');
+            strengthText.textContent = 'Strong';
+            strengthText.className = 'strength-text strong';
+        } else {
+            strengthBar.classList.add('strength-very-strong');
+            strengthText.textContent = 'Very Strong';
+            strengthText.className = 'strength-text very-strong';
+        }
+
+        // Update validation messages
+        validationDiv.innerHTML = validationMessages.map(msg =>
+            `<div class="${msg.valid ? 'validation-valid' : 'validation-invalid'}">${msg.text}</div>`
+        ).join('');
+    }
+
+    // Validate form function
+    function validateForm() {
+        const email = emailInput.value.trim();
+        const password = passwordInput.value;
+        const confirmPassword = confirmPasswordInput.value;
+
+        const isEmailValid = validateEmail(email);
+        const isPasswordValid = password.length >= 8;
+        const isConfirmPasswordValid = password === confirmPassword && password.length > 0;
+
+        // Update email validation
+        const emailValidation = document.getElementById('email_validation');
+        if (email.length === 0) {
+            emailInput.classList.remove('is-valid', 'is-invalid');
+            emailValidation.innerHTML = '';
+        } else if (isEmailValid) {
+            emailInput.classList.remove('is-invalid');
+            emailInput.classList.add('is-valid');
+            emailValidation.innerHTML = '<div class="validation-valid">✓ Valid email format</div>';
+        } else {
+            emailInput.classList.remove('is-valid');
+            emailInput.classList.add('is-invalid');
+            emailValidation.innerHTML = '<div class="validation-invalid">✗ Please enter a valid email address</div>';
+        }
+
+        // Update confirm password validation
+        const confirmValidation = document.getElementById('confirm_password_validation');
+        if (confirmPassword.length === 0) {
+            confirmPasswordInput.classList.remove('is-valid', 'is-invalid');
+            confirmValidation.innerHTML = '';
+        } else if (isConfirmPasswordValid) {
+            confirmPasswordInput.classList.remove('is-invalid');
+            confirmPasswordInput.classList.add('is-valid');
+            confirmValidation.innerHTML = '<div class="validation-valid">✓ Passwords match</div>';
+        } else {
+            confirmPasswordInput.classList.remove('is-valid');
+            confirmPasswordInput.classList.add('is-invalid');
+            confirmValidation.innerHTML = '<div class="validation-invalid">✗ Passwords do not match</div>';
+        }
+
+        // Enable/disable send OTP button
+        isFormValid = isEmailValid && isPasswordValid && isConfirmPasswordValid;
+        sendOtpBtn.disabled = !isFormValid;
+
+        return isFormValid;
+    }
+
+    // Event listeners for real-time validation
+    emailInput.addEventListener('input', validateForm);
+    passwordInput.addEventListener('input', function() {
+        updatePasswordStrength(this.value);
+        validateForm();
+    });
+    confirmPasswordInput.addEventListener('input', validateForm);
+
+    // Send OTP
+    sendOtpBtn.addEventListener("click", function () {
+        if (!isFormValid) {
+            showAlert("Please fix the validation errors before proceeding!", "error");
+            return;
+        }
+
+        const email = emailInput.value.trim();
+        const password = passwordInput.value;
+        const confirmPassword = confirmPasswordInput.value;
+
+        // Show loading state
+        const originalText = sendOtpBtn.innerHTML;
+        sendOtpBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Sending OTP<span class="loading-dots"></span>';
+        sendOtpBtn.disabled = true;
+
+        fetch("{% url 'send_email_otp' %}", {
+            method: "POST",
+            headers: {
+                "X-CSRFToken": "{{ csrf_token }}",
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: "email=" + encodeURIComponent(email)
+        })
+        .then(res => res.json())
+        .then(data => {
+            // Restore button state
+            sendOtpBtn.innerHTML = originalText;
+            sendOtpBtn.disabled = false;
+
+            const msg = document.getElementById("otp_message");
+            if (data.status === "success") {
+                msg.innerHTML = '<div class="success-message">' + data.message + '</div>';
+                const otpModal = new bootstrap.Modal(otpModalEl);
+                otpModal.show();
+
+                // Initialize OTP inputs after modal is shown
+                setTimeout(() => {
+                    otpInputs = otpModalEl.querySelectorAll(".otp-input");
+                    setupOtpInputs();
+                }, 500);
+            } else {
+                msg.innerHTML = '<div class="error-message">' + data.message + '</div>';
+                showAlert(data.message, "error");
+            }
+        })
+        .catch(error => {
+            console.error('Error sending OTP:', error);
+            sendOtpBtn.innerHTML = originalText;
+            sendOtpBtn.disabled = false;
+            showAlert("Error sending OTP. Please try again.", "error");
+        });
+    });
+
+    // Verify OTP
+    verifyOtpBtn.addEventListener("click", function () {
+        if (!otpInputs) return;
+
+        const otp = Array.from(otpInputs).map(i => i.value).join('');
+
+        if (otp.length < 6) {
+            const msg = document.getElementById("otp_message");
+            msg.innerHTML = '<div class="error-message">Please enter complete 6-digit OTP!</div>';
+            otpInputs[0].focus();
+            return;
+        }
+
+        // Show verifying state
+        const originalText = verifyOtpBtn.innerHTML;
+        verifyOtpBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Verifying<span class="loading-dots"></span>';
+        verifyOtpBtn.disabled = true;
+
+        const msg = document.getElementById("otp_message");
+        msg.innerHTML = '<div class="text-info">Verifying OTP<span class="loading-dots"></span></div>';
+
+        fetch("{% url 'verify_email_otp' %}", {
+            method: "POST",
+            headers: {
+                "X-CSRFToken": "{{ csrf_token }}",
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: "otp=" + encodeURIComponent(otp)
+        })
+        .then(res => res.json())
+        .then(data => {
+            verifyOtpBtn.innerHTML = originalText;
+            verifyOtpBtn.disabled = false;
+
+            if (data.status === "success") {
+                msg.innerHTML = '<div class="success-message">' + data.message + '</div>';
+                document.getElementById("otp_verified").value = "true";
+
+                setTimeout(() => {
+                    bootstrap.Modal.getInstance(otpModalEl).hide();
+                    setTimeout(() => {
+                        registrationForm.submit();
+                    }, 1000);
+                }, 1500);
+            } else {
+                msg.innerHTML = '<div class="error-message">' + data.message + '</div>';
+            }
+        })
+        .catch(error => {
+            console.error('Error verifying OTP:', error);
+            verifyOtpBtn.innerHTML = originalText;
+            verifyOtpBtn.disabled = false;
+            msg.innerHTML = '<div class="error-message">Error verifying OTP. Please try again.</div>';
+        });
+    });
+
+    // Resend OTP
+    resendOtpBtn.addEventListener("click", function () {
+        if (otpInputs) {
+            otpInputs.forEach(input => input.value = '');
+            otpInputs[0].focus();
+        }
+
+        const msg = document.getElementById("otp_message");
+        msg.innerHTML = '<div class="text-info">Sending new OTP<span class="loading-dots"></span></div>';
+
+        sendOtpBtn.click();
+    });
+
+    // Setup OTP inputs
+    function setupOtpInputs() {
+        otpInputs.forEach((input, index) => {
+            input.value = '';
+            input.addEventListener("input", (e) => {
+                if (e.target.value.length === 1 && index < otpInputs.length - 1) {
+                    otpInputs[index + 1].focus();
+                }
+            });
+            input.addEventListener("keydown", (e) => {
+                if (e.key === "Backspace" && e.target.value === "" && index > 0) {
+                    otpInputs[index - 1].focus();
+                }
+            });
+        });
+        otpInputs[0].focus();
+    }
+
+    // Professional alert function
+    function showAlert(message, type) {
+        // Use the showAlert function from your layout
+        if (typeof window.showAlert === 'function') {
+            window.showAlert(message, type);
+        } else {
+            alert(message);
+        }
+    }
+  });
+</script>
+
+<!-- AOS Animation -->
+<link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+<script>
+  AOS.init({
+      duration: 1000,
+      once: true,
+      offset: 50
+  });
+</script>
+{% endblock %}

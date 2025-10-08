@@ -1,0 +1,558 @@
+{% extends 'FinanceApp/layout.html' %}
+{% load static %}
+
+{% block title %}
+<title>Loan Finance - About Us</title>
+{% endblock title %}
+
+{% block content %}
+
+<style>
+    /* Professional Color Variables */
+    :root {
+        --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        --warning-gradient: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        --dark-gradient: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+    }
+
+    /* Global Styles */
+    body, html {
+        overflow-x: hidden;
+        max-width: 100%;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .container {
+        max-width: 100%;
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    /* Section Spacing */
+    .section-spacing {
+        padding: 80px 0;
+    }
+
+    /* Professional Typography */
+    .professional-title {
+        font-weight: 700;
+        letter-spacing: -0.5px;
+    }
+
+    .professional-subtitle {
+        font-weight: 300;
+        line-height: 1.6;
+    }
+
+    .gradient-text {
+        background: var(--primary-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    /* Card Styles */
+    .about-card {
+        border: none;
+        border-radius: 20px;
+        transition: all 0.4s ease;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+    }
+
+    .about-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+    }
+
+    .process-card {
+        min-height: 320px;
+        border: none;
+        border-radius: 20px;
+        transition: all 0.3s ease;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+
+    .process-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Button Styles */
+    .btn-premium {
+        background: var(--primary-gradient);
+        border: none;
+        border-radius: 50px;
+        padding: 14px 35px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        color: white;
+        font-size: 1.1rem;
+        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+    }
+
+    .btn-premium:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 35px rgba(0, 0, 0, 0.25);
+        color: white;
+    }
+
+    /* Hero Section */
+    .about-hero {
+        background: var(--primary-gradient);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .about-hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80') center/cover no-repeat;
+        opacity: 0.1;
+        z-index: 1;
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 2;
+    }
+
+    /* Stats Section */
+    .stats-container {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 20px;
+        padding: 30px;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .stat-item {
+        text-align: center;
+        padding: 20px;
+    }
+
+    .stat-number {
+        font-size: 3rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+        background: linear-gradient(135deg, #fff, #e3f2fd);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    /* Process Section */
+    .process-section {
+        background: var(--success-gradient);
+        position: relative;
+    }
+
+    .process-icon {
+        width: 80px;
+        height: 80px;
+        background: var(--primary-gradient);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px;
+        box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+    }
+
+    .process-icon img {
+        width: 40px;
+        height: 40px;
+        filter: brightness(0) invert(1);
+    }
+
+    .step-number {
+        width: 50px;
+        height: 50px;
+        background: var(--primary-gradient);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px;
+        color: white;
+        font-weight: 700;
+        font-size: 1.2rem;
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    /* Feature Cards */
+    .feature-card {
+        min-height: 200px;
+        border: none;
+        border-radius: 20px;
+        transition: all 0.3s ease;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+
+    .feature-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Mission Section */
+    .mission-section {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    }
+
+    .mission-card {
+        min-height: 500px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    /* CTA Section */
+    .cta-section {
+        background: var(--primary-gradient);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .cta-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80') center/cover no-repeat;
+        opacity: 0.1;
+        z-index: 1;
+    }
+
+    .cta-content {
+        position: relative;
+        z-index: 2;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .section-spacing {
+            padding: 60px 0;
+        }
+
+        .process-card {
+            min-height: 280px;
+            margin: 10px;
+        }
+
+        .mission-card {
+            min-height: 400px;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+        }
+
+        .btn-premium {
+            padding: 12px 25px;
+            font-size: 1rem;
+        }
+    }
+
+    /* List Styles */
+    .feature-list {
+        list-style: none;
+        padding: 0;
+    }
+
+    .feature-list li {
+        padding: 10px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .feature-list li:last-child {
+        border-bottom: none;
+    }
+
+    .feature-list li::before {
+        content: '✓';
+        color: #43e97b;
+        font-weight: bold;
+        margin-right: 10px;
+    }
+</style>
+
+<!-- About Hero Section -->
+<section class="about-hero text-white section-spacing">
+    <div class="container">
+        <div class="row justify-content-center text-center mx-0">
+            <div class="col-lg-10 hero-content">
+                <h1 class="professional-title display-4 mb-4" data-aos="fade-down">
+                    About <span >Loan Finance</span>
+                </h1>
+                <p class="lead professional-subtitle mb-5 fs-5" data-aos="fade-up">
+                    We are India's leading digital lending platform, committed to making financial services accessible to everyone.
+                    With cutting-edge technology and customer-centric approach, we've revolutionized the loan application process.
+                </p>
+
+                <!-- Stats Section -->
+                <div class="stats-container mt-5" data-aos="zoom-in">
+                    <div class="row">
+                        <div class="col-md-4 stat-item">
+                            <div class="stat-number">3+</div>
+                            <p class="professional-subtitle mb-0">Years of Excellence</p>
+                        </div>
+                        <div class="col-md-4 stat-item">
+                            <div class="stat-number">₹4Cr+</div>
+                            <p class="professional-subtitle mb-0">Loan Portfolio</p>
+                        </div>
+                        <div class="col-md-4 stat-item">
+                            <div class="stat-number">1K+</div>
+                            <p class="professional-subtitle mb-0">Families Empowered</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Mission & Vision Section -->
+<section class="mission-section section-spacing">
+    <div class="container">
+        <div class="row align-items-stretch mx-0 g-4">
+            <!-- Mission Card -->
+            <div class="col-lg-6" data-aos="fade-right">
+                <div class="about-card p-5 mission-card" style="background: var(--secondary-gradient);">
+                    <h3 class="professional-title text-white mb-4">Our Mission & Vision</h3>
+                    <p class="text-white mb-4 professional-subtitle">
+                        To democratize access to credit and empower individuals and businesses with flexible, transparent, and affordable financial solutions.
+                    </p>
+                    <p class="text-white mb-4 professional-subtitle">
+                        We envision a India where every deserving individual has access to formal credit without barriers, enabling them to achieve their dreams and aspirations.
+                    </p>
+                    <ul class="feature-list text-white professional-subtitle mt-auto">
+                        <li>Customer-first approach in everything we do</li>
+                        <li>Transparency in pricing and processes</li>
+                        <li>Innovation in financial technology</li>
+                        <li>Social responsibility and inclusion</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Vision Image -->
+            <div class="col-lg-6" data-aos="fade-left">
+                <div class="about-card overflow-hidden h-100">
+                    <img src="{% static 'FinanceApp/images/about.jpg' %}"
+                         class="img-fluid w-100 h-100"
+                         style="object-fit: cover; min-height: 500px;"
+                         alt="FinEase Team">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Loan Process Section -->
+<section class="process-section text-white section-spacing">
+    <div class="container">
+        <div class="row mb-5 justify-content-center text-center mx-0">
+            <div class="col-lg-8">
+                <h2 class="professional-title mb-4" data-aos="fade-down">Our 4-Step Loan Process</h2>
+                <p class="lead professional-subtitle" data-aos="fade-up">
+                    Simple, transparent, and hassle-free loan application process designed for your convenience
+                </p>
+            </div>
+        </div>
+
+        <div class="row mx-0 g-4">
+            <!-- Step 1 -->
+            <div class="col-md-6 col-lg-3" data-aos="fade-up">
+                <div class="process-card p-4 text-center bg-white">
+                    <div class="step-number">01</div>
+                    <div class="process-icon">
+                        <img src="https://cdn-icons-png.flaticon.com/512/3135/3135755.png" alt="Apply Online">
+                    </div>
+                    <h5 class="text-dark professional-title mb-3">Apply Online</h5>
+                    <p class="text-muted professional-subtitle">
+                        Fill simple online form in 5 minutes with basic details and requirements
+                    </p>
+                </div>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="100">
+                <div class="process-card p-4 text-center bg-white">
+                    <div class="step-number">02</div>
+                    <div class="process-icon">
+                        <img src="https://cdn-icons-png.flaticon.com/512/3135/3135765.png" alt="Upload Documents">
+                    </div>
+                    <h5 class="text-dark professional-title mb-3">Upload Documents</h5>
+                    <p class="text-muted professional-subtitle">
+                        Upload required documents through our secure and encrypted portal
+                    </p>
+                </div>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="200">
+                <div class="process-card p-4 text-center bg-white">
+                    <div class="step-number">03</div>
+                    <div class="process-icon">
+                        <img src="https://cdn-icons-png.flaticon.com/512/3135/3135775.png" alt="Get Approval">
+                    </div>
+                    <h5 class="text-dark professional-title mb-3">Get Approval</h5>
+                    <p class="text-muted professional-subtitle">
+                        Receive instant approval within 24 hours through automated processing
+                    </p>
+                </div>
+            </div>
+
+            <!-- Step 4 -->
+            <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="300">
+                <div class="process-card p-4 text-center bg-white">
+                    <div class="step-number">04</div>
+                    <div class="process-icon">
+                        <img src="https://cdn-icons-png.flaticon.com/512/3135/3135785.png" alt="Receive Money">
+                    </div>
+                    <h5 class="text-dark professional-title mb-3">Receive Money</h5>
+                    <p class="text-muted professional-subtitle">
+                        Get amount disbursed directly to your bank account within 48 hours
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Why Choose Us Section -->
+<section class="section-spacing" style="background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);">
+    <div class="container">
+        <div class="row mb-5 justify-content-center text-center mx-0">
+            <div class="col-lg-8">
+                <h2 class="professional-title mb-4" data-aos="fade-down">Why Choose FinEase?</h2>
+                <p class="lead professional-subtitle" data-aos="fade-up">
+                    We stand out with our customer-centric approach and innovative financial solutions
+                </p>
+            </div>
+        </div>
+
+        <div class="row mx-0 g-4">
+            <!-- Feature 1 -->
+            <div class="col-md-6" data-aos="fade-right">
+                <div class="feature-card p-4 h-100" style="background: var(--warning-gradient);">
+                    <h4 class="professional-title text-dark mb-3">
+                        <i class="fas fa-percentage me-2"></i>Lowest Interest Rates
+                    </h4>
+                    <p class="text-dark professional-subtitle">
+                        Starting from 8.5% per annum, we offer some of the most competitive rates in the market with complete transparency and no hidden charges.
+                    </p>
+                    <div class="mt-3">
+                        <span class="badge bg-dark me-2">Transparent Pricing</span>
+                        <span class="badge bg-dark">No Hidden Fees</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Feature 2 -->
+            <div class="col-md-6" data-aos="fade-left">
+                <div class="feature-card p-4 h-100" style="background: var(--secondary-gradient);">
+                    <h4 class="professional-title text-white mb-3">
+                        <i class="fas fa-bolt me-2"></i>Instant Approval
+                    </h4>
+                    <p class="text-white professional-subtitle">
+                        Get loan approval within 24 hours through our advanced automated underwriting system. No long waiting periods or unnecessary delays.
+                    </p>
+                    <div class="mt-3">
+                        <span class="badge bg-light text-dark me-2">24H Processing</span>
+                        <span class="badge bg-light text-dark">Quick Disbursal</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Feature 3 -->
+            <div class="col-md-6" data-aos="fade-right">
+                <div class="feature-card p-4 h-100" style="background: var(--primary-gradient);">
+                    <h4 class="professional-title text-white mb-3">
+                        <i class="fas fa-calendar-alt me-2"></i>Flexible EMI Options
+                    </h4>
+                    <p class="text-white professional-subtitle">
+                        Choose repayment tenure from 12 to 84 months with no prepayment penalties. EMI starts as low as ₹1,999 per lakh.
+                    </p>
+                    <div class="mt-3">
+                        <span class="badge bg-light text-dark me-2">12-84 Months</span>
+                        <span class="badge bg-light text-dark">No Prepayment Fee</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Feature 4 -->
+            <div class="col-md-6" data-aos="fade-left">
+                <div class="feature-card p-4 h-100" style="background: var(--success-gradient);">
+                    <h4 class="professional-title text-white mb-3">
+                        <i class="fas fa-mobile-alt me-2"></i>Digital Process
+                    </h4>
+                    <p class="text-white professional-subtitle">
+                        Complete your loan application 100% online from anywhere. No branch visits, no physical documentation required throughout the process.
+                    </p>
+                    <div class="mt-3">
+                        <span class="badge bg-light text-dark me-2">100% Online</span>
+                        <span class="badge bg-light text-dark">Paperless</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-section text-white section-spacing">
+    <div class="container">
+        <div class="row justify-content-center text-center mx-0">
+            <div class="col-lg-8 cta-content">
+                <h2 class="professional-title display-5 mb-4" data-aos="fade-down">
+                    Ready to Transform Your Financial Future?
+                </h2>
+                <p class="lead professional-subtitle mb-5" data-aos="fade-up">
+                    Join thousands of satisfied customers who have achieved their dreams with FinEase's transparent and hassle-free loan services.
+                </p>
+                <div class="d-flex flex-column flex-sm-row justify-content-center gap-4" data-aos="zoom-in">
+                    <a href="/loan" class="btn-premium">
+                        <i class="fas fa-rocket me-2"></i>Apply for Loan
+                    </a>
+                    <a href="/contact" class="btn btn-outline-light btn-lg">
+                        <i class="fas fa-phone me-2"></i>Contact Us
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- AOS Animations -->
+<link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+
+<!-- Font Awesome -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+<script>
+    AOS.init({
+        duration: 1000,
+        once: true,
+        offset: 50
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        document.body.style.overflowX = 'hidden';
+        document.documentElement.style.overflowX = 'hidden';
+    });
+
+
+</script>
+
+{% endblock content %}

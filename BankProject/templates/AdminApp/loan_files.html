@@ -1,0 +1,381 @@
+{% extends 'AdminApp/layout.html' %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Page Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 font-weight-bold text-primary mb-1">Loan Applications</h1>
+            <p class="text-muted">Manage and review all loan applications in the system</p>
+        </div>
+        <div class="d-flex">
+
+        </div>
+    </div>
+
+
+
+    <!-- Loan Files Table -->
+    <div class="card" data-aos="fade-up">
+        <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
+            <h5 class="mb-0 font-weight-bold text-dark">
+                <i class="fas fa-file-alt mr-2 text-primary"></i>
+                Loan Applications
+            </h5>
+            <div>
+                <span class="badge badge-primary badge-pill p-2">{{ loan_object|length }} applications</span>
+            </div>
+        </div>
+        <div class="card-body p-0">
+            <!-- Responsive Table Container -->
+            <div class="table-responsive-lg">
+                <table class="table table-hover mb-0 w-100">
+                    <thead class="bg-light">
+                        <tr>
+                            <th class="border-0 font-weight-bold text-dark py-3 px-4">Customer Details</th>
+                            <th class="border-0 font-weight-bold text-dark py-3 px-4 text-center">Loan Amount</th>
+                            <th class="border-0 font-weight-bold text-dark py-3 px-4 text-center">Application Date</th>
+                            <th class="border-0 font-weight-bold text-dark py-3 px-4 text-center">Status</th>
+                            <th class="border-0 font-weight-bold text-dark py-3 px-4 text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for loan in loan_object %}
+                        <tr>
+                            <td class="py-3 px-4">
+                                <div class="d-flex align-items-center">
+                                    <div class="customer-avatar bg-primary text-white d-flex align-items-center justify-content-center mr-3">
+                                        {{ loan.customer_name|first|upper }}
+                                    </div>
+                                    <div>
+                                        <div class="font-weight-bold text-dark">{{ loan.customer_name }}</div>
+                                        <div class="text-muted small">{{ loan.customer_mobile }}</div>
+                                        <div class="text-muted small">User: {{ loan.user_name }}</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="text-center py-3 px-4">
+                                <div class="loan-amount">
+                                    <div class="font-weight-bold text-dark">₹{{ loan.request_amount }}</div>
+                                    <small class="text-muted">Requested</small>
+                                </div>
+                            </td>
+                            <td class="text-center py-3 px-4">
+                                <div class="application-date">
+                                    <div class="text-dark">{{ loan.action|date:"M d, Y" }}</div>
+                                    <small class="text-muted">{{ loan.action|date:"h:i A" }}</small>
+                                </div>
+                            </td>
+                            <td class="text-center py-3 px-4">
+                                {% if loan.status == 'approved' %}
+                                    <span class="status-badge approved">Approved</span>
+                                {% elif loan.status == 'rejected' %}
+                                    <span class="status-badge rejected">Rejected</span>
+                                {% elif loan.status == 'pending' %}
+                                    <span class="status-badge pending">Pending</span>
+                                {% else %}
+                                    <span class="status-badge pending">{{ loan.status|title }}</span>
+                                {% endif %}
+                            </td>
+                            <td class="text-center py-3 px-4">
+                                <div class="btn-group" role="group">
+                                    <a href="/FinanceAdmin/view_loan/{{loan.id}}" class="btn btn-sm btn-outline-info" data-toggle="tooltip" title="View Details">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a href="/FinanceAdmin/update_loan/{{loan.id}}" class="btn btn-sm btn-outline-primary" data-toggle="tooltip" title="Edit Loan">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a href="/FinanceAdmin/delete_loan/{{loan.id}}" onclick="return confirm('Are you sure you want to delete this loan application?')"
+                                       class="btn btn-sm btn-outline-danger" data-toggle="tooltip" title="Delete Loan">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+
+                        {% if not loan_object %}
+                        <tr>
+                            <td colspan="5" class="text-center py-5">
+                                <div class="empty-state">
+                                    <i class="fas fa-file-invoice-dollar fa-3x text-muted mb-3"></i>
+                                    <h5 class="text-muted">No Loan Applications Found</h5>
+                                    <p class="text-muted">There are no loan applications in the system yet.</p>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% if loan_object %}
+        <div class="card-footer bg-white d-flex justify-content-between align-items-center">
+            <div class="text-muted">
+                Showing <strong>{{ loan_object|length }}</strong> of <strong>{{ loan_object|length }}</strong> applications
+            </div>
+
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+    .customer-avatar {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        font-weight: 600;
+        font-size: 16px;
+    }
+
+    .empty-state {
+        padding: 40px 20px;
+    }
+
+    .card {
+        border: none;
+        border-radius: 12px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    .card-header {
+        border-bottom: 1px solid #e9ecef;
+        border-radius: 12px 12px 0 0 !important;
+    }
+
+    .btn-group .btn {
+        border-radius: 6px;
+        margin: 0 2px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-group .btn:hover {
+        transform: translateY(-1px);
+    }
+
+    /* Status Badges */
+    .status-badge {
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .status-badge.approved {
+        background: rgba(76, 175, 80, 0.1);
+        color: #4caf50;
+        border: 1px solid rgba(76, 175, 80, 0.2);
+    }
+
+    .status-badge.rejected {
+        background: rgba(244, 67, 54, 0.1);
+        color: #f44336;
+        border: 1px solid rgba(244, 67, 54, 0.2);
+    }
+
+    .status-badge.pending {
+        background: rgba(255, 152, 0, 0.1);
+        color: #ff9800;
+        border: 1px solid rgba(255, 152, 0, 0.2);
+    }
+
+    /* Stat Cards */
+    .stat-card {
+        text-align: center;
+        padding: 25px 15px;
+        border-radius: 12px;
+        color: white;
+        margin-bottom: 20px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    .stat-card i {
+        font-size: 2.5rem;
+        margin-bottom: 15px;
+        display: block;
+        opacity: 0.9;
+    }
+
+    .stat-card .count {
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 5px;
+    }
+
+    .stat-card .label {
+        font-size: 0.9rem;
+        opacity: 0.9;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .stat-card.primary {
+        background: linear-gradient(135deg, #1a73e8, #64b5f6);
+    }
+
+    .stat-card.success {
+        background: linear-gradient(135deg, #4caf50, #81c784);
+    }
+
+    .stat-card.warning {
+        background: linear-gradient(135deg, #ff9800, #ffb74d);
+    }
+
+    .stat-card.danger {
+        background: linear-gradient(135deg, #f44336, #e57373);
+    }
+
+    /* Responsive Table Styles */
+    .table-responsive-lg {
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .table {
+        width: 100%;
+        min-width: 800px;
+        margin-bottom: 0;
+    }
+
+    .table th,
+    .table td {
+        white-space: nowrap;
+        vertical-align: middle;
+    }
+
+    .table thead th {
+        border-top: none;
+        font-weight: 600;
+        text-transform: none;
+        letter-spacing: normal;
+        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    }
+
+    .table tbody tr:hover {
+        background-color: rgba(26, 115, 232, 0.03);
+    }
+
+    /* Mobile-specific styles */
+    @media (max-width: 768px) {
+        .table-responsive-lg {
+            border-radius: 0 0 10px 10px;
+        }
+
+        .table {
+            min-width: 700px;
+        }
+
+        .table th,
+        .table td {
+            padding: 12px 8px;
+            font-size: 14px;
+        }
+
+        .customer-avatar {
+            width: 40px;
+            height: 40px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+
+        .btn-group .btn {
+            padding: 4px 8px;
+            font-size: 12px;
+        }
+
+        .status-badge {
+            padding: 4px 8px;
+            font-size: 10px;
+        }
+
+        .card-header {
+            padding: 15px 20px;
+        }
+
+        .card-header h5 {
+            font-size: 1.1rem;
+        }
+
+        .d-flex.justify-content-between.align-items-center.mb-4 {
+            flex-direction: column;
+            align-items: flex-start !important;
+        }
+
+        .d-flex.justify-content-between.align-items-center.mb-4 > div:last-child {
+            margin-top: 15px;
+            width: 100%;
+        }
+
+        .input-group {
+            max-width: 100% !important;
+        }
+
+        .stat-card {
+            padding: 20px 10px;
+        }
+
+        .stat-card i {
+            font-size: 2rem;
+        }
+
+        .stat-card .count {
+            font-size: 1.5rem;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .table {
+            min-width: 600px;
+        }
+
+        .table th,
+        .table td {
+            padding: 10px 6px;
+            font-size: 13px;
+        }
+
+        .empty-state {
+            padding: 30px 15px;
+        }
+
+        .empty-state i {
+            font-size: 2rem;
+        }
+
+        .empty-state h5 {
+            font-size: 1.1rem;
+        }
+    }
+
+    /* Custom scrollbar for table */
+    .table-responsive-lg::-webkit-scrollbar {
+        height: 6px;
+    }
+
+    .table-responsive-lg::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 3px;
+    }
+
+    .table-responsive-lg::-webkit-scrollbar-thumb {
+        background: #c1c1c1;
+        border-radius: 3px;
+    }
+
+    .table-responsive-lg::-webkit-scrollbar-thumb:hover {
+        background: #a8a8a8;
+    }
+</style>
+
+
+{% endblock %}

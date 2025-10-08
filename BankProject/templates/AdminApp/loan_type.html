@@ -1,0 +1,426 @@
+{% extends 'AdminApp/layout.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block content %}
+<div class="container-fluid   ">
+    <!-- Page Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 font-weight-bold text-primary mb-1">Loan Types Management</h1>
+            <p class="text-muted">Add and manage different loan types with their interest rates</p>
+        </div>
+
+    </div>
+
+    <div class="row">
+        <!-- Form Section -->
+        <div class="col-xl-12 col-lg-12 mb-4">
+            <div class="row justify-content-center">
+                <div class="col-md-5">
+                     <div class="card" data-aos="fade-right">
+
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="form-row">
+                            <div class="form-group col-md-12">
+                                {{ form.name|as_crispy_field }}
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-12">
+                                {{ form.interest_rate|as_crispy_field }}
+                            </div>
+                        </div>
+                        <div class="form-group mt-4">
+                            <button class="btn btn-primary btn-lg btn-block py-2" type="submit">
+                                <i class="fas fa-save mr-2"></i> Save Loan Type
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Loan Types Table -->
+        <div class="col-xl-12 col-lg-12">
+            <div class="card" data-aos="fade-left">
+                <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
+                    <h5 class="mb-0 font-weight-bold text-dark">
+                        <i class="fas fa-list mr-2 text-primary"></i>
+                        Loan Types
+                    </h5>
+                    <div>
+                        <span class="badge badge-primary badge-pill p-2">{{ loan_obj|length }} types</span>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    <!-- Responsive Table Container -->
+                    <div class="table-responsive-lg">
+                        <table class="table table-hover mb-0 w-100">
+                            <thead class="bg-light">
+                                <tr>
+                                    <th class="border-0 font-weight-bold text-dark py-3 px-4">Loan Type</th>
+                                    <th class="border-0 font-weight-bold text-dark py-3 px-4 text-center">Interest Rate</th>
+                                    <th class="border-0 font-weight-bold text-dark py-3 px-4 text-center">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for type in loan_obj %}
+                                <tr>
+                                    <td class="py-3 px-4">
+                                        <div class="d-flex align-items-center">
+                                            <div class="loan-type-icon bg-primary text-white d-flex align-items-center justify-content-center mr-3">
+                                                <i class="fas fa-hand-holding-usd"></i>
+                                            </div>
+                                            <div>
+                                                <div class="font-weight-bold text-dark">{{ type.name }}</div>
+                                                <small class="text-muted">ID: LT-{{ type.id }}</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="text-center py-3 px-4">
+                                        <span class="interest-badge">{{ type.interest_rate }}%</span>
+                                    </td>
+                                    <td class="text-center py-3 px-4">
+                                        <div class="btn-group" role="group">
+                                            <a href="/FinanceAdmin/type/update/{{type.id}}" class="btn btn-sm btn-outline-primary" data-toggle="tooltip" title="Edit Loan Type">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <a href="/FinanceAdmin/type/delete/{{type.id}}" onclick="return confirm('Are you sure you want to delete this loan type?')"
+                                               class="btn btn-sm btn-outline-danger" data-toggle="tooltip" title="Delete Loan Type">
+                                                <i class="fas fa-trash"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+
+                                {% if not loan_obj %}
+                                <tr>
+                                    <td colspan="3" class="text-center py-5">
+                                        <div class="empty-state">
+                                            <i class="fas fa-hand-holding-usd fa-3x text-muted mb-3"></i>
+                                            <h5 class="text-muted">No Loan Types Found</h5>
+                                            <p class="text-muted">Get started by adding your first loan type using the form.</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .loan-type-icon {
+        width: 45px;
+        height: 45px;
+        border-radius: 10px;
+        font-size: 18px;
+    }
+
+    .interest-badge {
+        background: rgba(76, 175, 80, 0.1);
+        color: #4caf50;
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 14px;
+        border: 1px solid rgba(76, 175, 80, 0.2);
+    }
+
+    .empty-state {
+        padding: 40px 20px;
+    }
+
+    .card {
+        border: none;
+        border-radius: 12px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        height: fit-content;
+    }
+
+    .card-header {
+        border-bottom: 1px solid #e9ecef;
+        border-radius: 12px 12px 0 0 !important;
+    }
+
+    .btn-group .btn {
+        border-radius: 6px;
+        margin: 0 2px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-group .btn:hover {
+        transform: translateY(-1px);
+    }
+
+    .form-control {
+        border-radius: 8px;
+        padding: 12px 15px;
+        border: 1px solid #e0e0e0;
+        transition: all 0.3s;
+    }
+
+    .form-control:focus {
+        border-color: #1a73e8;
+        box-shadow: 0 0 0 0.2rem rgba(26, 115, 232, 0.15);
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #1a73e8, #64b5f6);
+        border: none;
+        border-radius: 8px;
+        padding: 12px 30px;
+        font-weight: 600;
+        transition: all 0.3s;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(26, 115, 232, 0.3);
+    }
+
+    /* Crispy Forms Styling */
+    .form-group label {
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 8px;
+    }
+
+    .help-block {
+        font-size: 12px;
+        color: #6c757d;
+        margin-top: 5px;
+    }
+
+    /* Responsive Table Styles */
+    .table-responsive-lg {
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+        border-radius: 0 0 10px 10px;
+    }
+
+    .table {
+        width: 100%;
+        min-width: 500px; /* Minimum width before scrolling kicks in */
+        margin-bottom: 0;
+    }
+
+    /* Table cell padding for better spacing */
+    .table th,
+    .table td {
+        white-space: nowrap;
+        vertical-align: middle;
+    }
+
+    .table thead th {
+        border-top: none;
+        font-weight: 600;
+        text-transform: none;
+        letter-spacing: normal;
+        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    }
+
+    .table tbody tr:hover {
+        background-color: rgba(26, 115, 232, 0.03);
+    }
+
+    /* Mobile-specific styles */
+    @media (max-width: 1200px) {
+        .col-xl-5, .col-xl-7 {
+            flex: 0 0 100%;
+            max-width: 100%;
+        }
+
+        .col-xl-7 {
+            margin-top: 20px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .table-responsive-lg {
+            border-radius: 0 0 10px 10px;
+        }
+
+        .table {
+            min-width: 450px; /* Smaller minimum width for mobile */
+        }
+
+        .table th,
+        .table td {
+            padding: 12px 8px;
+            font-size: 14px;
+        }
+
+        .loan-type-icon {
+            width: 40px;
+            height: 40px;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+
+        .btn-group .btn {
+            padding: 4px 8px;
+            font-size: 12px;
+        }
+
+        .interest-badge {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+
+        .card-header {
+            padding: 15px 20px;
+        }
+
+        .card-header h5 {
+            font-size: 1.1rem;
+        }
+
+        .d-flex.justify-content-between.align-items-center.mb-4 {
+            flex-direction: column;
+            align-items: flex-start !important;
+        }
+
+        .d-flex.justify-content-between.align-items-center.mb-4 > div:last-child {
+            margin-top: 15px;
+            width: 100%;
+        }
+
+        .btn-primary {
+            width: 100%;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .table {
+            min-width: 400px;
+        }
+
+        .table th,
+        .table td {
+            padding: 10px 6px;
+            font-size: 13px;
+        }
+
+        .loan-type-icon {
+            width: 35px;
+            height: 35px;
+            font-size: 14px;
+        }
+
+        .empty-state {
+            padding: 30px 15px;
+        }
+
+        .empty-state i {
+            font-size: 2rem;
+        }
+
+        .empty-state h5 {
+            font-size: 1.1rem;
+        }
+    }
+
+    /* Custom scrollbar for table */
+    .table-responsive-lg::-webkit-scrollbar {
+        height: 6px;
+    }
+
+    .table-responsive-lg::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 3px;
+    }
+
+    .table-responsive-lg::-webkit-scrollbar-thumb {
+        background: #c1c1c1;
+        border-radius: 3px;
+    }
+
+    .table-responsive-lg::-webkit-scrollbar-thumb:hover {
+        background: #a8a8a8;
+    }
+
+    /* Animation for better UX */
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .table tbody tr {
+        animation: fadeIn 0.3s ease-out;
+    }
+</style>
+
+<script>
+    // Initialize tooltips
+    $(document).ready(function(){
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+
+    // Function to handle responsive table behavior
+    function handleTableResponsive() {
+        const tableContainer = document.querySelector('.table-responsive-lg');
+        const table = document.querySelector('.table');
+
+        if (tableContainer && table) {
+            // Add visual indicator for scrollable tables on mobile
+            if (tableContainer.scrollWidth > tableContainer.clientWidth) {
+                tableContainer.style.background = 'linear-gradient(90deg, transparent 95%, rgba(0,0,0,0.05) 100%)';
+            } else {
+                tableContainer.style.background = 'transparent';
+            }
+        }
+    }
+
+    // Initialize on load and resize
+    document.addEventListener('DOMContentLoaded', handleTableResponsive);
+    window.addEventListener('resize', handleTableResponsive);
+
+    // Add smooth scrolling behavior for table
+    document.addEventListener('DOMContentLoaded', function() {
+        const tableContainer = document.querySelector('.table-responsive-lg');
+        if (tableContainer) {
+            let isDown = false;
+            let startX;
+            let scrollLeft;
+
+            tableContainer.addEventListener('mousedown', (e) => {
+                isDown = true;
+                tableContainer.classList.add('active');
+                startX = e.pageX - tableContainer.offsetLeft;
+                scrollLeft = tableContainer.scrollLeft;
+            });
+
+            tableContainer.addEventListener('mouseleave', () => {
+                isDown = false;
+                tableContainer.classList.remove('active');
+            });
+
+            tableContainer.addEventListener('mouseup', () => {
+                isDown = false;
+                tableContainer.classList.remove('active');
+            });
+
+            tableContainer.addEventListener('mousemove', (e) => {
+                if (!isDown) return;
+                e.preventDefault();
+                const x = e.pageX - tableContainer.offsetLeft;
+                const walk = (x - startX) * 2;
+                tableContainer.scrollLeft = scrollLeft - walk;
+            });
+        }
+    });
+</script>
+{% endblock %}

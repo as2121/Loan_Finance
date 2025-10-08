@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FINANCE ADMIN</title>
+
+  <!-- Bootstrap & Fonts -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/331cd755fd.js" crossorigin="anonymous"></script>
+
+  <!-- AOS Animation -->
+  <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+
+  <style>
+    :root {
+      --primary: #1a73e8;
+      --primary-dark: #0d47a1;
+      --primary-light: #64b5f6;
+      --secondary: #26c6da;
+      --accent: #ff5722;
+      --success: #4caf50;
+      --warning: #ff9800;
+      --danger: #f44336;
+      --light: #f8f9fa;
+      --dark: #212529;
+      --gray: #6c757d;
+      --gray-light: #e9ecef;
+      --sidebar-width: 280px;
+      --sidebar-collapsed-width: 70px;
+      --header-height: 70px;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f5f7fb;
+      color: #333;
+      overflow-x: hidden;
+    }
+
+    /* Sidebar Styling */
+    #sidebar {
+      width: var(--sidebar-width);
+      background: linear-gradient(180deg, var(--primary-dark) 0%, var(--primary) 100%);
+      color: #fff;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100vh;
+      z-index: 1000;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+      overflow-y: auto;
+    }
+
+    #sidebar.collapsed {
+      width: var(--sidebar-collapsed-width);
+    }
+
+    /* Alert Notification Styles */
+    .alert-notification {
+        position: fixed;
+        top: 90px;
+        right: 20px;
+        min-width: 350px;
+        max-width: 450px;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        z-index: 9999;
+        animation: slideInRight 0.5s ease-out;
+        border: none;
+        overflow: hidden;
+        backdrop-filter: blur(10px);
+        border-left: 4px solid;
+    }
+
+    .alert-notification.success {
+        background: linear-gradient(135deg, rgba(76, 175, 80, 0.95), rgba(76, 175, 80, 0.9));
+        border-left-color: #2e7d32;
+        color: white;
+    }
+
+    .alert-notification.info {
+        background: linear-gradient(135deg, rgba(33, 150, 243, 0.95), rgba(33, 150, 243, 0.9));
+        border-left-color: #1565c0;
+        color: white;
+    }
+
+    .alert-notification.warning {
+        background: linear-gradient(135deg, rgba(255, 152, 0, 0.95), rgba(255, 152, 0, 0.9));
+        border-left-color: #ef6c00;
+        color: white;
+    }
+
+    .alert-notification.error {
+        background: linear-gradient(135deg, rgba(244, 67, 54, 0.95), rgba(244, 67, 54, 0.9));
+        border-left-color: #c62828;
+        color: white;
+    }
+
+    .alert-content {
+        display: flex;
+        align-items: center;
+        padding: 10px 7px;
+    }
+
+    .alert-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 15px;
+        font-size: 1.3rem;
+        background: rgba(255, 255, 255, 0.2);
+    }
+
+    .alert-text {
+        flex: 1;
+        font-weight: 500;
+        font-size: 14px;
+        line-height: 1.4;
+    }
+
+    .alert-close {
+        background: none;
+        border: none;
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 1.2rem;
+        cursor: pointer;
+        padding: 0;
+        margin-left: 15px;
+        transition: color 0.3s;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .alert-close:hover {
+        color: white;
+        background: rgba(255, 255, 255, 0.1);
+    }
+
+    /* Progress Bar */
+    .alert-progress {
+        height: 3px;
+        background: rgba(255, 255, 255, 0.3);
+        width: 100%;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .alert-progress-bar {
+        height: 100%;
+        background: rgba(255, 255, 255, 0.6);
+        width: 100%;
+        animation: progressBar 5s linear forwards;
+    }
+
+    /* Animations */
+    @keyframes slideInRight {
+        from {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+
+    @keyframes slideOutRight {
+        from {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        to {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+    }
+
+    @keyframes progressBar {
+        from {
+            width: 100%;
+        }
+        to {
+            width: 0%;
+        }
+    }
+
+    /* Multiple notifications stacking */
+    .alert-notification:not(:first-child) {
+        margin-top: 10px;
+    }
+
+    @media (max-width: 768px) {
+        .alert-notification {
+            min-width: calc(100% - 40px);
+            right: 20px;
+            left: 20px;
+            top: 80px;
+        }
+    }
+
+    #sidebar.collapsed .sidebar-header span,
+    #sidebar.collapsed ul li a span {
+      display: none;
+    }
+
+    #sidebar.collapsed .sidebar-header {
+      justify-content: center;
+      padding: 15px 0;
+    }
+
+    #sidebar.collapsed ul li {
+      padding: 15px 0;
+      text-align: center;
+    }
+
+    #sidebar.collapsed ul li a i {
+      margin-right: 0;
+      font-size: 1.2rem;
+    }
+
+    .sidebar-header {
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.05);
+      height: var(--header-height);
+      display: flex;
+      align-items: center;
+      font-size: 1.3rem;
+      font-weight: 700;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .sidebar-header img {
+      height: 35px;
+      margin-right: 15px;
+      border-radius: 5px;
+    }
+
+    #sidebar ul.components {
+      padding: 20px 0;
+    }
+
+    #sidebar ul li {
+      padding: 12px 20px;
+      font-size: 0.95rem;
+      font-weight: 500;
+      transition: all 0.3s;
+      border-radius: 0;
+      margin-bottom: 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    #sidebar ul li:before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      width: 4px;
+      background: var(--secondary);
+      transform: scaleY(0);
+      transition: transform 0.3s;
+    }
+
+    #sidebar ul li.active:before,
+    #sidebar ul li:hover:before {
+      transform: scaleY(1);
+    }
+
+    #sidebar ul li.active,
+    #sidebar ul li:hover {
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    #sidebar ul li a {
+      color: rgba(255, 255, 255, 0.85);
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    #sidebar ul li a:hover {
+      color: #fff;
+    }
+
+    #sidebar ul li a i {
+      margin-right: 15px;
+      font-size: 1.1rem;
+      width: 20px;
+      text-align: center;
+    }
+
+    #sidebar ul li.logout {
+      margin-top: 20px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding-top: 20px;
+    }
+
+    #sidebar ul li.logout a {
+      color: rgba(255, 255, 255, 0.7) !important;
+      font-weight: 600;
+    }
+
+    #sidebar ul li.logout:hover a {
+      color: #fff !important;
+    }
+
+    /* Main Content Area */
+    #content {
+      margin-left: var(--sidebar-width);
+      width: calc(100% - var(--sidebar-width));
+      padding: 20px;
+      min-height: 100vh;
+      transition: all 0.3s;
+    }
+
+    #content.expanded {
+      margin-left: var(--sidebar-collapsed-width);
+      width: calc(100% - var(--sidebar-collapsed-width));
+    }
+
+    /* Navbar */
+    .navbar {
+      background: #fff;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      border-radius: 10px;
+      padding: 10px 20px;
+      margin-bottom: 25px;
+    }
+
+    .navbar .btn-toggle {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 15px;
+      transition: all 0.3s;
+    }
+
+    .navbar .btn-toggle:hover {
+      background: var(--primary-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+    }
+
+    .user-info img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      margin-right: 10px;
+      border: 2px solid var(--primary-light);
+    }
+
+    /* Cards & Dashboard Elements */
+    .card {
+      border: none;
+      border-radius: 12px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s;
+      margin-bottom: 25px;
+      overflow: hidden;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-header {
+      background: #fff;
+      border-bottom: 1px solid var(--gray-light);
+      padding: 15px 20px;
+      font-weight: 600;
+      color: var(--dark);
+    }
+
+    .card-body {
+      padding: 20px;
+    }
+
+    /* Stats Cards */
+    .stat-card {
+      text-align: center;
+      padding: 25px 15px;
+    }
+
+    .stat-card i {
+      font-size: 2.5rem;
+      margin-bottom: 15px;
+      display: block;
+    }
+
+    .stat-card .count {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 5px;
+    }
+
+    .stat-card .label {
+      font-size: 0.9rem;
+      color: var(--gray);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .stat-card.primary {
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      color: white;
+    }
+
+    .stat-card.success {
+      background: linear-gradient(135deg, var(--success), #81c784);
+      color: white;
+    }
+
+    .stat-card.warning {
+      background: linear-gradient(135deg, var(--warning), #ffb74d);
+      color: white;
+    }
+
+    .stat-card.danger {
+      background: linear-gradient(135deg, var(--danger), #e57373);
+      color: white;
+    }
+
+    /* Tables */
+    .table-container {
+      background: #fff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    .table {
+      margin-bottom: 0;
+    }
+
+    .table thead th {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 15px;
+      font-weight: 600;
+    }
+
+    .table tbody td {
+      padding: 15px;
+      vertical-align: middle;
+      border-bottom: 1px solid var(--gray-light);
+    }
+
+    .table tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    .table tbody tr:hover {
+      background: rgba(26, 115, 232, 0.05);
+    }
+
+    /* Buttons */
+    .btn {
+      border-radius: 8px;
+      font-weight: 500;
+      padding: 8px 20px;
+      transition: all 0.3s;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      border-color: var(--primary);
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+      border-color: var(--primary-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(26, 115, 232, 0.3);
+    }
+
+    .btn-success {
+      background: var(--success);
+      border-color: var(--success);
+    }
+
+    .btn-warning {
+      background: var(--warning);
+      border-color: var(--warning);
+    }
+
+    .btn-danger {
+      background: var(--danger);
+      border-color: var(--danger);
+    }
+
+    .btn-outline-primary {
+      color: var(--primary);
+      border-color: var(--primary);
+    }
+
+    .btn-outline-primary:hover {
+      background: var(--primary);
+      border-color: var(--primary);
+    }
+
+    /* Forms */
+    .form-container {
+      background: #fff;
+      border-radius: 12px;
+      padding: 25px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    .form-group label {
+      font-weight: 600;
+      color: var(--dark);
+      margin-bottom: 8px;
+    }
+
+    .form-control {
+      border-radius: 8px;
+      border: 1px solid var(--gray-light);
+      padding: 10px 15px;
+      transition: all 0.3s;
+    }
+
+    .form-control:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 0.2rem rgba(26, 115, 232, 0.25);
+    }
+
+    /* Badges */
+    .badge {
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-weight: 500;
+    }
+
+    .badge-pending {
+      background: rgba(255, 152, 0, 0.1);
+      color: var(--warning);
+    }
+
+    .badge-approved {
+      background: rgba(76, 175, 80, 0.1);
+      color: var(--success);
+    }
+
+    .badge-rejected {
+      background: rgba(244, 67, 54, 0.1);
+      color: var(--danger);
+    }
+
+    /* Responsive */
+    @media (max-width: 992px) {
+      #sidebar {
+        margin-left: -280px;
+        width: var(--sidebar-width);
+      }
+
+      #sidebar.active {
+        margin-left: 0;
+      }
+
+      #sidebar.collapsed {
+        margin-left: -280px;
+      }
+
+      #sidebar.collapsed.active {
+        margin-left: 0;
+      }
+
+      #content {
+        margin-left: 0;
+        width: 100%;
+        padding: 15px;
+      }
+
+      #content.expanded {
+        margin-left: 0;
+        width: 100%;
+      }
+
+      .navbar {
+        margin-bottom: 15px;
+        padding: 10px 15px;
+      }
+    }
+
+    /* Scrollbar Styling */
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #f1f1f1;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--primary-light);
+      border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--primary);
+    }
+  </style>
+</head>
+<body>
+  <!-- Alert Notifications Container -->
+  <div id="alertContainer" style="position: fixed; top: 90px; right: 20px; z-index: 9999;"></div>
+
+  <div class="wrapper">
+    <!-- Sidebar -->
+    <nav id="sidebar" data-aos="fade-right">
+        <div class="sidebar-header">
+            <img src="{% static 'FinanceApp/images/loan_logo.jpg' %}" alt="Logo">
+            <span>Finance Admin</span>
+        </div>
+        <ul class="components">
+            <li class="{% if request.path == '/FinanceAdmin/dashboard' %}active{% endif %}">
+    <a href="/FinanceAdmin/dashboard">
+        <i class="fas fa-tachometer-alt"></i>
+        <span>DASHBOARD</span>
+    </a>
+</li>
+            <li class="{% if request.path == '/FinanceAdmin/user' %}active{% endif %}">
+                <a href="/FinanceAdmin/user">
+                    <i class="fas fa-users"></i>
+                    <span>USERS</span>
+                </a>
+            </li>
+            <li class="{% if request.path == '/FinanceAdmin/type' %}active{% endif %}">
+                <a href="/FinanceAdmin/type">
+                    <i class="fas fa-list-alt"></i>
+                    <span>LOAN TYPE</span>
+                </a>
+            </li>
+            <li class="{% if request.path == '/FinanceAdmin/loan' %}active{% endif %}">
+                <a href="/FinanceAdmin/loan">
+                    <i class="fas fa-file-invoice-dollar"></i>
+                    <span>LOAN REQUEST</span>
+                </a>
+            </li>
+            <li class="{% if request.path == '/FinanceAdmin/approve_loan' %}active{% endif %}">
+                <a href="/FinanceAdmin/approve_loan">
+                    <i class="fas fa-check-circle"></i>
+                    <span>APPROVED LOAN FILES</span>
+                </a>
+            </li>
+            <li class="{% if request.path == '/FinanceAdmin/disbursed' %}active{% endif %}">
+                <a href="/FinanceAdmin/disbursed">
+                    <i class="fas fa-money-check-alt"></i>
+                    <span>DISBURSED LOAN FILES</span>
+                </a>
+            </li>
+            <li class="{% if request.path == '/FinanceAdmin/rejected' %}active{% endif %}">
+                <a href="/FinanceAdmin/rejected">
+                    <i class="fas fa-times-circle"></i>
+                    <span>REJECTED LOAN FILES</span>
+                </a>
+            </li>
+            <li class="{% if request.path == '/FinanceAdmin/active_loan' %}active{% endif %}">
+                <a href="/FinanceAdmin/active_loan">
+                    <i class="fas fa-chart-line"></i>
+                    <span>ACTIVE LOAN FILES</span>
+                </a>
+            </li>
+            <li class="{% if request.path == '/FinanceAdmin/emi_history' %}active{% endif %}">
+                <a href="/FinanceAdmin/emi_history">
+                    <i class="fas fa-history"></i>
+                    <span>EMI HISTORY</span>
+                </a>
+            </li>
+            <li class="{% if request.path == '/FinanceAdmin/contact' %}active{% endif %}">
+                <a href="/FinanceAdmin/contact">
+                    <i class="fas fa-envelope"></i>
+                    <span>CONTACT US</span>
+                </a>
+            </li>
+            <li class="logout">
+                <a href="#" onclick="confirmLogout('/FinanceAdmin/logout')">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>LOGOUT</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Page Content -->
+    <div id="content">
+        <nav class="navbar navbar-expand-lg navbar-light">
+            <div class="container-fluid">
+                <button type="button" id="sidebarCollapse" class="btn btn-toggle">
+                    <i class="fas fa-align-left"></i>
+                </button>
+                <div class="user-info ml-auto">
+                    <img src="{% static 'FinanceApp/images/loan_logo.jpg' %}" alt="Admin">
+                    <span>Hello, <b>{{ user }}</b></span>
+                </div>
+            </div>
+        </nav>
+
+        {% block content %}
+        <p>Please override content here</p>
+        {% endblock %}
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.7.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    $(document).ready(function () {
+        $('#sidebarCollapse').on('click', function () {
+            if ($(window).width() <= 992) {
+                // Mobile behavior - toggle active class (slide in/out)
+                $('#sidebar').toggleClass('active');
+            } else {
+                // Desktop behavior - toggle collapsed class (mini sidebar)
+                $('#sidebar').toggleClass('collapsed');
+                $('#content').toggleClass('expanded');
+            }
+        });
+
+        // Close sidebar when clicking outside on mobile
+        $(document).on('click', function (e) {
+            if ($(window).width() <= 992) {
+                if (!$(e.target).closest('#sidebar').length &&
+                    !$(e.target).closest('#sidebarCollapse').length &&
+                    $('#sidebar').hasClass('active')) {
+                    $('#sidebar').removeClass('active');
+                }
+            }
+        });
+
+        // Handle window resize
+        $(window).on('resize', function() {
+            if ($(window).width() > 992) {
+                // Reset mobile active state on desktop
+                $('#sidebar').removeClass('active');
+            }
+        });
+    });
+
+    AOS.init({
+        duration: 800,
+        once: true,
+        offset: 100
+    });
+
+    // Logout confirmation
+    function confirmLogout(url){
+        if(confirm("Are you sure you want to logout?")){
+            window.location.href = url;
+        }
+    }
+
+    // Alert Notification Function
+    function showAlert(message, type = 'info', duration = 5000) {
+        const alertContainer = document.getElementById('alertContainer');
+        if (!alertContainer) {
+            console.error('Alert container not found');
+            return;
+        }
+
+        // Create alert element
+        const alert = document.createElement('div');
+        alert.className = `alert-notification ${type}`;
+
+        // Get icon based on type
+        const icons = {
+            'success': 'fa-check-circle',
+            'info': 'fa-info-circle',
+            'warning': 'fa-exclamation-triangle',
+            'error': 'fa-exclamation-circle'
+        };
+
+        const icon = icons[type] || 'fa-info-circle';
+
+        alert.innerHTML = `
+            <div class="alert-content">
+                <div class="alert-icon">
+                    <i class="fas ${icon}"></i>
+                </div>
+                <div class="alert-text">${message}</div>
+                <button class="alert-close" onclick="closeAlert(this)">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="alert-progress">
+                <div class="alert-progress-bar"></div>
+            </div>
+        `;
+
+        // Add to container
+        alertContainer.appendChild(alert);
+
+        // Auto remove after duration
+        const timeout = setTimeout(() => {
+            closeAlert(alert.querySelector('.alert-close'));
+        }, duration);
+
+        // Store timeout reference for manual close
+        alert.timeout = timeout;
+
+        return alert;
+    }
+
+    // Close alert function
+    function closeAlert(closeButton) {
+        const alert = closeButton.closest('.alert-notification');
+        if (alert && alert.timeout) {
+            clearTimeout(alert.timeout);
+        }
+
+        alert.style.animation = 'slideOutRight 0.5s ease-out';
+        setTimeout(() => {
+            if (alert.parentElement) {
+                alert.remove();
+            }
+        }, 500);
+    }
+
+    // Close all alerts
+    function closeAllAlerts() {
+        const alerts = document.querySelectorAll('.alert-notification');
+        alerts.forEach(alert => {
+            const closeBtn = alert.querySelector('.alert-close');
+            if (closeBtn) closeAlert(closeBtn);
+        });
+    }
+
+    // Process Django messages
+    {% for message in messages %}
+        {% if message %}
+            showAlert('{{ message|escapejs }}', '{{ message.tags }}');
+        {% endif %}
+    {% endfor %}
+
+    // Test function - you can remove this
+    function testAlert() {
+        showAlert('This is a test notification from admin panel!', 'success');
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,765 @@
+{% extends 'FinanceApp/layout.html' %}
+{% block content %}
+<style>
+    /* Professional Color Grading */
+    :root {
+        --primary: #667eea;
+        --primary-dark: #764ba2;
+        --secondary: #4facfe;
+        --secondary-dark: #00f2fe;
+        --success: #43e97b;
+        --success-dark: #38f9d7;
+        --warning: #feca57;
+        --warning-dark: #ff9ff3;
+        --danger: #ff6b6b;
+        --danger-dark: #ee5a24;
+        --dark: #2c3e50;
+        --light: #f8f9fa;
+        --muted: #6c757d;
+        --glass: rgba(255, 255, 255, 0.08);
+    }
+
+    /* Page Styles */
+    .payment-container {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+        min-height: 100vh;
+        padding: 40px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Main Wrapper */
+    .payment-wrapper {
+        width: 100%;
+        max-width: 1200px;
+        display: grid;
+        grid-template-columns: 1fr 400px;
+        gap: 30px;
+        align-items: start;
+    }
+
+    @media (max-width: 968px) {
+        .payment-wrapper {
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+    }
+
+    /* Cards */
+    .payment-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        border-radius: 20px;
+        padding: 35px;
+        box-shadow: 0 25px 60px rgba(0, 0, 0, 0.15);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        transition: all 0.3s ease;
+    }
+
+    .payment-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 30px 80px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Header */
+    .payment-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .payment-logo {
+        width: 70px;
+        height: 70px;
+        background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px;
+        color: white;
+        font-weight: 800;
+        font-size: 28px;
+        box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+    }
+
+    .payment-title {
+        font-size: 2.2rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 8px;
+    }
+
+    .payment-subtitle {
+        color: var(--muted);
+        font-size: 1.1rem;
+        font-weight: 400;
+    }
+
+    /* Amount Display */
+    .amount-display {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .amount-label {
+        color: var(--muted);
+        font-size: 1.1rem;
+        margin-bottom: 12px;
+    }
+
+    .amount-value {
+        font-size: 3.5rem;
+        font-weight: 800;
+        color: var(--dark);
+        line-height: 1;
+    }
+
+    .amount-currency {
+        color: var(--primary);
+    }
+
+    /* Order Info */
+    .order-info {
+        background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+        border-radius: 15px;
+        padding: 25px;
+        margin-bottom: 25px;
+    }
+
+    .info-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 0;
+        border-bottom: 1px solid rgba(102, 126, 234, 0.1);
+    }
+
+    .info-item:last-child {
+        border-bottom: none;
+    }
+
+    .info-label {
+        color: var(--muted);
+        font-weight: 500;
+    }
+
+    .info-value {
+        font-weight: 600;
+        color: var(--dark);
+    }
+
+    .customer-phone {
+        font-family: 'Courier New', monospace;
+        background: rgba(102, 126, 234, 0.1);
+        padding: 6px 12px;
+        border-radius: 8px;
+        font-weight: 600;
+        color: var(--primary);
+    }
+
+    /* Action Buttons */
+    .action-buttons {
+        display: flex;
+        gap: 15px;
+        margin-top: 25px;
+    }
+
+    @media (max-width: 480px) {
+        .action-buttons {
+            flex-direction: column;
+        }
+    }
+
+    .btn {
+        border: none;
+        border-radius: 12px;
+        padding: 16px 30px;
+        font-weight: 600;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        flex: 1;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+        color: white;
+        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-secondary {
+        background: rgba(255, 255, 255, 0.8);
+        border: 2px solid #e9ecef;
+        color: var(--dark);
+    }
+
+    .btn-secondary:hover {
+        background: white;
+        border-color: var(--primary);
+        transform: translateY(-2px);
+    }
+
+    /* Bank Panel */
+    .bank-panel {
+        position: sticky;
+        top: 20px;
+    }
+
+    .bank-header {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 25px;
+    }
+
+    .bank-icon {
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, var(--secondary), var(--secondary-dark));
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 24px;
+    }
+
+    .bank-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--dark);
+    }
+
+    .bank-subtitle {
+        color: var(--muted);
+        font-size: 0.95rem;
+    }
+
+    .bank-details {
+        background: linear-gradient(135deg, rgba(79, 172, 254, 0.1), rgba(0, 242, 254, 0.1));
+        border-radius: 15px;
+        padding: 25px;
+        margin-bottom: 20px;
+        display: none;
+    }
+
+    .bank-details.show {
+        display: block;
+        animation: slideDown 0.5s ease;
+    }
+
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .detail-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 14px 0;
+        border-bottom: 1px solid rgba(79, 172, 254, 0.2);
+    }
+
+    .detail-item:last-child {
+        border-bottom: none;
+    }
+
+    .detail-label {
+        color: var(--muted);
+        font-size: 0.9rem;
+        font-weight: 500;
+    }
+
+    .detail-value {
+        font-weight: 600;
+        color: var(--dark);
+        font-family: 'Courier New', monospace;
+    }
+
+    .copy-btn {
+        background: transparent;
+        border: 1px solid var(--primary);
+        color: var(--primary);
+        padding: 6px 12px;
+        border-radius: 8px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-left: 10px;
+    }
+
+    .copy-btn:hover {
+        background: var(--primary);
+        color: white;
+    }
+
+    /* Progress Steps */
+    .progress-steps {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 30px 0;
+        position: relative;
+    }
+
+    .progress-steps::before {
+        content: '';
+        position: absolute;
+        top: 15px;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: #e9ecef;
+        z-index: 1;
+    }
+
+    .step {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        position: relative;
+        z-index: 2;
+    }
+
+    .step-icon {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: #e9ecef;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--muted);
+        margin-bottom: 8px;
+        transition: all 0.3s ease;
+    }
+
+    .step.active .step-icon {
+        background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+        color: white;
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+    }
+
+    .step.completed .step-icon {
+        background: linear-gradient(135deg, var(--success), var(--success-dark));
+        color: white;
+    }
+
+    .step-label {
+        font-size: 0.8rem;
+        color: var(--muted);
+        font-weight: 500;
+    }
+
+    .step.active .step-label {
+        color: var(--primary);
+        font-weight: 600;
+    }
+
+    /* Success Modal */
+    .modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(10px);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        padding: 20px;
+    }
+
+    .modal.show {
+        display: flex;
+        animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    .modal-content {
+        background: white;
+        border-radius: 20px;
+        padding: 40px;
+        max-width: 500px;
+        width: 100%;
+        box-shadow: 0 25px 80px rgba(0, 0, 0, 0.3);
+        animation: modalSlideIn 0.3s ease;
+    }
+
+    @keyframes modalSlideIn {
+        from {
+            opacity: 0;
+            transform: translateY(-50px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .success-animation {
+        text-align: center;
+        padding: 20px 0;
+    }
+
+    .success-icon {
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(135deg, var(--success), var(--success-dark));
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 25px;
+        color: white;
+        font-size: 36px;
+        animation: successScale 0.5s ease;
+    }
+
+    @keyframes successScale {
+        0% {
+            transform: scale(0);
+        }
+        50% {
+            transform: scale(1.2);
+        }
+        100% {
+            transform: scale(1);
+        }
+    }
+
+    .success-title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--success);
+        margin-bottom: 15px;
+    }
+
+    .success-message {
+        color: var(--muted);
+        margin-bottom: 25px;
+        line-height: 1.6;
+    }
+
+    /* Loading Spinner */
+    .spinner {
+        width: 20px;
+        height: 20px;
+        border: 3px solid rgba(255, 255, 255, 0.3);
+        border-top: 3px solid white;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    /* Utility Classes */
+    .text-center { text-align: center; }
+    .mb-20 { margin-bottom: 20px; }
+    .mt-20 { margin-top: 20px; }
+</style>
+
+<div class="payment-container">
+    <div class="payment-wrapper">
+        <!-- Left: Payment Details -->
+        <div class="payment-card">
+            <div class="payment-header">
+                <div class="payment-logo">LF</div>
+                <h1 class="payment-title">EMI Payment</h1>
+                <p class="payment-subtitle">Secure payment processing · Loan installment</p>
+            </div>
+
+            <!-- Amount Display -->
+            <div class="amount-display">
+                <div class="amount-label">Installment Amount</div>
+                <div class="amount-value">
+                    <span class="amount-currency">₹</span>{{ emi.emi_amount }}
+                </div>
+            </div>
+
+            <!-- Order Information -->
+            <div class="order-info">
+                <div class="info-item">
+                    <span class="info-label">Order ID</span>
+                    <span class="info-value">ORD-{{ emi.id }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Customer Name</span>
+                    <span class="info-value">{{ emi.loan.customer_name }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Email</span>
+                    <span class="info-value">{{ emi.loan.customer_email }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Mobile</span>
+                    <span class="info-value customer-phone">{{ emi.loan.customer_mobile }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Due Date</span>
+                    <span class="info-value">{{ emi.due_date }}</span>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <button class="btn btn-primary" id="showBankBtn">
+                    <i class="fas fa-university"></i> Bank Transfer
+                </button>
+                <button class="btn btn-secondary" id="payNowBtn">
+                    <i class="fas fa-credit-card"></i> Pay Now
+                </button>
+            </div>
+
+            <!-- Security Note -->
+            <div class="order-info mt-20">
+                <div class="info-item" style="border-bottom: none; padding-top: 0;">
+                    <small style="color: var(--muted); line-height: 1.5;">
+                        <i class="fas fa-shield-alt text-primary mr-2"></i>
+                        Your payment is secured with bank-level encryption.
+                        No sensitive data is stored on our servers.
+                    </small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right: Bank Details -->
+        <div class="payment-card bank-panel">
+            <div class="bank-header">
+                <div class="bank-icon">🏦</div>
+                <div>
+                    <div class="bank-title">Bank Transfer</div>
+                    <div class="bank-subtitle">Direct bank account details</div>
+                </div>
+            </div>
+
+            <!-- Bank Details (Hidden by default) -->
+            <div class="bank-details" id="bankDetails">
+               <div class="detail-item">
+                    <span class="detail-label">Name</span>
+                    <span class="detail-value"><b>LOAN FINANCE</b></span>
+                    <button class="copy-btn" data-copy="Loan Finance">Copy</button>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Bank Name</span>
+                    <span class="detail-value">Bank Of Maharashtra</span>
+                    <button class="copy-btn" data-copy="Bank Of Maharashtra">Copy</button>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Account Number</span>
+                    <span class="detail-value">60350475329</span>
+                    <button class="copy-btn" data-copy="60350475329">Copy</button>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">IFSC Code</span>
+                    <span class="detail-value">MAHA091241</span>
+                    <button class="copy-btn" data-copy="MAHA091241">Copy</button>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Amount</span>
+                    <span class="detail-value">₹{{ emi.emi_amount }}</span>
+                    <button class="copy-btn" data-copy="{{ emi.emi_amount }}">Copy</button>
+                </div>
+
+                <button class="btn btn-primary" id="confirmPaymentBtn" style="width: 100%; margin-top: 20px;">
+                    <i class="fas fa-check-circle"></i> Confirm Payment
+                </button>
+            </div>
+
+            <!-- Bank CTA (Shown by default) -->
+            <div id="bankCta" class="text-center">
+                <p style="color: var(--muted); margin-bottom: 20px;">
+                    Click "Bank Transfer" to reveal account details for direct transfer
+                </p>
+                <div class="bank-icon" style="margin: 0 auto 15px; opacity: 0.5;">
+                    <i class="fas fa-lock"></i>
+                </div>
+            </div>
+
+            <!-- Progress Steps -->
+            <div class="progress-steps">
+                <div class="step completed">
+                    <div class="step-icon">1</div>
+                    <div class="step-label">Details</div>
+                </div>
+                <div class="step">
+                    <div class="step-icon">2</div>
+                    <div class="step-label">Payment</div>
+                </div>
+                <div class="step">
+                    <div class="step-icon">3</div>
+                    <div class="step-label">Complete</div>
+                </div>
+            </div>
+
+            <div class="text-center">
+                <small style="color: var(--muted);">
+                    <i class="fas fa-clock mr-2"></i>
+                    Process completed in real-time
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Payment Form -->
+<form method="post" id="paymentForm" style="display: none;">
+    {% csrf_token %}
+    <!-- Hidden fields for payment data -->
+    <input type="hidden" name="emi_id" value="{{ emi.id }}">
+    <input type="hidden" name="amount" value="{{ emi.emi_amount }}">
+</form>
+
+<!-- Success Modal -->
+<div class="modal" id="successModal">
+    <div class="modal-content">
+        <div class="success-animation">
+            <div class="success-icon">✓</div>
+            <h2 class="success-title">Payment Successful!</h2>
+            <p class="success-message">
+                Your EMI payment of <strong>₹{{ emi.emi_amount }}</strong> has been processed successfully.
+                The payment will reflect in your account within 24 hours.
+            </p>
+            <p style="color: var(--muted); font-size: 14px; margin-bottom: 25px;">
+                Transaction ID: <strong>TXN_{{ emi.id }}_{{ random_number }}</strong>
+            </p>
+            <button type="submit" form="paymentForm" class="btn btn-primary" id="finalSubmitBtn" style="min-width: 200px;">
+                <i class="fas fa-check"></i> Complete Payment
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Font Awesome -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Elements
+    const showBankBtn = document.getElementById('showBankBtn');
+    const payNowBtn = document.getElementById('payNowBtn');
+    const confirmPaymentBtn = document.getElementById('confirmPaymentBtn');
+    const finalSubmitBtn = document.getElementById('finalSubmitBtn');
+    const bankDetails = document.getElementById('bankDetails');
+    const bankCta = document.getElementById('bankCta');
+    const successModal = document.getElementById('successModal');
+    const copyButtons = document.querySelectorAll('.copy-btn');
+    const steps = document.querySelectorAll('.step');
+
+    // Generate random transaction number
+    const randomNumber = Math.floor(100000 + Math.random() * 900000);
+
+    // Show bank details
+    showBankBtn.addEventListener('click', function() {
+        bankDetails.classList.add('show');
+        bankCta.style.display = 'none';
+
+        // Scroll to bank details on mobile
+        if (window.innerWidth <= 968) {
+            bankDetails.scrollIntoView({ behavior: 'smooth' });
+        }
+    });
+
+    // Pay Now button
+    payNowBtn.addEventListener('click', function() {
+        // Show bank details first
+        bankDetails.classList.add('show');
+        bankCta.style.display = 'none';
+
+        // Scroll to confirm button
+        if (window.innerWidth <= 968) {
+            confirmPaymentBtn.scrollIntoView({ behavior: 'smooth' });
+        }
+    });
+
+    // Confirm payment
+    confirmPaymentBtn.addEventListener('click', function() {
+        // Show loading state
+        this.innerHTML = '<div class="spinner"></div> Processing...';
+        this.disabled = true;
+
+        // Simulate payment processing
+        setTimeout(() => {
+            // Update progress steps
+            steps[1].classList.add('completed');
+            steps[2].classList.add('active');
+
+            // Show success modal
+            successModal.classList.add('show');
+        }, 2000);
+    });
+
+    // Copy functionality
+    copyButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const text = this.getAttribute('data-copy');
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = this.textContent;
+                this.textContent = 'Copied!';
+                this.style.background = 'var(--success)';
+                this.style.color = 'white';
+                this.style.borderColor = 'var(--success)';
+
+                setTimeout(() => {
+                    this.textContent = originalText;
+                    this.style.background = 'transparent';
+                    this.style.color = 'var(--primary)';
+                    this.style.borderColor = 'var(--primary)';
+                }, 2000);
+            });
+        });
+    });
+
+    // Final form submission
+    finalSubmitBtn.addEventListener('click', function() {
+        // Show loading state
+        this.innerHTML = '<div class="spinner"></div> Completing...';
+        this.disabled = true;
+
+        // Submit the form after a short delay
+        setTimeout(() => {
+            document.getElementById('paymentForm').submit();
+        }, 1000);
+    });
+
+    // Keyboard support
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            successModal.classList.remove('show');
+        }
+    });
+});
+</script>
+
+{% endblock %}

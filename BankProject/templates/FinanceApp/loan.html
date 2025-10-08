@@ -1,0 +1,1258 @@
+{% extends 'FinanceApp/layout.html' %}
+{% block title %}
+<title>Loan Finance - Loan Application</title>
+{% endblock %}
+
+{% block content %}
+
+<style>
+    /* Professional Color Variables */
+    :root {
+        --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        --warning-gradient: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        --dark-gradient: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+        --light-gradient: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    }
+
+    /* Global Styles */
+    body, html {
+        overflow-x: hidden;
+        max-width: 100%;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: var(--light-gradient);
+    }
+
+    .container {
+        max-width: 100%;
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    /* Section Spacing */
+    .section-spacing {
+        padding: 80px 0;
+    }
+
+    /* Professional Typography */
+    .professional-title {
+        font-weight: 700;
+        letter-spacing: -0.5px;
+    }
+
+    .professional-subtitle {
+        font-weight: 300;
+        line-height: 1.6;
+    }
+
+    .gradient-text {
+        background: var(--primary-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    /* Card Styles */
+    .loan-card {
+        border: none;
+        border-radius: 20px;
+        transition: all 0.4s ease;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+    }
+
+    .loan-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 25px 60px rgba(0, 0, 0, 0.15);
+    }
+
+    .loan-card-header {
+        border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+        backdrop-filter: blur(10px);
+        padding: 25px 30px;
+    }
+
+    /* Form Styles */
+    .form-control, .form-select {
+        border: 2px solid #e9ecef;
+        border-radius: 12px;
+        padding: 14px 18px;
+        transition: all 0.3s ease;
+        font-size: 1rem;
+        background: rgba(255, 255, 255, 0.9);
+    }
+
+    .form-control:focus, .form-select:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 0.3rem rgba(102, 126, 234, 0.15);
+        background: white;
+    }
+
+    .form-control.error {
+        border-color: #dc3545;
+        box-shadow: 0 0 0 0.3rem rgba(220, 53, 69, 0.15);
+    }
+
+    .form-control.success {
+        border-color: #28a745;
+        box-shadow: 0 0 0 0.3rem rgba(40, 167, 69, 0.15);
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 8px;
+        font-size: 0.95rem;
+    }
+
+    /* Error Message Styles */
+    .error-message {
+        color: #dc3545;
+        font-size: 0.85rem;
+        margin-top: 5px;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-weight: 500;
+    }
+
+    .error-message i {
+        font-size: 0.8rem;
+    }
+
+    .success-message {
+        color: #28a745;
+        font-size: 0.85rem;
+        margin-top: 5px;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-weight: 500;
+    }
+
+    /* Button Styles */
+    .btn-premium {
+        background: var(--primary-gradient);
+        border: none;
+        border-radius: 50px;
+        padding: 14px 35px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        color: white;
+        font-size: 1.1rem;
+        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+    }
+
+    .btn-premium:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 35px rgba(0, 0, 0, 0.25);
+        color: white;
+    }
+
+    .btn-premium:disabled {
+        background: #6c757d;
+        transform: none;
+        box-shadow: none;
+        cursor: not-allowed;
+    }
+
+    /* Table Styles */
+    .loan-table {
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    }
+
+    .loan-table thead {
+        background: var(--primary-gradient);
+    }
+
+    .loan-table th {
+        border: none;
+        font-weight: 600;
+        padding: 18px 15px;
+        color: white;
+        font-size: 1rem;
+    }
+
+    .loan-table td {
+        padding: 16px 15px;
+        vertical-align: middle;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .loan-table tbody tr {
+        transition: all 0.3s ease;
+    }
+
+    .loan-table tbody tr:hover {
+        background-color: rgba(102, 126, 234, 0.08);
+        transform: scale(1.01);
+    }
+
+    /* Badge Styles */
+    .status-badge {
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.85rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Enhanced OTP Modal Styles */
+    .otp-modal .modal-content {
+        border: none;
+        border-radius: 25px;
+        box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+        overflow: hidden;
+        background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
+    }
+
+    .otp-modal .modal-header {
+        background: var(--primary-gradient);
+        border-bottom: none;
+        padding: 30px;
+        position: relative;
+    }
+
+    .otp-modal .modal-header::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60px;
+        height: 4px;
+        background: var(--warning-gradient);
+        border-radius: 2px;
+    }
+
+    .otp-modal .modal-title {
+        font-weight: 700;
+        font-size: 1.5rem;
+        color: white;
+        text-align: center;
+        width: 100%;
+    }
+
+    .otp-modal .modal-body {
+        padding: 40px 30px;
+        background: transparent;
+    }
+
+    /* Enhanced OTP Input Styles */
+    .otp-container {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        margin: 30px 0;
+    }
+
+    .otp-input {
+        width: 55px;
+        height: 65px;
+        border: 2px solid #e1e5e9;
+        border-radius: 15px;
+        text-align: center;
+        font-size: 24px;
+        font-weight: 700;
+        color: #2c3e50;
+        background: white;
+        transition: all 0.3s ease;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    }
+
+    .otp-input:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+        transform: translateY(-2px);
+        background: #f8f9ff;
+    }
+
+    .otp-input.filled {
+        border-color: #667eea;
+        background: linear-gradient(135deg, #f8f9ff 0%, #ffffff 100%);
+        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.2);
+    }
+
+    /* OTP Icon Container */
+    .otp-icon-container {
+        width: 90px;
+        height: 90px;
+        background: var(--primary-gradient);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 25px;
+        box-shadow: 0 15px 30px rgba(102, 126, 234, 0.3);
+        position: relative;
+    }
+
+    .otp-icon-container::before {
+        content: '';
+        position: absolute;
+        top: -5px;
+        left: -5px;
+        right: -5px;
+        bottom: -5px;
+        background: var(--primary-gradient);
+        border-radius: 50%;
+        opacity: 0.2;
+        z-index: -1;
+    }
+
+    .otp-icon {
+        font-size: 2.5rem;
+        color: white;
+    }
+
+    /* Enhanced Modal Close Button */
+    .modal-close-btn {
+        background: rgba(255, 255, 255, 0.2);
+        border: none;
+        border-radius: 50%;
+        width: 45px;
+        height: 45px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.4rem;
+        color: white;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(10px);
+        position: absolute;
+        right: 20px;
+        top: 20px;
+    }
+
+    .modal-close-btn:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: rotate(90deg) scale(1.1);
+    }
+
+    /* Enhanced Action Buttons */
+    .otp-action-btn {
+        border-radius: 15px;
+        padding: 12px 30px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        border: none;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn-verify {
+        background: var(--success-gradient);
+        color: white;
+    }
+
+    .btn-verify:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(67, 233, 123, 0.3);
+        color: white;
+    }
+
+    .btn-resend {
+        background: rgba(102, 126, 234, 0.1);
+        color: #667eea;
+        border: 2px solid #667eea;
+    }
+
+    .btn-resend:hover {
+        background: #667eea;
+        color: white;
+        transform: translateY(-2px);
+    }
+
+    /* Enhanced Message Styling */
+    .otp-message {
+        font-size: 0.95rem;
+        padding: 12px 20px;
+        border-radius: 12px;
+        margin: 20px 0;
+        text-align: center;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .otp-message.success {
+        background: rgba(67, 233, 123, 0.1);
+        color: #27ae60;
+        border: 1px solid rgba(67, 233, 123, 0.3);
+    }
+
+    .otp-message.error {
+        background: rgba(245, 87, 108, 0.1);
+        color: #e74c3c;
+        border: 1px solid rgba(245, 87, 108, 0.3);
+    }
+
+    .otp-message.info {
+        background: rgba(74, 144, 226, 0.1);
+        color: #3498db;
+        border: 1px solid rgba(74, 144, 226, 0.3);
+    }
+
+    /* File Input Styling */
+    .file-input-info {
+        font-size: 0.85rem;
+        color: #6c757d;
+        margin-top: 8px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    /* Amount Info Styling */
+    .amount-info {
+        background: rgba(102, 126, 234, 0.1);
+        border-radius: 10px;
+        padding: 10px 15px;
+        margin-top: 8px;
+        font-size: 0.85rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        border-left: 4px solid #667eea;
+    }
+
+    /* Section Backgrounds */
+    .application-section {
+        background: var(--light-gradient);
+    }
+
+    /* Success Section */
+    .success-section {
+        background: var(--warning-gradient);
+        border-radius: 20px;
+        padding: 50px 30px;
+        text-align: center;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .section-spacing {
+            padding: 60px 0;
+        }
+
+        .loan-card {
+            margin: 10px;
+        }
+
+        .loan-card-header {
+            padding: 20px 25px;
+        }
+
+        .btn-premium {
+            padding: 12px 25px;
+            font-size: 1rem;
+        }
+
+        .otp-input {
+            width: 45px;
+            height: 55px;
+            font-size: 1.2rem;
+        }
+
+        .otp-container {
+            gap: 10px;
+        }
+
+        .otp-modal .modal-body {
+            padding: 30px 20px;
+        }
+
+        .otp-icon-container {
+            width: 70px;
+            height: 70px;
+        }
+
+        .otp-icon {
+            font-size: 2rem;
+        }
+    }
+
+    /* Loading Animation */
+    .loading-dots {
+        display: inline-block;
+    }
+
+    .loading-dots::after {
+        content: '';
+        animation: dots 1.5s steps(5, end) infinite;
+    }
+
+    @keyframes dots {
+        0%, 20% { content: '.'; }
+        40% { content: '..'; }
+        60% { content: '...'; }
+        80%, 100% { content: ''; }
+    }
+    @media (max-width: 768px) {
+    .container-fluid {
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    .animated-background {
+        padding: 10px !important;
+    }
+
+    .row.w-100.justify-content-center {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .col-md-6 {
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+}
+</style>
+
+{% if loan_object.status == 'pending' or loan_object.status == 'rejected' %}
+<!-- Loan File Display Section -->
+<div class="site-section py-5 application-section">
+    <div class="container-fluid">
+        <div class="row justify-content-center text-center mx-0 mb-5">
+            <div class="col-md-10">
+                <h1 class="professional-title text-dark mb-4" data-aos="fade-down">
+                    Your <span style="background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Loan Application</span>
+                </h1>
+                <p class="lead professional-subtitle text-muted" data-aos="fade-up">
+                    Track your loan application status and manage your details
+                </p>
+            </div>
+        </div>
+
+        <div class="row justify-content-center mx-0">
+            <div class="col-12">
+                <div class="loan-card">
+                    <div class="table-responsive">
+                        <table class="table table-hover loan-table">
+                            <thead>
+                                <tr class="table-dark">
+                                    <th class="text-center">ACTION</th>
+                                    <th>NAME</th>
+                                    <th>MOBILE</th>
+                                    <th>EMAIL</th>
+                                    <th>ADDRESS</th>
+                                    <th>Date & Time</th>
+                                    <th>STATUS</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="table-light">
+                                    <td class="text-center">
+                                        <a href="/update/{{loan_object.id}}">
+                                            <button class="btn btn-sm btn-primary action-btn mx-1">
+                                                <i class="fa-solid fa-pen-to-square me-1"></i>Edit
+                                            </button>
+                                        </a>
+                                        <button onclick="alert('Please Contact To Admin For Delete Loan File')"
+                                                class="btn btn-sm btn-danger action-btn mx-1">
+                                            <i class="fa-solid fa-trash me-1"></i>Delete
+                                        </button>
+                                    </td>
+                                    <td class="professional-title">{{loan_object.customer_name}}</td>
+                                    <td>{{loan_object.customer_mobile}}</td>
+                                    <td>{{loan_object.customer_email}}</td>
+                                    <td>{{loan_object.customer_address}}</td>
+                                    <td>{{loan_object.action}}</td>
+                                    <td>
+                                        <span class="status-badge
+                                            {% if loan_object.status == 'disbursed' %}bg-success text-white
+                                            {% elif loan_object.status == 'pending' %}bg-warning text-dark
+                                            {% elif loan_object.status == 'rejected' %}bg-danger text-white
+                                            {% else %}bg-secondary text-white{% endif %}">
+                                            {{loan_object.status|upper}}
+                                        </span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{% if not loan_object %}
+<!-- Loan Application Form Section -->
+<div class="site-section py-5 application-section">
+    <div class="container">
+        <div class="row justify-content-center text-center mx-0 mb-5">
+            <div class="col-md-10">
+                <h1 class="professional-title text-dark mb-4" data-aos="fade-down">
+                    Apply for <span style="background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Loan</span>
+                </h1>
+                <p class="lead professional-subtitle text-muted" data-aos="fade-up">
+                    Fill in the customer and loan details below to get started with your loan application
+                </p>
+            </div>
+        </div>
+
+        <form method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+            {% csrf_token %}
+            <input type="hidden" name="otp_verified" id="otp_verified" value="false">
+
+            <!-- Customer Details Card -->
+            <div class="loan-card mb-5">
+                <div class="loan-card-header text-white" style="background: var(--primary-gradient);">
+                    <h4 class="professional-title mb-0 text-center">
+                        <i class="fas fa-user-circle me-2"></i>Customer Details
+                    </h4>
+                </div>
+                <div class="card-body p-5">
+                    <div class="row g-4">
+                        <!-- Customer Name -->
+                        <div class="col-md-4">
+                            <label class="form-label">
+                                <i class="fas fa-user me-2 text-primary"></i>Customer Name <span class="text-danger">*</span>
+                            </label>
+                            <input value="{{user.id}}" type="text" name="user_id" hidden>
+                            <input value="{{user}}" type="text" name="user_name" hidden>
+                            <input type="text" name="customer_name" placeholder="Enter customer full name" class="form-control" required>
+                        </div>
+
+                        <!-- Customer Mobile -->
+                        <div class="col-md-4">
+                            <label class="form-label">
+                                <i class="fas fa-mobile-alt me-2 text-primary"></i>Customer Mobile <span class="text-danger">*</span>
+                            </label>
+                            <input type="number" id="mobile_input" name="customer_mobile" placeholder="Enter mobile number" class="form-control" required>
+                            <div id="mobile_error" class="error-message" style="display: none;">
+                                <i class="fas fa-exclamation-circle"></i>
+                                <span>Mobile number must be 10 digits</span>
+                            </div>
+                        </div>
+
+                        <!-- Customer Email -->
+                        <div class="col-md-4">
+                            <label class="form-label">
+                                <i class="fas fa-envelope me-2 text-primary"></i>Customer Email <span class="text-danger">*</span>
+                            </label>
+                            <input readonly type="email" id="email_input" name="customer_email" placeholder="Customer Email" value="{{ user }}" class="form-control" required style="background: #f8f9fa;">
+                        </div>
+
+                        <!-- PAN & Aadhaar -->
+                        <div class="col-md-4">
+                            <label class="form-label">
+                                <i class="fas fa-id-card me-2 text-primary"></i>PAN Card No <span class="text-danger">*</span>
+                            </label>
+                            <input type="text" id="pan_input" name="pan_number" placeholder="Enter PAN number" class="form-control" required>
+                            <div id="pan_error" class="error-message" style="display: none;">
+                                <i class="fas fa-exclamation-circle"></i>
+                                <span>Invalid PAN card format (e.g., ABCDE1234F)</span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">
+                                <i class="fas fa-address-card me-2 text-primary"></i>Aadhaar No <span class="text-danger">*</span>
+                            </label>
+                            <input type="number" id="adhar_input" name="adhar_number" placeholder="Enter Aadhaar number" class="form-control" required>
+                            <div id="adhar_error" class="error-message" style="display: none;">
+                                <i class="fas fa-exclamation-circle"></i>
+                                <span>Aadhaar number must be 12 digits</span>
+                            </div>
+                        </div>
+
+                        <!-- File Uploads -->
+                        <div class="col-md-4">
+                            <label class="form-label">
+                                <i class="fas fa-camera me-2 text-primary"></i>Customer Photo <span class="text-danger">*</span>
+                            </label>
+                            <input type="file" accept="image/*" name="customer_photo" class="form-control" required>
+                            <div class="file-input-info">
+                                <i class="fas fa-info-circle"></i>Upload a clear passport size photo
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">
+                                <i class="fas fa-file-contract me-2 text-primary"></i>PAN Card <span class="text-danger">*</span>
+                            </label>
+                            <input type="file" accept="image/*" name="customer_pan_card" class="form-control" required>
+                            <div class="file-input-info">
+                                <i class="fas fa-info-circle"></i>Upload scanned copy of PAN card
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">
+                                <i class="fas fa-id-badge me-2 text-primary"></i>Aadhaar Front <span class="text-danger">*</span>
+                            </label>
+                            <input type="file" accept="image/*" name="customer_adhar" class="form-control" required>
+                            <div class="file-input-info">
+                                <i class="fas fa-info-circle"></i>Upload front side of Aadhaar card
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">
+                                <i class="fas fa-signature me-2 text-primary"></i>Signature <span class="text-danger">*</span>
+                            </label>
+                            <input type="file" accept="image/*" name="customer_signature" class="form-control">
+                            <div class="file-input-info">
+                                <i class="fas fa-info-circle"></i>Upload scanned signature
+                            </div>
+                        </div>
+
+                        <!-- Address -->
+                        <div class="col-12">
+                            <label class="form-label">
+                                <i class="fas fa-map-marker-alt me-2 text-primary"></i>Customer Address <span class="text-danger">*</span>
+                            </label>
+                            <textarea name="customer_address" rows="3" placeholder="Enter complete address with PIN code" class="form-control" required></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Loan Details Card -->
+            <div class="loan-card mb-5">
+                <div class="loan-card-header text-white" style="background: var(--secondary-gradient);">
+                    <h4 class="professional-title mb-0 text-center">
+                        <i class="fas fa-file-invoice-dollar me-2"></i>Loan Details
+                    </h4>
+                </div>
+                <div class="card-body p-5">
+                    <div class="row g-4">
+                        <!-- Loan Type -->
+                        <div class="col-md-3">
+                            <label class="form-label">
+                                <i class="fas fa-hand-holding-usd me-2 text-primary"></i>Loan Type <span class="text-danger">*</span>
+                            </label>
+                            <select class="form-select" name="loan_type" id="loan_type_select" required>
+                                <option value="" disabled selected>Select Loan Type</option>
+                                {% for type in type_obj %}
+                                    <option value="{{ type.id }}" data-interest="{{ type.interest_rate }}">{{ type.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <!-- Interest -->
+                        <div class="col-md-3">
+                            <label class="form-label">
+                                <i class="fas fa-percentage me-2 text-primary"></i>Interest Rate <span class="text-danger">*</span>
+                            </label>
+                            <input type="text" name="interest" placeholder="Auto-filled" class="form-control" readonly style="background: #f8f9fa;">
+                        </div>
+
+                        <!-- Amount -->
+                        <div class="col-md-3">
+                            <label class="form-label">
+                                <i class="fas fa-rupee-sign me-2 text-primary"></i>Request Amount <span class="text-danger">*</span>
+                            </label>
+                            <input type="number" id="request_amount" name="request_amount" placeholder="Enter amount" class="form-control" required>
+                            <div id="amount_error" class="error-message" style="display: none;">
+                                <i class="fas fa-exclamation-circle"></i>
+                                <span>Amount must be between ₹5,000 and ₹50,00,000</span>
+                            </div>
+                            <div class="amount-info">
+                                <i class="fas fa-lightbulb text-primary"></i>Amount Range: ₹5,000 - ₹50,00,000
+                            </div>
+                        </div>
+
+                        <!-- Duration -->
+                       <div class="col-md-3">
+                          <label class="form-label">
+                                <i class="fas fa-calendar-alt me-2 text-primary"></i>Installment Months <span class="text-danger">*</span>
+                            </label>
+                               <input type="number" id="month_installation" name="month_installation"
+                                          placeholder="Enter months" class="form-control" required min="3" max="24">
+                           <div id="month_error" class="error-message" style="display: none;">
+                                <i class="fas fa-exclamation-circle"></i>
+                                <span>Months must be between 3 and 24</span>
+                            </div>
+                           <div class="amount-info">
+                                <i class="fas fa-lightbulb text-primary"></i>Month Range: 3 to 24 Months
+                            </div>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="col-12 text-center mt-4">
+                            <button type="button" class="btn-premium" id="saveLoanBtn">
+                                <i class="fas fa-paper-plane me-2"></i>Submit Loan Application
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Enhanced OTP Modal -->
+<div class="modal fade otp-modal" id="otpModal" tabindex="-1" aria-labelledby="otpModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title w-100 text-center" id="otpModalLabel">
+                    <i class="fas fa-shield-alt me-2"></i>Email Verification Required
+                </h5>
+                <button type="button" class="modal-close-btn" data-bs-dismiss="modal">
+                    ×
+                </button>
+            </div>
+            <div class="modal-body text-center">
+                <div class="otp-icon-container">
+                    <i class="fas fa-envelope-open-text otp-icon"></i>
+                </div>
+
+                <h4 class="professional-title text-dark mb-3">Verify Your Email</h4>
+                <p class="text-muted mb-4">We've sent a 6-digit verification code to your email address. Please enter it below to proceed with your loan application.</p>
+
+                <div class="d-flex justify-content-center otp-container">
+                    <input type="password" maxlength="1" class="otp-input form-control text-center" />
+                    <input type="password" maxlength="1" class="otp-input form-control text-center" />
+                    <input type="password" maxlength="1" class="otp-input form-control text-center" />
+                    <input type="password" maxlength="1" class="otp-input form-control text-center" />
+                    <input type="password" maxlength="1" class="otp-input form-control text-center" />
+                    <input type="password" maxlength="1" class="otp-input form-control text-center" />
+                </div>
+
+                <div id="otp_message" class="otp-message"></div>
+
+                <div class="d-flex justify-content-between align-items-center mt-4">
+                    <button type="button" class="btn btn-resend otp-action-btn" id="resendOtpBtn">
+                        <i class="fas fa-redo me-2"></i>Resend OTP
+                    </button>
+                    <button type="button" class="btn btn-verify otp-action-btn" id="verifyOtpBtn">
+                        <i class="fas fa-check-circle me-2"></i>Verify & Submit
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{% if loan_object.status == 'approved' or loan_object.status == 'disbursed' %}
+<!-- Approved Loan Section -->
+<div class="site-section py-5 application-section">
+    <div class="container">
+        <div class="row justify-content-center text-center mx-0">
+            <div class="col-md-8">
+                <div class="success-section text-white">
+                    <div class="mb-4">
+                        <div style="width: 100px; height: 100px; background: rgba(255, 255, 255, 0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 25px;">
+                            <i class="fas fa-check fa-3x"></i>
+                        </div>
+                    </div>
+                    <h2 class="professional-title mb-4">🎉 Loan Application Approved!</h2>
+                    <p class="lead professional-subtitle mb-4">
+                        Your loan file has been successfully processed and approved by our team.
+                    </p>
+                    <p class="professional-subtitle">
+                        <strong>Next Step:</strong> Go to <strong>Disbursed Loan</strong> section to submit your bank account details for fund transfer.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const loanForm = document.querySelector("form");
+    const saveBtn = document.getElementById("saveLoanBtn");
+    const verifyOtpBtn = document.getElementById("verifyOtpBtn");
+    const resendOtpBtn = document.getElementById("resendOtpBtn");
+    const otpInputs = document.querySelectorAll('.otp-input');
+
+    // Validation functions
+    function validateMobile(mobile) {
+        const mobileRegex = /^[6-9]\d{9}$/;
+        return mobileRegex.test(mobile);
+    }
+
+    function validatePAN(pan) {
+        const panRegex = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/;
+        return panRegex.test(pan.toUpperCase());
+    }
+
+    function validateAadhaar(aadhaar) {
+        const aadhaarRegex = /^\d{12}$/;
+        return aadhaarRegex.test(aadhaar);
+    }
+
+    function validateAmount(amount) {
+        return amount >= 5000 && amount <= 5000000;
+    }
+
+    function validateMonths(months) {
+        return months >= 3 && months <= 24;
+    }
+
+    // Show error function
+    function showError(inputId, errorId, message) {
+        const input = document.getElementById(inputId);
+        const error = document.getElementById(errorId);
+
+        input.classList.remove('success');
+        input.classList.add('error');
+        error.innerHTML = `<i class="fas fa-exclamation-circle"></i><span>${message}</span>`;
+        error.style.display = 'flex';
+    }
+
+    // Show success function
+    function showSuccess(inputId, errorId) {
+        const input = document.getElementById(inputId);
+        const error = document.getElementById(errorId);
+
+        input.classList.remove('error');
+        input.classList.add('success');
+        error.style.display = 'none';
+    }
+
+    // Hide error function
+    function hideError(inputId, errorId) {
+        const input = document.getElementById(inputId);
+        const error = document.getElementById(errorId);
+
+        input.classList.remove('error');
+        error.style.display = 'none';
+    }
+
+    // Real-time validation
+    document.getElementById('mobile_input').addEventListener('input', function() {
+        const mobile = this.value;
+        if (mobile.length === 10) {
+            if (validateMobile(mobile)) {
+                showSuccess('mobile_input', 'mobile_error');
+            } else {
+                showError('mobile_input', 'mobile_error', 'Invalid mobile number format');
+            }
+        } else {
+            hideError('mobile_input', 'mobile_error');
+        }
+    });
+
+    document.getElementById('pan_input').addEventListener('input', function() {
+        const pan = this.value;
+        if (pan.length === 10) {
+            if (validatePAN(pan)) {
+                showSuccess('pan_input', 'pan_error');
+            } else {
+                showError('pan_input', 'pan_error', 'Invalid PAN card format (e.g., ABCDE1234F)');
+            }
+        } else {
+            hideError('pan_input', 'pan_error');
+        }
+    });
+
+    document.getElementById('adhar_input').addEventListener('input', function() {
+        const aadhaar = this.value;
+        if (aadhaar.length === 12) {
+            if (validateAadhaar(aadhaar)) {
+                showSuccess('adhar_input', 'adhar_error');
+            } else {
+                showError('adhar_input', 'adhar_error', 'Aadhaar must contain only numbers');
+            }
+        } else {
+            hideError('adhar_input', 'adhar_error');
+        }
+    });
+
+    document.getElementById('request_amount').addEventListener('input', function() {
+        const amount = parseInt(this.value) || 0;
+        if (amount > 0) {
+            if (validateAmount(amount)) {
+                showSuccess('request_amount', 'amount_error');
+            } else {
+                showError('request_amount', 'amount_error', 'Amount must be between ₹5,000 and ₹50,00,000');
+            }
+        } else {
+            hideError('request_amount', 'amount_error');
+        }
+    });
+
+    document.getElementById('month_installation').addEventListener('input', function() {
+        const months = parseInt(this.value) || 0;
+        if (months > 0) {
+            if (validateMonths(months)) {
+                showSuccess('month_installation', 'month_error');
+            } else {
+                showError('month_installation', 'month_error', 'Months must be between 3 and 24');
+            }
+        } else {
+            hideError('month_installation', 'month_error');
+        }
+    });
+
+    // Enhanced OTP input styling
+    otpInputs.forEach(input => {
+        input.addEventListener('input', function() {
+            if (this.value) {
+                this.classList.add('filled');
+            } else {
+                this.classList.remove('filled');
+            }
+        });
+    });
+
+    // -----------------------------
+    // 1. Auto-fill interest
+    // -----------------------------
+    const select = document.getElementById("loan_type_select");
+    const interestInput = document.querySelector('input[name="interest"]');
+    if (select && interestInput) {
+        select.addEventListener("change", function() {
+            const selectedOption = this.options[this.selectedIndex];
+            const interest = selectedOption.getAttribute("data-interest");
+            interestInput.value = interest ? interest : "";
+        });
+
+        // Trigger once on page load if already selected
+        const initialOption = select.options[select.selectedIndex];
+        if (initialOption) {
+            const interest = initialOption.getAttribute("data-interest");
+            interestInput.value = interest ? interest : "";
+        }
+    }
+
+
+
+    // -----------------------------
+    // 3. OTP input auto-focus
+    // -----------------------------
+    otpInputs.forEach((input, index) => {
+        input.addEventListener('input', () => {
+            if(input.value.length === 1 && index < otpInputs.length - 1){
+                otpInputs[index + 1].focus();
+            }
+        });
+        input.addEventListener('keydown', (e) => {
+            if(e.key === "Backspace" && input.value === "" && index > 0){
+                otpInputs[index - 1].focus();
+            }
+        });
+    });
+
+    function getOTPValue() {
+        return Array.from(otpInputs).map(input => input.value).join('');
+    }
+
+    // -----------------------------
+    // 4. Send OTP with validation
+    // -----------------------------
+    saveBtn.addEventListener("click", function() {
+        // Get all input values
+        const mobile = document.getElementById('mobile_input').value;
+        const pan = document.getElementById('pan_input').value;
+        const aadhaar = document.getElementById('adhar_input').value;
+        const amount = parseInt(document.getElementById('request_amount').value) || 0;
+        const months = parseInt(document.getElementById('month_installation').value) || 0;
+
+        // Validate all fields
+        let isValid = true;
+
+        if (!validateMobile(mobile)) {
+            showError('mobile_input', 'mobile_error', 'Mobile number must be 10 digits starting with 6-9');
+            isValid = false;
+        }
+
+        if (!validatePAN(pan)) {
+            showError('pan_input', 'pan_error', 'Invalid PAN card format (e.g., ABCDE1234F)');
+            isValid = false;
+        }
+
+        if (!validateAadhaar(aadhaar)) {
+            showError('adhar_input', 'adhar_error', 'Aadhaar number must be 12 digits');
+            isValid = false;
+        }
+
+        if (!validateAmount(amount)) {
+            showError('request_amount', 'amount_error', 'Amount must be between ₹5,000 and ₹50,00,000');
+            isValid = false;
+        }
+
+        if (!validateMonths(months)) {
+            showError('month_installation', 'month_error', 'Months must be between 3 and 24');
+            isValid = false;
+        }
+
+        // Check required fields
+        const loanFormFields = loanForm.querySelectorAll("[required]");
+        let allFilled = true;
+        loanFormFields.forEach(field => {
+            if (!field.value) {
+                allFilled = false;
+                field.focus();
+                field.classList.add('error');
+            }
+        });
+
+        if (!allFilled) {
+            showMessage("Please fill all required fields before proceeding!");
+            return;
+        }
+
+        if (!isValid) {
+            showMessage("Please fix the validation errors before proceeding!");
+            return;
+        }
+
+        const email = document.getElementById("email_input").value;
+
+        // Show loading state
+        const originalText = saveBtn.innerHTML;
+        saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Sending OTP<span class="loading-dots"></span>';
+        saveBtn.disabled = true;
+
+        fetch("{% url 'verify:send_email_otp' %}", {
+            method: "POST",
+            headers: {
+                "X-CSRFToken": "{{ csrf_token }}",
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: "email=" + encodeURIComponent(email)
+        })
+        .then(response => {
+            // Check if response is JSON
+            const contentType = response.headers.get('content-type');
+            if (contentType && contentType.includes('application/json')) {
+                return response.json();
+            } else {
+                throw new Error('Server returned non-JSON response');
+            }
+        })
+        .then(data => {
+            // Restore button state
+            saveBtn.innerHTML = originalText;
+            saveBtn.disabled = false;
+
+            const msg = document.getElementById("otp_message");
+            msg.innerText = data.message;
+            msg.className = data.status === "success" ? "otp-message success" : "otp-message error";
+
+            if (data.status === "success") {
+                // show OTP modal
+                new bootstrap.Modal(document.getElementById("otpModal")).show();
+            }
+             else if (data.status === "error") {
+                // Show alert for error messages
+                showMessage(data.message);
+                msg.innerText = data.message;
+                msg.className = "otp-message error";
+                }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            saveBtn.innerHTML = originalText;
+            saveBtn.disabled = false;
+            const msg = document.getElementById("otp_message");
+            msg.innerText = "Failed to send OTP. Please try again.";
+            msg.className = "otp-message error";
+        });
+    });
+
+    // -----------------------------
+    // 5. Verify OTP and submit form
+    // -----------------------------
+    verifyOtpBtn.addEventListener("click", function(event) {
+        // Prevent form submission if button is type="submit"
+        if (event) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+
+        const otp = getOTPValue();
+        if (otp.length < 6) {
+            const msg = document.getElementById("otp_message");
+            msg.innerText = "Please enter complete 6-digit OTP!";
+            msg.className = "otp-message error";
+            return;
+        }
+
+        // Show verifying message
+        const msg = document.getElementById("otp_message");
+        msg.innerText = "Verifying OTP...";
+        msg.className = "otp-message info";
+
+        // Disable verify button during verification
+        const originalText = verifyOtpBtn.innerHTML;
+        verifyOtpBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Verifying';
+        verifyOtpBtn.disabled = true;
+
+        fetch("{% url 'verify:verify_email_otp' %}", {
+            method: "POST",
+            headers: {
+                "X-CSRFToken": "{{ csrf_token }}",
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: "otp=" + encodeURIComponent(otp)
+        })
+        .then(response => {
+            const contentType = response.headers.get('content-type');
+            if (contentType && contentType.includes('application/json')) {
+                return response.json();
+            } else {
+                throw new Error('Server returned non-JSON response');
+            }
+        })
+        .then(data => {
+            verifyOtpBtn.innerHTML = originalText;
+            verifyOtpBtn.disabled = false;
+
+            msg.innerText = data.message;
+
+            if (data.status === "success") {
+                msg.className = "otp-message success";
+
+                // Wait 1 second to show success message, then submit
+                setTimeout(() => {
+                    const otpModal = bootstrap.Modal.getInstance(document.getElementById("otpModal"));
+                    if (otpModal) {
+                        otpModal.hide();
+                    }
+                    document.getElementById("otp_verified").value = "true";
+                    loanForm.submit();
+                }, 1000);
+
+            } else {
+                msg.className = "otp-message error";
+                // Clear OTP inputs on error and refocus
+                otpInputs.forEach(input => input.value = '');
+                if (otpInputs[0]) {
+                    otpInputs[0].focus();
+                }
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            verifyOtpBtn.innerHTML = originalText;
+            verifyOtpBtn.disabled = false;
+            msg.innerText = "Failed to verify OTP. Please try again.";
+            msg.className = "otp-message error";
+        });
+    });
+
+    // -----------------------------
+    // 6. Resend OTP
+    // -----------------------------
+    resendOtpBtn.addEventListener("click", function() {
+        saveBtn.click(); // simply trigger the send OTP again
+    });
+});
+</script>
+
+<!-- AOS Animations -->
+<link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+<script>
+    AOS.init({
+        duration: 1000,
+        once: true,
+        offset: 50
+    });
+</script>
+
+<!-- Font Awesome -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+{% endblock %}

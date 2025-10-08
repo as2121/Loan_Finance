@@ -1,0 +1,711 @@
+<!doctype html>
+{% load static %}
+<html lang="en">
+<head>
+    {% block title %}
+    <title>Loan Finance - Smart Financial Solutions</title>
+    {% endblock title %}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="FinEase - Your trusted partner for smart financial solutions and loan management">
+    <meta name="keywords" content="finance, loans, EMI, banking, financial services">
+
+    <!-- Favicon -->
+    <link rel="icon" href="{% static 'FinanceApp/images/loan_logo.jpg' %}" type="image/jpeg">
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #667eea;
+            --primary-dark: #764ba2;
+            --secondary-color: #f093fb;
+            --accent-color: #f5576c;
+            --dark-color: #2c3e50;
+            --light-color: #f8f9fa;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-color);
+            padding-top: 80px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Navigation Styles */
+        .main-navbar {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%) !important;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+            padding: 0.8rem 0;
+            transition: all 0.3s ease;
+        }
+
+        .navbar-brand-custom {
+            font-weight: 700;
+            font-size: 1.6rem;
+            color: white !important;
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar-brand-custom img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .nav-link-custom {
+            color: rgba(255, 255, 255, 0.9) !important;
+            font-weight: 500;
+            padding: 0.5rem 1rem !important;
+            margin: 0 0.2rem;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link-custom:hover {
+            color: white !important;
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-1px);
+        }
+
+        .dropdown-menu-custom {
+            background: white;
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            padding: 0.5rem 0;
+            min-width: 200px;
+        }
+
+        .dropdown-item-custom {
+            padding: 0.7rem 1.5rem;
+            color: #333;
+            transition: all 0.3s ease;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+        }
+
+        .dropdown-item-custom i {
+            width: 20px;
+            margin-right: 10px;
+        }
+
+        .dropdown-item-custom:hover {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            color: white;
+            transform: translateX(5px);
+        }
+
+        .dropdown-item-custom:last-child {
+            border-bottom: none;
+        }
+
+        /* User Section */
+        .user-welcome {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 0.5rem 1rem;
+            color: white;
+            font-weight: 500;
+        }
+
+
+
+
+        .content-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Footer Styles */
+        .main-footer {
+            background: linear-gradient(135deg, var(--dark-color) 0%, #3498db 100%);
+            color: white;
+            margin-top: auto;
+        }
+
+        .footer-section h5 {
+            font-weight: 600;
+            margin-bottom: 1.2rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+
+        .footer-section h5::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 3px;
+            background: var(--secondary-color);
+            border-radius: 2px;
+        }
+
+        .footer-links {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: white;
+            transform: translateX(5px);
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .social-icon:hover {
+            background: var(--primary-color);
+            transform: translateY(-3px);
+        }
+
+        .copyright {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        /* Loading Spinner */
+        .loading-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 300px;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Alert Notification Styles */
+        .alert-notification {
+            position: fixed;
+            top: 90px;
+            right: 20px;
+            min-width: 300px;
+            max-width: 400px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            z-index: 9999;
+            animation: slideInRight 0.5s ease-out;
+            border: none;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            border-left: 4px solid;
+        }
+
+        .alert-notification.success {
+            background: linear-gradient(135deg, rgba(76, 175, 80, 0.95), rgba(76, 175, 80, 0.9));
+            border-left-color: #2e7d32;
+            color: white;
+        }
+
+        .alert-notification.info {
+            background: linear-gradient(135deg, rgba(33, 150, 243, 0.95), rgba(33, 150, 243, 0.9));
+            border-left-color: #1565c0;
+            color: white;
+        }
+
+        .alert-notification.warning {
+            background: linear-gradient(135deg, rgba(255, 152, 0, 0.95), rgba(255, 152, 0, 0.9));
+            border-left-color: #ef6c00;
+            color: white;
+        }
+
+        .alert-notification.error {
+            background: linear-gradient(135deg, rgba(244, 67, 54, 0.95), rgba(244, 67, 54, 0.9));
+            border-left-color: #c62828;
+            color: white;
+        }
+
+        .alert-content {
+            display: flex;
+            align-items: center;
+            padding: 10px 7px;
+        }
+
+        .alert-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-size: 1.3rem;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .alert-text {
+            flex: 1;
+            font-weight: 500;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .alert-close {
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 0;
+            margin-left: 15px;
+            transition: color 0.3s;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .alert-close:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Progress Bar */
+        .alert-progress {
+            height: 3px;
+            background: rgba(255, 255, 255, 0.3);
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .alert-progress-bar {
+            height: 100%;
+            background: rgba(255, 255, 255, 0.6);
+            width: 100%;
+            animation: progressBar 5s linear forwards;
+        }
+
+        /* Animations */
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOutRight {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+
+        @keyframes progressBar {
+            from {
+                width: 100%;
+            }
+            to {
+                width: 0%;
+            }
+        }
+
+        /* Multiple notifications stacking */
+        .alert-notification:not(:first-child) {
+            margin-top: 10px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            body {
+                padding-top: 70px;
+            }
+
+            .navbar-brand-custom {
+                font-size: 1.3rem;
+            }
+
+            .nav-link-custom {
+                text-align: center;
+                margin: 0.2rem 0;
+            }
+
+            .dropdown-menu-custom {
+                text-align: center;
+                margin: 0.5rem 0;
+            }
+
+            .content-container {
+                padding: 1.5rem;
+                margin: 1rem;
+            }
+
+            .alert-notification {
+                min-width: calc(100% - 40px);
+                right: 20px;
+                left: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Alert Notifications Container -->
+    <div id="alertContainer" style="position: fixed; top: 90px; right: 20px; z-index: 9999;"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark main-navbar fixed-top">
+        <div class="container">
+            <!-- Brand -->
+            <a class="navbar-brand navbar-brand-custom" href="/">
+                <img src="{% static 'FinanceApp/images/loan_logo.jpg' %}" alt="Loan Finance">
+                Loan Finance
+            </a>
+
+            <!-- Mobile Toggle -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Navigation Items -->
+            <div class="collapse navbar-collapse" id="navbarMain">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link nav-link-custom" href="/">
+                            <i class="fas fa-home me-1"></i>Home
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link nav-link-custom" href="/about">
+                            <i class="fas fa-info-circle me-1"></i>About
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link nav-link-custom" href="/blog">
+                            <i class="fas fa-blog me-1"></i>Blog
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link nav-link-custom" href="/contact">
+                            <i class="fas fa-envelope me-1"></i>Contact
+                        </a>
+                    </li>
+
+                    <!-- Loan Dropdown -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link nav-link-custom dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-hand-holding-usd me-1"></i>LOAN
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-custom">
+                            <li><a class="dropdown-item dropdown-item-custom" href="/loan">
+                                <i class="fas fa-file-alt me-2"></i>REQUEST LOAN
+                            </a></li>
+                            <li><a class="dropdown-item dropdown-item-custom" href="/disbursed">
+                                <i class="fas fa-money-check me-2"></i>DISBURSED LOAN
+                            </a></li>
+                        </ul>
+                    </li>
+
+                    <!-- EMI Dropdown -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link nav-link-custom dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-calendar-alt me-1"></i>EMI
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-custom">
+                            <li><a class="dropdown-item dropdown-item-custom" href="/emi">
+                                <i class="fas fa-list-alt me-2"></i>EMI Schedule
+                            </a></li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <!-- User Section -->
+                <ul class="navbar-nav">
+                    {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <span class="nav-link nav-link-custom user-welcome" id="userDisplay">
+                            <i class="fas fa-user me-1"></i>{{ user }}
+                        </span>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link nav-link-custom text-warning" href="/finance/logout" onclick="return confirm('Are you sure you want to logout?')">
+                            <i class="fas fa-sign-out-alt me-1"></i>Logout
+                        </a>
+                    </li>
+                    {% else %}
+                    <!-- Login Dropdown -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link nav-link-custom dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-sign-in-alt me-1"></i>Login
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-custom">
+                            <li><a class="dropdown-item dropdown-item-custom" href="/finance/login">
+                                <i class="fas fa-user me-2"></i>User Login
+                            </a></li>
+                            <li><a class="dropdown-item dropdown-item-custom" href="/FinanceAdmin/login/">
+                                <i class="fas fa-cog me-2"></i>Admin Login
+                            </a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link nav-link-custom" href="/finance/register">
+                            <i class="fas fa-user-plus me-1"></i>Register
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container-fluid">
+            <div class="content-container p-0 m-0">
+                {% block content %}
+                <div class="loading-container">
+                    <div class="loading-spinner"></div>
+                </div>
+                {% endblock content %}
+            </div>
+        </div>
+
+
+    <!-- Footer -->
+    <footer class="main-footer pt-5">
+        <div class="container">
+            <div class="row justify-content-center p-5">
+                <div class="col-lg-4 col-md-6 col-12 footer-section mb-4">
+                    <h5>About Loan Finance</h5>
+                    <p class="mb-4">We provide smart financial solutions with transparent processes and excellent customer service. Our mission is to make financial management accessible and stress-free for everyone.</p>
+                    <div class="social-icons">
+                        <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+
+                <div class="col-lg-2 col-md-6  footer-section mb-4">
+                    <h5>Quick Links</h5>
+                    <ul class="footer-links">
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/about">About</a></li>
+                        <li><a href="/blog">Blog</a></li>
+                        <li><a href="/contact">Contact</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-3 col-md-6 col-12  footer-section mb-4">
+                    <h5>Our Services</h5>
+                    <ul class="footer-links">
+                        <li><a href="/loan">Personal Loans</a></li>
+                        <li><a href="/loan">Business Loans</a></li>
+                        <li><a href="/emi">EMI Management</a></li>
+                        <li><a href="/disbursed">Loan Tracking</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-3 col-md-6 footer-section mb-4">
+                    <h5>Contact Info</h5>
+                    <div class="mb-3">
+                        <i class="fas fa-envelope me-2 text-warning"></i>
+                        <span>loanfinance0915@gmail.com</span>
+                    </div>
+                    <div class="mb-3">
+                        <i class="fas fa-phone me-2 text-warning"></i>
+                        <span>+91 9604735635</span>
+                    </div>
+                    <div class="mb-3">
+                        <i class="fas fa-map-marker-alt me-2 text-warning"></i>
+                        <span>Pune, Maharashtra</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="copyright text-center  ">
+                <p class="p-4">
+                    &copy; <script>document.write(new Date().getFullYear());</script> Loan Financial Services.
+                    All rights reserved. | Designed with <i class="fas fa-heart text-danger"></i> by
+                    <a href="/" class="text-warning text-decoration-none">ADITYA SASE</a>
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Alert Notification Function
+        function showAlert(message, type = 'info', duration = 5000) {
+            const alertContainer = document.getElementById('alertContainer');
+            if (!alertContainer) {
+                console.error('Alert container not found');
+                return;
+            }
+
+            // Create alert element
+            const alert = document.createElement('div');
+            alert.className = `alert-notification ${type}`;
+
+            // Get icon based on type
+            const icons = {
+                'success': 'fa-check-circle',
+                'info': 'fa-info-circle',
+                'warning': 'fa-exclamation-triangle',
+                'error': 'fa-exclamation-circle'
+            };
+
+            const icon = icons[type] || 'fa-info-circle';
+
+            alert.innerHTML = `
+                <div class="alert-content">
+                    <div class="alert-icon">
+                        <i class="fas ${icon}"></i>
+                    </div>
+                    <div class="alert-text">${message}</div>
+                    <button class="alert-close" onclick="closeAlert(this)">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="alert-progress">
+                    <div class="alert-progress-bar"></div>
+                </div>
+            `;
+
+            // Add to container
+            alertContainer.appendChild(alert);
+
+            // Auto remove after duration
+            const timeout = setTimeout(() => {
+                closeAlert(alert.querySelector('.alert-close'));
+            }, duration);
+
+            // Store timeout reference for manual close
+            alert.timeout = timeout;
+
+            return alert;
+        }
+
+        // Close alert function
+        function closeAlert(closeButton) {
+            const alert = closeButton.closest('.alert-notification');
+            if (alert && alert.timeout) {
+                clearTimeout(alert.timeout);
+            }
+
+            alert.style.animation = 'slideOutRight 0.5s ease-out';
+            setTimeout(() => {
+                if (alert.parentElement) {
+                    alert.remove();
+                }
+            }, 500);
+        }
+
+        // Close all alerts
+        function closeAllAlerts() {
+            const alerts = document.querySelectorAll('.alert-notification');
+            alerts.forEach(alert => {
+                const closeBtn = alert.querySelector('.alert-close');
+                if (closeBtn) closeAlert(closeBtn);
+            });
+        }
+
+        // User display formatting
+        document.addEventListener('DOMContentLoaded', function() {
+            const userDisplay = document.getElementById('userDisplay');
+            if (userDisplay) {
+                const email = userDisplay.textContent.trim();
+                const nameWithNumbers = email.split('@')[0];
+                const nameOnly = nameWithNumbers.replace(/\d+/g, '');
+                userDisplay.innerHTML = '<i class="fas fa-user me-1"></i>Hello, <b>' + nameOnly + '</b>';
+            }
+
+            // Navbar scroll effect
+            const navbar = document.querySelector('.main-navbar');
+            if (navbar) {
+                window.addEventListener('scroll', function() {
+                    if (window.scrollY > 50) {
+                        navbar.style.background = 'rgba(102, 126, 234, 0.95)';
+                    } else {
+                        navbar.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+                    }
+                });
+            }
+        });
+
+        // Process Django messages
+        {% for message in messages %}
+            {% if message %}
+                showAlert('{{ message|escapejs }}', '{{ message.tags }}');
+            {% endif %}
+        {% endfor %}
+
+        // Test function - you can remove this
+        function testAlert() {
+            showAlert('This is a test notification!', 'success');
+        }
+    </script>
+</body>
+</html>
